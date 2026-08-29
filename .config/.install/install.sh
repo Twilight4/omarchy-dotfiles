@@ -4,11 +4,13 @@
 # aborts the whole install instead of leaving silent partial state.
 #
 # Scope: this repo layers a customized Omarchy rice on top of a STOCK Omarchy
-# install. It installs only the delta (kitty, satty, Bibata cursor,
-# zen-browser), removes conflicting/unused pre-installed bloat, and deploys
-# the tracked Omarchy user configs. Everything Omarchy ships by default and
-# everything owned by the official dotfiles repo (zsh, waybar rice, rofi,
-# swaync, emacs, ...) is intentionally out of scope.
+# install:
+#   1. bloat removal (unused preinstalls + pre-v4 stack)
+#   2. delta packages (rice picks + official-dotfiles toolset)
+#   3. tracked Omarchy user configs (hypr/omarchy/kitty/imv/gtk)
+#   4. shared configs from the official dotfiles repo (zsh/emacs/git/...)
+#   5. shell + fonts + cursor + plugins + home cleanup
+#   6. official post-install workflow + reboot prompt
 set -euo pipefail
 
 # Repo root: this script lives at <repo>/.config/.install/install.sh
@@ -41,12 +43,15 @@ fi
 # Installation #
 ################
 source "$REPO_DIR/.config/.install/library.sh"
+source "$REPO_DIR/.config/.install/confirm-start.sh"
 source "$REPO_DIR/.config/.install/remove-bloat.sh"
 source "$REPO_DIR/.config/.install/install-packages.sh"
+source "$REPO_DIR/.config/.install/install-fonts.sh"
 source "$REPO_DIR/.config/.install/deploy-configs.sh"
+source "$REPO_DIR/.config/.install/fetch-official-dotfiles.sh"
+source "$REPO_DIR/.config/.install/zsh.sh"
 source "$REPO_DIR/.config/.install/setup-cursor.sh"
 source "$REPO_DIR/.config/.install/setup-plugins.sh"
-
-echo
-ok "Omarchy rice install finished."
-info "Log out and back in (or reboot) for the full session path."
+source "$REPO_DIR/.config/.install/cleanup-homedir.sh"
+source "$REPO_DIR/.config/.install/run-post-install.sh"
+source "$REPO_DIR/.config/.install/prompt-reboot.sh"
