@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Sourced by install.sh — use `return`, not `exit`.
+#
+# Deploys the tracked configs into ~/.config. NON-destructive on purpose:
+# unlike the official dotfiles deploy (rm -rf + cp), this copies tracked paths
+# over the live tree so Omarchy-managed files we don't track survive, and
+# omarchy-update/refresh can keep doing its per-file .bak backups.
+
+info "Deploying configs into ~/.config ..."
+
+# Tracked top-level dirs under .config/
+deploy_dirs=(
+    hypr
+    omarchy
+    kitty
+    imv
+    gtk-3.0
+    gtk-4.0
+)
+
+for d in "${deploy_dirs[@]}"; do
+    src="$REPO_DIR/.config/$d"
+    dst="$HOME/.config/$d"
+    [[ -d $src ]] || { warn "Tracked dir missing, skipping: $src"; continue; }
+    mkdir -p "$dst"
+    cp -a "$src/." "$dst/"
+    ok "Deployed ~/.config/$d"
+done
+
+# shell.json is watched by the quickshell shell; a running session picks it
+# up live. Hyprland reloads Lua configs on `hyprctl reload`.
+if command -v hyprctl &>/dev/null && hyprctl version &>/dev/null 2>&1; then
+    hyprctl reload &>/dev/null && ok "Hyprland reloaded." || true
+fi

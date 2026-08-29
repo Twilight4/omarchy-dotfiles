@@ -1,0 +1,5 @@
+# Restorable/regenerated content
+.config/omarchy/plugins/
+.config/omarchy/*.bak.*
+__pycache__/
+*.pyc
