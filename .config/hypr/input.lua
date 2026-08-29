@@ -49,6 +49,16 @@ hl.config({
     -- Swap Caps Lock and Left Ctrl (replaces Omarchy default
     -- "compose:caps,shift:both_capslock_cancel").
     kb_options = "ctrl:swapcaps",
+
+    -- Touchpad (ported from the official dotfiles general.lua — 2-in-1 panel)
+    touchpad = {
+      disable_while_typing    = true,
+      natural_scroll          = true,
+      scroll_factor           = 0.5,
+      clickfinger_behavior    = true,
+      middle_button_emulation = false,
+      tap_to_click            = true,
+    },
   },
 })
 

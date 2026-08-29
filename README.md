@@ -17,10 +17,23 @@ what differs on top.
 | `.config/omarchy/` | quickshell `shell.json` layout, hooks, branding, extensions, `themed/` |
 | `.config/kitty/`, `.config/imv/` | terminal + image viewer |
 | `.config/gtk-3.0/`, `.config/gtk-4.0/` | Bibata cursor settings |
+| `.config/systemd/user/` | fcitx5 override (frees input-method-v2 for wvkbd) |
 | `.config/.install/` | the install chain (below) |
 
 Shell plugin *code* is not tracked — `setup-plugins.sh` re-clones the three
 quickshell plugins from their git remotes.
+
+
+## Touch (2-in-1 panel)
+
+`bindings.lua` binds a hyprgrass **swipe-up-from-bottom-edge** touchscreen
+gesture → `hypr/scripts/osk-toggle.sh` (wvkbd on-screen keyboard);
+`input.lua` carries the touchpad prefs (natural scroll, tap-to-click,
+clickfinger, `scroll_factor 0.5`); `hypr/scripts/auto-rotate.sh` rotates the
+built-in Sharp panel from the accelerometer (`iio-sensor-proxy`; `lock` arg
+freezes the transform) and is autostarted. `setup-touch.sh` installs the
+hyprgrass plugin via hyprpm, enables the sensor service, and restarts fcitx5
+without `waylandim` so the OSK can take the input-method slot.
 
 ## Install
 

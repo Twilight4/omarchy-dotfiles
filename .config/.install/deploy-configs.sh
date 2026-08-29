@@ -11,6 +11,7 @@ info "Deploying configs into ~/.config ..."
 # Tracked top-level dirs under .config/
 deploy_dirs=(
     hypr
+    systemd
     omarchy
     kitty
     imv

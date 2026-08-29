@@ -10,7 +10,7 @@
 #   3. tracked Omarchy user configs (hypr/omarchy/kitty/imv/gtk)
 #   4. shared configs from the official dotfiles repo (zsh/emacs/git/...)
 #      + the Omarchy zsh bridge (PATH + XDG symlinks)
-#   5. shell + cursor + plugins + home cleanup
+#   5. shell + cursor + plugins + touch stack + home cleanup
 #   6. official post-install workflow + completion message
 set -euo pipefail
 
@@ -52,5 +52,6 @@ source "$REPO_DIR/.config/.install/fetch-official-dotfiles.sh"
 source "$REPO_DIR/.config/.install/zsh.sh"
 source "$REPO_DIR/.config/.install/setup-cursor.sh"
 source "$REPO_DIR/.config/.install/setup-plugins.sh"
+source "$REPO_DIR/.config/.install/setup-touch.sh"
 source "$REPO_DIR/.config/.install/cleanup-homedir.sh"
 source "$REPO_DIR/.config/.install/run-post-install.sh"

@@ -10,3 +10,8 @@ o.launch_on_start("hyprctl setcursor Bibata-Modern-Classic 24")
 -- gesture (swipe up from bottom edge) - see bindings.lua and
 -- ~/.config/hypr/scripts/osk-toggle.sh. Nothing to autostart: the gesture
 -- launches wvkbd on demand.
+
+-- Auto-rotate the built-in panel from the accelerometer (iio-sensor-proxy).
+-- Exits silently when the sensor/panel is absent; `auto-rotate.sh lock`
+-- freezes the transform (e.g. reading lying down).
+o.launch_on_start(os.getenv("HOME") .. "/.config/hypr/scripts/auto-rotate.sh")

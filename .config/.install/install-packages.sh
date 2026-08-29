@@ -40,6 +40,10 @@ packages=(
     "cliamp-bin"               # official variant; omarchy's cliamp preinstall
                                # is dropped by the preinstall remover first
 
+    # ---- touch stack (2-in-1 panel) -------------------------------------
+    "wvkbd"                    # on-screen keyboard (wvkbd-mobintl)
+    "iio-sensor-proxy"         # accelerometer -> monitor-sensor (auto-rotate)
+
     # ---- shell (official dotfiles zsh + p10k) ---------------------------
     "zsh"
     "zsh-autosuggestions"
