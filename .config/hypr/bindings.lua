@@ -45,4 +45,27 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "edge", origin = "down", direction = "up" },
       action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/osk-toggle.sh"),
     })
+    -- 3-finger tap toggles float (docs example).
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "tap", fingers = 3 },
+      action = hl.dsp.window.float(),
+    })
+    -- Hold-then-drag with one finger moves the window (tablet-style title
+    -- bar drag). mouse = true lets the bind drive the mouse dispatcher.
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "longpress", fingers = 1 },
+      action = hl.dsp.window.drag(),
+      mouse = true,
+    })
+    -- 2-finger pinch zooms the FOCUSED app: hyprgrass has no zoom
+    -- dispatcher, so pinch sends Ctrl +/- to the app (browser/documents
+    -- zoom). Needs wtype.
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "pinch", fingers = 2, direction = "pinchout" },
+      action = hl.dsp.exec_cmd("wtype -M ctrl -k plus -m ctrl"),
+    })
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "pinch", fingers = 2, direction = "pinchin" },
+      action = hl.dsp.exec_cmd("wtype -M ctrl -k minus -m ctrl"),
+    })
 end

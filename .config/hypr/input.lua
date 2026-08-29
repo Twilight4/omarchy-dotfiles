@@ -62,6 +62,16 @@ hl.config({
   },
 })
 
+-- Touchscreen workspace swipes (hyprgrass docs recommendation): 3-finger
+-- horizontal touch swipe switches workspaces; a small cancel ratio avoids
+-- accidental switches on short swipes.
+hl.config({
+  gestures = {
+    workspace_swipe_touch        = true,
+    workspace_swipe_cancel_ratio = 0.15,
+  },
+})
+
 -- App-specific touchpad scroll speeds.
 -- o.window("(Alacritty|kitty|foot)", { scroll_touchpad = 1.5 })
 -- o.window("com.mitchellh.ghostty", { scroll_touchpad = 0.2 })
