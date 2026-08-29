@@ -4,11 +4,16 @@
 # Installs ONLY the delta on top of a stock Omarchy install:
 #   1. rice picks that differ from Omarchy defaults
 #   2. the official-dotfiles toolset that Omarchy doesn't ship
+#
 # Everything Omarchy already ships is deliberately excluded — including the
-# rice tools we keep as-is: quickshell (omarchy dep: bar/launcher/
+# rice tools we keep as Omarchy's: quickshell (omarchy dep: bar/launcher/
 # notifications/OSD/idle+lock), aether (theme builder), plymouth (boot
-# splash), hyprpicker (color picker), imv (image viewer), ufw +
-# ufw-docker, power-profiles-daemon, swaybg, grim/slurp, wl-clipboard.
+# splash), hyprpicker (color picker), satty (screenshot annotation), imv
+# (image viewer), gpu-screen-recorder (screen recording — wf-recorder is NOT
+# used by Omarchy's capture scripts), yaru icon theme, ufw + ufw-docker,
+# power-profiles-daemon, swaybg, grim/slurp, wl-clipboard.
+# Web apps (google-maps-desktop & friends) install via Omarchy's webapp
+# scripts (`omarchy-webapp-install`), not from here.
 #
 # Deliberately NOT installed (rice/system conflicts with Omarchy's stack):
 #   waybar, rofi/wofi, swaync, wob, wlogout, nwg-dock-hyprland, swappy,
@@ -25,10 +30,8 @@ info "Installing delta packages..."
 packages=(
     # ---- rice picks -----------------------------------------------------
     "kitty"                    # terminal (alacritty removed in remove-bloat.sh)
-    "satty"                    # screenshot annotation (Omarchy default, grim/slurp pair)
     "bibata-cursor-theme"      # cursor theme, same as official dotfiles
     "zen-browser-bin"          # browser (chromium removed in remove-bloat.sh)
-    "papirus-icon-theme"       # icon theme, same as official dotfiles
 
     # ---- shell (official dotfiles zsh + p10k) ---------------------------
     "zsh"
@@ -107,17 +110,13 @@ packages=(
     # ---- media ----------------------------------------------------------
     "mpv-mpris"
     "yt-dlp"
-    "cava"
     "pavucontrol"
     "noise-suppression-for-voice-git"
-    "blanket"
 
     # ---- desktop extras -------------------------------------------------
     "zathura"
     "zathura-pdf-poppler"
-    "wdisplays"
     "wlr-randr-git"
-    "wf-recorder"
     "kdeconnect"
     "yad"
     "zenity"
@@ -127,7 +126,6 @@ packages=(
     "gnome-clocks"
     "gnome-maps"
     "gnome-weather"
-    "google-maps-desktop"
 
     # ---- user apps ------------------------------------------------------
     "ferdium-bin"

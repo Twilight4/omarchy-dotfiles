@@ -9,11 +9,12 @@
 #
 # NOTE: the official zsh .zshenv redirects XDG_DATA_HOME to
 # ~/.config/.local/share and XDG_CACHE_HOME to ~/.config/.local/share/cache.
-# Omarchy's own state lives under ~/.local/state (XDG_STATE_HOME, unchanged)
-# so its toggles/migrations are safe — but fonts installed by Omarchy's
-# font picker into ~/.local/share/fonts are invisible to shells started
-# under that redirect. install-fonts.sh therefore installs into the
-# redirected dir, which terminal apps (kitty/p10k) do see.
+# The redirect is kept, and neutralized below (see "Omarchy XDG bridge") so
+# content Omarchy installs into the standard dirs stays visible.
+#
+# Excluded from the shared list on purpose: tools Omarchy itself rices/themes
+# (neofetch via its own fetch identity, cava via theme colors) and the
+# Garuda-desktop trees (waybar, rofi, swaync, wlogout, sddm, wal).
 
 info "Fetching official dotfiles..."
 
@@ -45,10 +46,8 @@ shared_configs=(
     yazi         # file manager (TUI)
     zathura      # document viewer
     bat          # bat + bat-extras config
-    cava         # audio visualizer
     fontconfig   # font rendering preferences
     lsd          # ls replacement theme/icons
-    neofetch     # fetch tool (their tracked config.conf)
 )
 
 info "Deploying shared configs from the official repo..."
@@ -69,3 +68,41 @@ if [[ -d $OFFICIAL_DIR/.config/.local/bin ]]; then
     cp -a "$OFFICIAL_DIR/.config/.local/bin/." "$HOME/.config/.local/bin/"
     ok "Deployed ~/.config/.local/bin user scripts"
 fi
+
+#------------------------------------------------------- omarchy zsh bridge
+# Two Omarchy-specific patches to the freshly deployed zsh config. Both are
+# idempotent and re-applied on every install run (the official repo's
+# .zshenv may be re-deployed over them).
+ZSHENV="$HOME/.config/zsh/.zshenv"
+
+# 1) PATH: Omarchy installs user-local binaries (agent CLIs, mise stubs:
+#   omp, pi, claude, gh, codex, ...) into ~/.local/bin — the official
+#   .zshenv doesn't put it on PATH.
+if [[ -f $ZSHENV ]] && ! grep -q 'omarchy-dotfiles: local bin' "$ZSHENV"; then
+    {
+        echo ''
+        echo '# omarchy-dotfiles: local bin (omarchy agent CLIs / mise stubs)'
+        echo 'export PATH="$HOME/.local/bin:$PATH"'
+    } >> "$ZSHENV"
+    ok "Added ~/.local/bin to PATH in .zshenv"
+fi
+
+# 2) XDG bridge: keep the official XDG_DATA_HOME redirect (~/.config/.local/
+#   share) but make Omarchy's standard-dir content visible through it via
+#   symlinks — fonts (font picker), applications (webapp/TUI .desktop
+#   entries), icons (user themes/cursors).
+for sub in fonts applications icons; do
+    std="$HOME/.local/share/$sub"
+    red="$HOME/.config/.local/share/$sub"
+    mkdir -p "$std"
+    if [[ -L $red ]]; then
+        continue # already bridged
+    fi
+    if [[ -e $red ]]; then
+        # Real dir in the way: merge its contents into the standard dir,
+        # then replace with the symlink.
+        cp -a "$red/." "$std/" && rm -rf "$red"
+    fi
+    ln -s "$std" "$red"
+    ok "Bridged ~/.config/.local/share/$sub -> ~/.local/share/$sub"
+done

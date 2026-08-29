@@ -6,16 +6,18 @@
 # Everything here is guarded: only installed packages are touched, so re-runs
 # and partial states are safe no-ops.
 #
-# Omarchy itself has no general "remove preinstalls" script — its only
-# upstream removals are a Kvantum migration and the v3->v4 transition that
-# stopped shipping the packages below (machines upgraded from v3 keep them
-# installed). This list mirrors that: on a clean v4 install those entries are
-# no-ops.
+# The pre-v4 entries and the "Remove > Preinstalls" drops below mirror what
+# Omarchy itself removes (the SUPER+SPACE menu's preinstall remover drops
+# webapps + TUI wrappers + mise stubs + a package list). The webapp/TUI/
+# mise-stub halves are interactive menu concerns — and the mise stubs in
+# ~/.local/bin are this user's agent tooling (omp, pi, claude, gh, ...) — so
+# only the package drops are ported here, minus aether (theme builder, kept)
+# and cliamp (in active use, kept).
 #
 # Keep list (Omarchy defaults that stay): quickshell, aether, plymouth,
 # hyprpicker, imv, evince, ufw, power-profiles-daemon, swaybg, fcitx5,
-# cups stack, docker, mise, lazygit/lazydocker, bluetui, wiremix,
-# neovim/omarchy-nvim, nautilus.
+# cups stack, docker, mise, lazygit, bluetui, wiremix, neovim/omarchy-nvim,
+# nautilus.
 
 info "Removing bloat..."
 
@@ -44,6 +46,13 @@ bloat=(
 
     # Browser — zen-browser-bin replaces it
     "chromium"
+
+    # Package drops from Omarchy's "Remove > Preinstalls" menu action
+    "moonlight-qt"
+    "lazydocker"
+    "omacut"
+    "omacalc"
+    "omawrite"
 
     # Unused pre-installed apps
     "1password-beta"

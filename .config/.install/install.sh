@@ -4,13 +4,14 @@
 # aborts the whole install instead of leaving silent partial state.
 #
 # Scope: this repo layers a customized Omarchy rice on top of a STOCK Omarchy
-# install:
-#   1. bloat removal (unused preinstalls + pre-v4 stack)
+# install, from a live Hyprland session (changes apply live; no reboot):
+#   1. bloat removal (unused preinstalls + pre-v4 stack + menu-drop list)
 #   2. delta packages (rice picks + official-dotfiles toolset)
 #   3. tracked Omarchy user configs (hypr/omarchy/kitty/imv/gtk)
 #   4. shared configs from the official dotfiles repo (zsh/emacs/git/...)
-#   5. shell + fonts + cursor + plugins + home cleanup
-#   6. official post-install workflow + reboot prompt
+#      + the Omarchy zsh bridge (PATH + XDG symlinks)
+#   5. shell + cursor + plugins + home cleanup
+#   6. official post-install workflow + completion message
 set -euo pipefail
 
 # Repo root: this script lives at <repo>/.config/.install/install.sh
@@ -46,7 +47,6 @@ source "$REPO_DIR/.config/.install/library.sh"
 source "$REPO_DIR/.config/.install/confirm-start.sh"
 source "$REPO_DIR/.config/.install/remove-bloat.sh"
 source "$REPO_DIR/.config/.install/install-packages.sh"
-source "$REPO_DIR/.config/.install/install-fonts.sh"
 source "$REPO_DIR/.config/.install/deploy-configs.sh"
 source "$REPO_DIR/.config/.install/fetch-official-dotfiles.sh"
 source "$REPO_DIR/.config/.install/zsh.sh"
@@ -54,4 +54,3 @@ source "$REPO_DIR/.config/.install/setup-cursor.sh"
 source "$REPO_DIR/.config/.install/setup-plugins.sh"
 source "$REPO_DIR/.config/.install/cleanup-homedir.sh"
 source "$REPO_DIR/.config/.install/run-post-install.sh"
-source "$REPO_DIR/.config/.install/prompt-reboot.sh"
