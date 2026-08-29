@@ -35,15 +35,18 @@ Run it from anywhere except inside `~/.config` itself.
 
 ## What the install chain does
 
-1. **remove-bloat** — unused preinstalls (1password, libreoffice, obsidian,
-   kdenlive, obs-studio, spotify, signal, typora, localsend, …), the
-   pre-v4 stack (waybar, mako, walker, swayosd, hypridle/hyprlock), and the
-   package drops from Omarchy's own "Remove > Preinstalls" menu action
-   (minus aether + cliamp, which are kept). Guarded: only installed
-   packages are touched.
-2. **install-packages** — the delta only: kitty, Bibata cursor, zen-browser
-   + the official-dotfiles toolset (zsh/p10k stack, emacs, texlive, CLI
-   tools, user apps). Everything Omarchy already ships is excluded.
+1. **remove-bloat** — launches Omarchy's own "Remove > Preinstalls" action
+   (the SUPER+SPACE menu script, interactive gum confirm) *first*, then this
+   rice's own drops: unused preinstalls (1password, spotify, signal,
+   typora, localsend, …), the pre-v4 stack (waybar, mako, walker, swayosd,
+   hypridle/hyprlock), evince (zathura instead) and shell/browser swaps
+   (alacritty→kitty, chromium→zen). Guarded: only installed packages are
+   touched.
+2. **install-packages** — the delta only: kitty, Bibata cursor, zen-browser,
+   cliamp-bin + gnome-calculator (official replacements for what the
+   preinstall remover drops) + the official-dotfiles toolset (zsh/p10k
+   stack, emacs, texlive, CLI tools, user apps). Everything Omarchy already
+   ships is excluded.
 3. **deploy-configs** — non-destructive copy of the tracked configs into
    `~/.config` (never `rm -rf`; `omarchy-update` keeps working).
 4. **fetch-official-dotfiles** — clone/pull `Twilight4/dotfiles` and deploy

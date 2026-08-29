@@ -5,6 +5,11 @@
 #   1. rice picks that differ from Omarchy defaults
 #   2. the official-dotfiles toolset that Omarchy doesn't ship
 #
+# Runs AFTER remove-bloat.sh (which launches Omarchy's preinstall remover
+# first), so packages dropped there that this rice still wants come back
+# from the official variants: cliamp-bin (not omarchy's cliamp) and
+# gnome-calculator (instead of omacalc).
+#
 # Everything Omarchy already ships is deliberately excluded — including the
 # rice tools we keep as Omarchy's: quickshell (omarchy dep: bar/launcher/
 # notifications/OSD/idle+lock), aether (theme builder), plymouth (boot
@@ -32,6 +37,8 @@ packages=(
     "kitty"                    # terminal (alacritty removed in remove-bloat.sh)
     "bibata-cursor-theme"      # cursor theme, same as official dotfiles
     "zen-browser-bin"          # browser (chromium removed in remove-bloat.sh)
+    "cliamp-bin"               # official variant; omarchy's cliamp preinstall
+                               # is dropped by the preinstall remover first
 
     # ---- shell (official dotfiles zsh + p10k) ---------------------------
     "zsh"
@@ -84,17 +91,13 @@ packages=(
     "qrencode"
     "chafa"
     "perl-image-exiftool"
-    "cliphist"
     "xdg-ninja-git"
-    "dragon-drop"
     "wget"
     "net-tools"
-    "wavemon"
     "speedtest-cli"
     "proxychains-ng"
     "freerdp2"
     "acpi"
-    "nvtop"
     "udiskie"
     "usbutils"
     "udev-block-notify-git"
@@ -110,19 +113,18 @@ packages=(
     # ---- media ----------------------------------------------------------
     "mpv-mpris"
     "yt-dlp"
-    "pavucontrol"
     "noise-suppression-for-voice-git"
 
     # ---- desktop extras -------------------------------------------------
     "zathura"
     "zathura-pdf-poppler"
     "wlr-randr-git"
-    "kdeconnect"
     "yad"
     "zenity"
     "nautilus-open-any-terminal"
     "nautilus-image-converter"
     "nautilus-admin-gtk4"
+    "gnome-calculator"         # replaces omacalc (dropped by the remover)
     "gnome-clocks"
     "gnome-maps"
     "gnome-weather"
