@@ -29,14 +29,20 @@
 -- o.bind("SUPER + PERIOD", nil, "omarchy-shell shell toggle omarchy.emojis")
 -- Touchscreen gesture (hyprgrass): swipe up from the bottom edge toggles the
 -- on-screen keyboard. Sensitivity 4.0 is hyprgrass's own tablet recommendation.
-hl.config({
-  plugin = {
-    hyprgrass = {
-      sensitivity = 4.0,
-    },
-  },
-})
-hl.plugin.hyprgrass.bind({
-  pattern = { kind = "edge", origin = "down", direction = "up" },
-  action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/osk-toggle.sh"),
-})
+-- Guarded like the official gestures.lua: hyprpm loads plugins AFTER the
+-- config parses, so an unguarded plugin.* config errors at startup/reload
+-- ("unknown option plugin:hyprgrass:sensitivity") whenever the plugin isn't
+-- loaded yet.
+if hl.plugin.hyprgrass ~= nil then
+    hl.config({
+      plugin = {
+        hyprgrass = {
+          sensitivity = 4.0,
+        },
+      },
+    })
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "edge", origin = "down", direction = "up" },
+      action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/osk-toggle.sh"),
+    })
+end
