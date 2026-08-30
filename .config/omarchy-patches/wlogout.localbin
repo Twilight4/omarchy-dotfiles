@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
-# Omarchy sets GDK_SCALE=2 for fractional monitor scales; on the 1.6-scale
-# panel that mismatch renders wlogout far smaller than its 1.0-scale
-# proportions. Force a scale-1 buffer — the compositor upscales the surface
-# back, restoring the 1.0-scale look. (dotfiles: omarchy-dotfiles)
-exec env GDK_SCALE=1 /usr/bin/wlogout "$@"
+# wlogout sizes its buttons from screen-derived px; CSS can't enlarge its
+# fixed grid cells (min-width/min-height/padding all ignored). At 1.6 scale
+# the cells come out ~40% smaller than the 1.0-scale look. So: drop the
+# focused monitor to 1.0 for the duration of the menu, restore on exit.
+# The scaler keeps hyprmoncfg's profile in sync, so nothing reverts.
+scaler="$(command -v omarchy-hyprland-monitor-scaling)"
+prev=$(hyprctl monitors -j 2>/dev/null | jq -r '.[] | select(.focused == true) | .scale')
+restore() { [[ -n $prev && -n $scaler ]] && "$scaler" "$prev" >/dev/null 2>&1; }
+trap restore EXIT TERM INT
+"$scaler" 1 >/dev/null 2>&1
+sleep 0.3   # let the modeset settle before wlogout maps
+/usr/bin/wlogout "$@"
