@@ -2,7 +2,6 @@
 configuration {
 	/*---------- Display setting ----------*/
 	  modi:                      "drun";
-	scroll-method:              1;
     show-icons:                 true;
 	  display-window:             "Windows";
 	  display-windowcd:           "Window CD";
