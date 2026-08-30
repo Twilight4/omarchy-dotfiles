@@ -42,29 +42,39 @@ output_name=$(hyprctl monitors -j 2>/dev/null \
 # Rotation goes THROUGH hyprmoncfg: hyprmoncfgd re-applies the active profile
 # on every poll-detected monitor change, so a bare `hyprctl eval` gets
 # reverted within seconds (and races a `save`-based workaround). Instead we
-# rewrite the touch panel's transform in the ACTIVE profile and let
-# `hyprmoncfg apply` make the change — daemon and live state stay in
+# rewrite the touch panel's transform in the profile that OWNS the panel and
+# let `hyprmoncfg apply` make the change — daemon and live state stay in
 # agreement, nothing ever reverts. Falls back to a bare eval when hyprmoncfg
 # isn't managing this setup.
 HYPRMONCFG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/hyprmoncfg"
 
 set_profile_transform() {
     # $1 = transform int. Returns 1 when hyprmoncfg isn't usable.
-    local transform=$1 active file tmp
+    #
+    # The profile is picked by OUTPUT IDENTITY (the file whose outputs[]
+    # contains the touch panel), NOT by `hyprmoncfg status`'s "Active
+    # profile": that name is live-state-dependent and reports a virtual
+    # "custom layout" (which has no file) whenever live state drifts from
+    # every saved profile — e.g. right after an external eval.
+    local transform=$1 f file name tmp
     command -v hyprmoncfg &>/dev/null || return 1
-    active=$(hyprmoncfg status 2>/dev/null | sed -n 's/^Active profile: //p')
-    [[ -n $active && $active != none ]] || return 1
-    # Profile files are slugged (custom layout -> custom-layout.json);
-    # match on the JSON "name" field instead of guessing the slug.
-    file=$(grep -lF "\"name\": \"$active\"" "$HYPRMONCFG_DIR"/profiles/*.json 2>/dev/null | head -1)
+    file=""
+    for f in "$HYPRMONCFG_DIR"/profiles/*.json; do
+        [[ -e $f ]] || continue
+        jq -e --arg d "$TOUCH_OUTPUT_DESC" \
+            'any(.outputs[]; (.description // "") | startswith($d))' "$f" &>/dev/null || continue
+        file=$f
+        break
+    done
     [[ -n $file ]] || return 1
+    name=$(jq -r '.name' "$file")
     tmp=$(mktemp) || return 1
     jq --arg d "$TOUCH_OUTPUT_DESC" --argjson t "$transform" \
         '.outputs |= map(if ((.description // "") | startswith($d))
                          then .transform = $t else . end)' \
         "$file" > "$tmp" && mv "$tmp" "$file" || { rm -f "$tmp"; return 1; }
     # --confirm-timeout 0: no interactive revert prompt (daemon context).
-    hyprmoncfg apply "$active" --confirm-timeout 0 &>/dev/null
+    hyprmoncfg apply "$name" --confirm-timeout 0 &>/dev/null
 }
 
 last_transform=-1
