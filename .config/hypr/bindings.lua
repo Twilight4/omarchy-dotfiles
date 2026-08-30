@@ -143,9 +143,9 @@ hl.gesture({ fingers = 3, direction = "up", action = function()
   hl.dispatch(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/dock-toggle.sh"))
 end })
 
--- Rofi app launcher (config imported from the Garuda dotfiles; same
--- SUPER+R keybind). pkill toggles an open instance closed.
-o.bind("SUPER + R", "Rofi app launcher", "pkill rofi || rofi -show drun -config ~/.config/rofi/configs/config.rasi")
+-- App launcher: quickshell apps menu (touch-native, replaces rofi here —
+-- rofi-wayland has no wl_touch). Rofi config stays in .config/rofi.
+o.bind("SUPER + R", "App launcher", "omarchy-menu toggle apps")
 
 -- Power/session menu: wlogout on the physical power button, replacing
 -- Omarchy's default "omarchy-menu toggle system". Blur behind it comes from
