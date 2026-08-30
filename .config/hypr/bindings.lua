@@ -112,3 +112,7 @@ if hl.plugin.hyprexpo ~= nil then
     -- Keyboard toggle (same key as the official dotfiles).
     hl.bind("SUPER + grave", function() hl.plugin.hyprexpo.expo("toggle") end)
 end
+
+-- Power/session menu (wlogout), same as the official dotfiles: SUPER+Backspace
+-- toggles it. Blur behind it comes from the layer rule in looknfeel.lua.
+o.bind("SUPER + Backspace", "Power menu", "pkill wlogout || wlogout")

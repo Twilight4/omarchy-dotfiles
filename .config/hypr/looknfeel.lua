@@ -48,3 +48,26 @@
 --     column_width = 0.97,
 --   },
 -- })
+
+-- wlogout power menu: blur the desktop behind it (same rule as the official
+-- Garuda dotfiles; the layer's namespace is "logout_dialog").
+hl.layer_rule({ match = { namespace = "logout_dialog" }, blur = true })
+
+-- Omarchy ships decoration.blur.enabled=false, which makes layer blur rules
+-- inert. Enable it (params from the official dotfiles). NOTE: blur is global
+-- — all translucent surfaces (bar, menus) get it, at a GPU cost.
+hl.config({
+  decoration = {
+    blur = {
+      enabled            = true,
+      xray               = false,
+      size               = 5,
+      passes             = 3,
+      ignore_opacity     = true,
+      new_optimizations  = true,
+      noise              = 0.02,
+      contrast           = 1.1,
+      brightness         = 1.1,
+    },
+  },
+})
