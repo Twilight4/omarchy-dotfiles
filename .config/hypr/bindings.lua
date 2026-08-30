@@ -59,6 +59,13 @@ if hl.plugin.hyprgrass ~= nil then
       action = hl.dsp.window.drag(),
       mouse = true,
     })
+    -- 3-finger long-press, then move = resize the window (README's
+    -- longpress:3 resizewindow pattern).
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "longpress", fingers = 3 },
+      action = hl.dsp.window.resize(),
+      mouse = true,
+    })
     -- Pinch is deliberately NOT bound: with no hyprgrass pinch bind, the
     -- gesture passes through to apps, which handle zoom natively
     -- (browser/web-app default behaviour the user prefers).
