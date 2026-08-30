@@ -45,15 +45,17 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "edge", origin = "down", direction = "up" },
       action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/osk-toggle.sh"),
     })
-    -- 3-finger tap toggles float (docs example).
+    -- 3-finger tap toggles float (README example; taps only register for
+    -- 3+ fingers in this build).
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "tap", fingers = 3 },
       action = hl.dsp.window.float(),
     })
-    -- Hold-then-drag with one finger moves the window (tablet-style title
-    -- bar drag). mouse = true lets the bind drive the mouse dispatcher.
+    -- 2-finger long-press, then move = drag the window (README example used
+    -- longpress:2 movewindow; mouse=true drives the mouse dispatcher).
+    -- 1-finger longpress isn't supported by this build.
     hl.plugin.hyprgrass.bind({
-      pattern = { kind = "longpress", fingers = 1 },
+      pattern = { kind = "longpress", fingers = 2 },
       action = hl.dsp.window.drag(),
       mouse = true,
     })
@@ -67,5 +69,15 @@ if hl.plugin.hyprgrass ~= nil then
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "pinch", fingers = 2, direction = "pinchin" },
       action = hl.dsp.exec_cmd("wtype -M ctrl -k minus -m ctrl"),
+    })
+    -- 1-finger swipes in from the left/right screen edge switch workspaces
+    -- (animated, follows the finger). Bottom edge stays the OSK toggle.
+    hl.plugin.hyprgrass.gesture({
+      pattern = { kind = "edge", origin = "left", direction = "right" },
+      action = "workspace",
+    })
+    hl.plugin.hyprgrass.gesture({
+      pattern = { kind = "edge", origin = "right", direction = "left" },
+      action = "workspace",
     })
 end

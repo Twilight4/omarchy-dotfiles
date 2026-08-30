@@ -71,6 +71,9 @@ hl.config({
     workspace_swipe_cancel_ratio = 0.15,
   },
 })
+-- Touchpad: 3-finger horizontal swipe switches workspaces (native hyprland
+-- gesture, no plugin needed — mirrors the touchscreen behaviour).
+hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
 
 -- App-specific touchpad scroll speeds.
 -- o.window("(Alacritty|kitty|foot)", { scroll_touchpad = 1.5 })

@@ -15,3 +15,11 @@ o.launch_on_start("hyprctl setcursor Bibata-Modern-Classic 24")
 -- Exits silently when the sensor/panel is absent; `auto-rotate.sh lock`
 -- freezes the transform (e.g. reading lying down).
 o.launch_on_start(os.getenv("HOME") .. "/.config/hypr/scripts/auto-rotate.sh")
+-- Load hyprpm plugins (hyprgrass touch gestures), then re-parse the config
+-- ONCE so the guarded hyprgrass binds in bindings.lua register: hyprpm loads
+-- plugins after the initial config parse, so without this the gestures are
+-- dead on every fresh session. The runtime lockfile breaks the loop this
+-- would otherwise cause (hyprctl reload re-runs this autostart block).
+o.launch_on_start(
+  'sh -c \'L="${XDG_RUNTIME_DIR:-/tmp}/hyprpm-reloaded"; [ -f "$L" ] || { hyprpm reload -n; touch "$L"; sleep 1; hyprctl reload; }\''
+)
