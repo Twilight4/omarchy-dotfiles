@@ -45,6 +45,7 @@ fi
 ################
 source "$REPO_DIR/.config/.install/library.sh"
 source "$REPO_DIR/.config/.install/confirm-start.sh"
+source "$REPO_DIR/.config/.install/sudoers.sh"
 source "$REPO_DIR/.config/.install/remove-bloat.sh"
 source "$REPO_DIR/.config/.install/install-packages.sh"
 source "$REPO_DIR/.config/.install/deploy-configs.sh"
