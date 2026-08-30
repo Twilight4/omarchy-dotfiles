@@ -79,6 +79,15 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "edge", origin = "right", direction = "left" },
       action = "workspace",
     })
+    -- Touchscreen: 3-finger swipe up toggles the hyprexpo overview (mirrors
+    -- the touchpad gesture; discrete bind so it fires once on completion,
+    -- not per animation frame). Nil-guarded: hyprexpo may be absent.
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "swipe", fingers = 3, direction = "up" },
+      action = function()
+        if hl.plugin.hyprexpo then hl.plugin.hyprexpo.expo("toggle") end
+      end,
+    })
 end
 -- hyprexpo (expose-style workspace overview, sandwichfarm fork). Same
 -- load-order guard as hyprgrass: hyprpm loads plugins after the config

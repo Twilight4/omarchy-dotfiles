@@ -20,6 +20,15 @@ if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] && command -v hyprpm &>/dev/null; t
     hyprpm enable hyprgrass || warn "hyprpm enable hyprgrass failed."
     hyprpm reload || warn "hyprpm reload failed."
     ok "hyprgrass installed/enabled."
+    hyprpm add https://github.com/sandwichfarm/hyprexpo 2>/dev/null \
+        || info "hyprexpo repo already added."
+    hyprpm enable hyprexpo || warn "hyprpm enable hyprexpo failed."
+    hyprpm reload || warn "hyprpm reload failed."
+    ok "hyprexpo installed/enabled."
+    # Note: hyprpm add/enable need /var/cache/hyprpm to be user-writable.
+    # If a sudo'd hyprpm run left it root-owned ("failed to create cache
+    # dir" / "Failed to write plugin state"): sudo chown -R $USER:$USER
+    # /var/cache/hyprpm
 else
     warn "No running Hyprland session (or no hyprpm) — hyprgrass not loaded."
     info "Re-run this module inside Hyprland, or use the official post-install step 1."
