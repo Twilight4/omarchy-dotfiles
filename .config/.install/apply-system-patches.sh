@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Sourced by install.sh — use `return`, not `exit`.
+# Sourced by install.sh — use `return`, not `exit`. Also runnable directly:
+#   bash ~/desktop/workspace/omarchy-dotfiles/.config/.install/apply-system-patches.sh
+# (the post-update hook points at this exact command when drift is detected).
 #
 # Applies the tracked /usr/bin patches from .config/omarchy-patches/ on top
 # of the stock omarchy package files (omarchy updates overwrite them; this
@@ -7,6 +9,13 @@
 # Then restarts the Omarchy shell stack: a RUNNING omarchy-launch-shell
 # supervisor keeps the pre-patch script parsed in memory, so without the
 # kill+restart the old behaviour (e.g. un-scaled bar) silently survives.
+
+# Standalone invocation: derive REPO_DIR + load the logging helpers.
+if [[ -z ${REPO_DIR:-} ]]; then
+    REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+    # shellcheck source=library.sh
+    source "$REPO_DIR/.config/.install/library.sh"
+fi
 
 patch_dir="$REPO_DIR/.config/omarchy-patches"
 

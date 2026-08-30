@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# post-update hook — after `omarchy update`:
+#   * package upgrades overwrite the /usr/bin files this rice patches
+#   * omarchy's config refresh can overwrite the repo-tracked ~/.config dirs
+# Detect either drift and tell the user the one command that fixes it.
+# (Message only — applying needs sudo, so it stays an explicit user action.)
+
+repo="$HOME/desktop/workspace/omarchy-dotfiles"
+patches="$repo/.config/omarchy-patches"
+reapply_cmd="bash $repo/.config/.install/apply-system-patches.sh"
+install_cmd="bash $repo/.config/.install/install.sh"
+
+drift_patch=0
+drift_config=0
+
+for p in "$patches"/*.patched; do
+    [[ -e $p ]] || continue
+    target="/usr/bin/$(basename "$p" .patched)"
+    if [[ ! -e $target ]] || ! cmp -s "$p" "$target"; then
+        drift_patch=1
+        echo "  - patch lost: $target"
+    fi
+done
+
+# Tracked config files only (git ls-files): live dirs also hold untracked
+# runtime files (__pycache__, generated colors.css, ...) that must not count.
+# hyprmoncfg-monitors.lua is excluded too: hyprmoncfgd regenerates it at
+# runtime, so it legitimately differs from the tracked seed copy.
+while IFS= read -r f; do
+    [[ -e $HOME/$f ]] || { drift_config=1; echo "  - config missing: ~/$f"; continue; }
+    cmp -s "$repo/$f" "$HOME/$f" || { drift_config=1; echo "  - config drifted: ~/$f"; }
+done < <(git -C "$repo" ls-files -- '.config/hypr' '.config/omarchy' '.config/kitty' \
+    | grep -vxF '.config/hypr/hyprmoncfg-monitors.lua')
+
+if ((drift_patch || drift_config)); then
+    echo ""
+    echo "===================================================================="
+    echo " omarchy update overwrote files this rice patches or deploys."
+    if ((drift_patch)); then
+        echo " Reapply /usr/bin patches + restart the shell:"
+        echo "   $reapply_cmd"
+    fi
+    if ((drift_config)); then
+        echo " Redeploy tracked configs too (full chain):"
+        echo "   $install_cmd"
+    fi
+    echo "===================================================================="
+    command -v notify-send &>/dev/null && notify-send -u critical \
+        "Omarchy update: rice needs reapply" \
+        "Patched/tracked files were overwritten.$( ((drift_config)) && echo -n " Run install.sh." || echo -n " Run apply-system-patches.sh.")"
+fi
