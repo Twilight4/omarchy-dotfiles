@@ -69,6 +69,20 @@ if [[ -d $OFFICIAL_DIR/.config/.local/bin ]]; then
     ok "Deployed ~/.config/.local/bin user scripts"
 fi
 
+# OMP (oh-my-pi) agent config. Tracked in the official repo under
+# .config/omp/ but lives at ~/.omp/ — copy only the tracked files, never the
+# runtime state (agent.db, sessions, node_modules).
+if [[ -d $OFFICIAL_DIR/.config/omp ]]; then
+    for f in agent/config.yml agent/mcp.json agent/models.yml \
+             plugins/package.json plugins/omp-plugins.lock.json; do
+        src="$OFFICIAL_DIR/.config/omp/$f"
+        [[ -f $src ]] || continue
+        mkdir -p "$HOME/.omp/$(dirname "$f")"
+        cp -a "$src" "$HOME/.omp/$f"
+    done
+    ok "Deployed ~/.omp agent config (config.yml, mcp.json, models.yml, plugins)"
+fi
+
 #------------------------------------------------------- omarchy zsh bridge
 # Two Omarchy-specific patches to the freshly deployed zsh config. Both are
 # idempotent and re-applied on every install run (the official repo's
