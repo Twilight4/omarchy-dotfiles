@@ -44,10 +44,9 @@ output_name=$(hyprctl monitors -j 2>/dev/null \
 # path is `hyprctl eval 'hl.monitor({...})'`. Scale is re-applied from the
 # live state so this doesn't stomp monitors.lua.
 #
-# hyprmoncfgd re-applies its saved profile on every monitor-state change
-# (~5s poll), which reverts a bare eval within seconds. After rotating we
-# therefore `hyprmoncfg save` the ACTIVE profile so the rotation becomes the
-# daemon's canonical state. Skipped silently when hyprmoncfg isn't in use.
+# NOTE: hyprmoncfgd reverts runtime transforms by re-applying its saved
+# profile on every poll-detected change — it must be disabled
+# (`systemctl --user disable --now hyprmoncfgd`) for this script to work.
 last_transform=-1
 monitor-sensor 2>/dev/null | while read -r line; do
     [[ -f $LOCK ]] && continue
@@ -66,7 +65,4 @@ monitor-sensor 2>/dev/null | while read -r line; do
     hyprctl eval "hl.monitor({output = \"$output_name\", mode = \"preferred\", position = \"auto\", scale = $scale, transform = $transform})" &>/dev/null \
         || continue
     last_transform=$transform
-    profile=$(hyprmoncfg status 2>/dev/null | sed -n 's/^Active profile: //p')
-    [[ -n $profile && $profile != "none" ]] \
-        && hyprmoncfg save "$profile" &>/dev/null
 done
