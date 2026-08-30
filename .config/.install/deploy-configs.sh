@@ -17,6 +17,7 @@ deploy_dirs=(
     imv
     gtk-3.0
     gtk-4.0
+    wlogout
 )
 
 for d in "${deploy_dirs[@]}"; do
@@ -27,6 +28,14 @@ for d in "${deploy_dirs[@]}"; do
     cp -a "$src/." "$dst/"
     ok "Deployed ~/.config/$d"
 done
+
+# wlogout colors are generated from the current Omarchy theme (colors.css is
+# gitignored); the theme-set.d/wlogout-colors.sh hook regenerates on theme
+# changes, but seed it once here so a fresh deploy has colors immediately.
+if [[ -x $HOME/.config/wlogout/generate-colors.sh ]]; then
+    "$HOME/.config/wlogout/generate-colors.sh" && ok "Generated wlogout colors.css" \
+        || warn "wlogout color generation failed (no theme applied yet?)"
+fi
 
 # shell.json is watched by the quickshell shell; a running session picks it
 # up live. Hyprland reloads Lua configs on `hyprctl reload`.

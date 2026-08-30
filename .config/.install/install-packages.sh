@@ -21,7 +21,7 @@
 # scripts (`omarchy-webapp-install`), not from here.
 #
 # Deliberately NOT installed (rice/system conflicts with Omarchy's stack):
-#   waybar, rofi/wofi, swaync, wob, wlogout, nwg-dock-hyprland, swappy,
+#   waybar, rofi/wofi, swaync, wob, nwg-dock-hyprland, swappy,
 #   swayimg (imv instead), scrot, aylurs-gtk-shell, sddm-git/pixie-sddm-git,
 #   kvantum-qt5 (omarchy migration removes it), graphite gtk theme +
 #   gtk-engine-murrine + python-pywal (aether themes own appearance),
@@ -39,6 +39,8 @@ packages=(
     "zen-browser-bin"          # browser (chromium removed in remove-bloat.sh)
     "cliamp-bin"               # official variant; omarchy's cliamp preinstall
                                # is dropped by the preinstall remover first
+    "wlogout"                  # power menu (AUR); colors track the Omarchy
+                               # theme via hooks/theme-set.d/wlogout-colors.sh
 
     # ---- touch stack (2-in-1 panel) -------------------------------------
     "wvkbd"                    # on-screen keyboard (wvkbd-mobintl)
