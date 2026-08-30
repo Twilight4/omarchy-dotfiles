@@ -1,36 +1,36 @@
 {
     "label" : "lock",
-    "action" : "hyprlock",
+    "action" : "omarchy-system-lock",
     "text" : "Lock (l)",
     "keybind" : "l"
 }
 {
-    "label" : "reboot",
-    "action" : "systemctl reboot",
-    "text" : "Reboot (r)",
-    "keybind" : "r"
-}
-{
     "label" : "shutdown",
-    "action" : "systemctl poweroff",
+    "action" : "sh -c 'omarchy-hyprland-monitor-scaling \"${WLOGOUT_PREV_SCALE:-1.6}\" >/dev/null 2>&1; omarchy-system-shutdown'",
     "text" : "Shutdown (s)",
     "keybind" : "s"
 }
 {
-    "label" : "logout",
-    "action" : "uwsm stop",
-    "text" : "Exit (e)",
-    "keybind" : "e"
-}
-{
     "label" : "suspend",
-    "action" : "hyprlock-suspend",
+    "action" : "systemctl suspend",
     "text" : "Suspend (u)",
     "keybind" : "u"
 }
 {
+    "label" : "reboot",
+    "action" : "sh -c 'omarchy-hyprland-monitor-scaling \"${WLOGOUT_PREV_SCALE:-1.6}\" >/dev/null 2>&1; omarchy-system-reboot'",
+    "text" : "Reboot (r)",
+    "keybind" : "r"
+}
+{
+    "label" : "logout",
+    "action" : "omarchy-system-logout",
+    "text" : "Exit (e)",
+    "keybind" : "e"
+}
+{
     "label" : "reboot-uefi",
-    "action" : "systemctl reboot --firmware-setup",
+    "action" : "sh -c 'omarchy-hyprland-monitor-scaling \"${WLOGOUT_PREV_SCALE:-1.6}\" >/dev/null 2>&1; systemctl reboot --firmware-setup'",
     "text" : "Reboot to UEFI (h)",
     "keybind" : "h"
 }

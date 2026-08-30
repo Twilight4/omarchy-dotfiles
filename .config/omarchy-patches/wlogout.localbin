@@ -4,10 +4,14 @@
 # the cells come out ~40% smaller than the 1.0-scale look. So: drop the
 # focused monitor to 1.0 for the duration of the menu, restore on exit.
 # The scaler keeps hyprmoncfg's profile in sync, so nothing reverts.
+# WLOGOUT_PREV_SCALE lets the layout's power-off actions restore the scale
+# (and its profile) before shutdown/reboot kills the session.
 scaler="$(command -v omarchy-hyprland-monitor-scaling)"
 prev=$(hyprctl monitors -j 2>/dev/null | jq -r '.[] | select(.focused == true) | .scale')
+export WLOGOUT_PREV_SCALE="$prev"
 restore() { [[ -n $prev && -n $scaler ]] && "$scaler" "$prev" >/dev/null 2>&1; }
 trap restore EXIT TERM INT
 "$scaler" 1 >/dev/null 2>&1
-sleep 0.3   # let the modeset settle before wlogout maps
+# No settle needed: a scale change isn't a modeset, and wlogout reads output
+# geometry at map time, by which point the scale has already applied.
 /usr/bin/wlogout "$@"
