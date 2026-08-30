@@ -99,6 +99,12 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "tap", fingers = 3 },
       action = hl.dsp.window.fullscreen(),
     })
+    -- 3-finger swipe down toggles the top bar (same command as
+    -- SUPER+SHIFT+SPACE). Touchpad mirror is below, outside this block.
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "swipe", fingers = 3, direction = "down" },
+      action = hl.dsp.exec_cmd("omarchy-toggle-bar"),
+    })
 end
 -- hyprexpo (expose-style workspace overview, sandwichfarm fork). Same
 -- load-order guard as hyprgrass: hyprpm loads plugins after the config
@@ -118,6 +124,13 @@ if hl.plugin.hyprexpo ~= nil then
     -- Keyboard toggle (same key as the official dotfiles).
     hl.bind("SUPER + grave", function() hl.plugin.hyprexpo.expo("toggle") end)
 end
+
+-- Touchpad mirror: 3-finger swipe down toggles the top bar (native
+-- gesture, no plugin). Completes the touchpad 3-finger set: horizontal =
+-- workspaces, up = hyprexpo, down = bar.
+hl.gesture({ fingers = 3, direction = "down", action = function()
+  hl.dispatch(hl.dsp.exec_cmd("omarchy-toggle-bar"))
+end })
 
 -- Power/session menu: wlogout on the physical power button, replacing
 -- Omarchy's default "omarchy-menu toggle system". Blur behind it comes from
