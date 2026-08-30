@@ -93,6 +93,11 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "swipe", fingers = 3, direction = "down" },
       action = hl.dsp.window.close(),
     })
+    -- 4-finger swipe up toggles fullscreen on the active window.
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "swipe", fingers = 4, direction = "up" },
+      action = hl.dsp.window.fullscreen(),
+    })
 end
 -- hyprexpo (expose-style workspace overview, sandwichfarm fork). Same
 -- load-order guard as hyprgrass: hyprpm loads plugins after the config
