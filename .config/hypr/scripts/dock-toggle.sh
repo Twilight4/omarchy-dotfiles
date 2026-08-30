@@ -7,6 +7,8 @@
 if pgrep -f nwg-dock-hyprland >/dev/null; then
     pkill -f nwg-dock-hyprland
 else
-    nwg-dock-hyprland -i 30 -w 5 -mb 10 -ml 10 -mr 10 \
+    # GDK_SCALE=2: GTK3 renders a 2x buffer for the same logical size —
+    # without it the 1.6 monitor scale upscales a 1x surface (blurry icons).
+    GDK_SCALE=2 nwg-dock-hyprland -i 30 -w 5 -mb 10 -ml 10 -mr 10 \
         -c "rofi -show drun -config ~/.config/rofi/configs/config.rasi" >/dev/null 2>&1 &
 fi

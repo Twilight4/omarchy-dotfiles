@@ -57,16 +57,13 @@ hl.layer_rule({ match = { namespace = "logout_dialog" }, no_anim = true })
 -- Blur behind the top bar so its transparent mode (double-click toggle) frosts
 -- the desktop instead of going fully clear.
 hl.layer_rule({ match = { namespace = "omarchy-bar" }, blur = true })
--- App dock (nwg-dock-hyprland): blur behind it, like the Garuda rice
--- (toggled by 3-finger swipe up — see bindings.lua).
-hl.layer_rule({ match = { namespace = "nwg-dock" }, blur = true })
 -- Omarchy disables workspace-switch animations by default; re-enable with a
 -- horizontal slide (curves are defined in the Omarchy defaults).
 hl.animation({ leaf = "workspaces", enabled = true, speed = 4, bezier = "easeOutQuint", style = "slide" })
 
--- Omarchy ships decoration.blur.enabled=false, which makes layer blur rules
--- inert. Enable it (params from the official dotfiles). NOTE: blur is global
--- — all translucent surfaces (bar, menus) get it, at a GPU cost.
+-- ignore_opacity=false: blur is masked by each surface's per-pixel alpha, so
+-- rounded corners (dock, menus) stay rounded instead of showing a frosted
+-- rectangle behind the cut-outs. Frost is softer everywhere as a tradeoff.
 hl.config({
   decoration = {
     blur = {
@@ -74,7 +71,7 @@ hl.config({
       xray               = false,
       size               = 5,
       passes             = 3,
-      ignore_opacity     = true,
+      ignore_opacity     = false,
       new_optimizations  = true,
       noise              = 0.02,
       contrast           = 1.1,
@@ -82,3 +79,10 @@ hl.config({
     },
   },
 })
+
+-- App dock: slide in/out from its screen edge (bottom) like the quickshell
+-- bar, instead of the global layer fade.
+hl.layer_rule({ match = { namespace = "nwg-dock" }, blur = true, animation = "slide" })
+
+-- Rofi: blurred like the dock, but instant (no fade wait).
+hl.layer_rule({ match = { namespace = "rofi" }, blur = true, no_anim = true })
