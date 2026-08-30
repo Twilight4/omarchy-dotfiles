@@ -3,7 +3,7 @@
 hl.monitor({
   output = "desc:Sharp Corporation LQ134N1JW54",
   mode = "1920x1200@120.00",
-  position = "-982x-70",
+  position = "0x0",
   scale = 1.6,
   sdr_min_luminance = 0.2,
   sdr_max_luminance = 80,
