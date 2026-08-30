@@ -80,3 +80,21 @@ if hl.plugin.hyprgrass ~= nil then
       action = "workspace",
     })
 end
+-- hyprexpo (expose-style workspace overview, sandwichfarm fork). Same
+-- load-order guard as hyprgrass: hyprpm loads plugins after the config
+-- parses (autostart.lua re-parses once the plugins are in).
+if hl.plugin.hyprexpo ~= nil then
+    hl.config({ plugin = { hyprexpo = {
+        columns = 3,
+        bg_col = "rgb(111111)",
+        workspace_method = "center current",
+        skip_empty = 0,
+        gesture_distance = 200,
+        cancel_key = "escape",
+    }}})
+    -- 3-finger swipe UP on the touchpad opens the overview (native gesture,
+    -- like the Garuda setup). 3-finger horizontal stays workspace switching.
+    hl.plugin.hyprexpo.gesture({ fingers = 3, direction = "up", action = "expo" })
+    -- Keyboard toggle (same key as the official dotfiles).
+    hl.bind("SUPER + grave", function() hl.plugin.hyprexpo.expo("toggle") end)
+end
