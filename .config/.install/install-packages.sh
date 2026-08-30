@@ -141,6 +141,8 @@ packages=(
     # ---- user apps ------------------------------------------------------
     "ferdium-bin"
     "freetube"
+    "megacmd"                  # MEGAcmd — engine for the omaga-sync plugin
+                               # (widget + services: setup-plugins.sh)
     "torbrowser-launcher"
     "onionshare"
     "privatebin-cli"

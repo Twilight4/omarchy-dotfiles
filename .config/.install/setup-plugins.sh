@@ -33,3 +33,23 @@ for entry in "${plugins[@]}"; do
         warn "Plugin install failed: $id ($url)"
     fi
 done
+
+# omaga-sync — MEGA two-way sync widget + systemd services (bismawy/omaga-sync).
+# Unlike the shell plugins above, it also ships CLI binaries (~/.local/bin/
+# omaga-*) and two systemd user units, installed by its own ./install.sh;
+# requires the megacmd package (install-packages.sh).
+OMAGA_ID="bisma.omaga-sync"
+OMAGA_URL="https://github.com/bismawy/omaga-sync.git"
+if [[ -d "$HOME/.config/omarchy/plugins/$OMAGA_ID" && -x "$HOME/.local/bin/omaga-sync" ]]; then
+    info "Plugin already present: $OMAGA_ID"
+else
+    omaga_tmp="$(mktemp -d)"
+    if git clone --depth 1 "$OMAGA_URL" "$omaga_tmp/omaga-sync" \
+        && (cd "$omaga_tmp/omaga-sync" && ./install.sh) \
+        && omarchy plugin add "$OMAGA_URL" --enable; then
+        ok "Plugin installed: $OMAGA_ID"
+    else
+        warn "Plugin install failed: $OMAGA_ID ($OMAGA_URL)"
+    fi
+    rm -rf "$omaga_tmp"
+fi
