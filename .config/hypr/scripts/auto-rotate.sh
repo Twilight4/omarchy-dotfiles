@@ -36,16 +36,25 @@ output_name=$(hyprctl monitors -j 2>/dev/null \
 [[ -n $output_name ]] || exit 0
 
 # monitor-sensor streams "Accelerometer orientation changed: <orient>" lines.
-# Mapping (hyprland transforms are clockwise): device left-edge-up -> screen
-# content rotated 90 CW, etc.
+# Hyprland transforms are clockwise ints: 0 normal, 1 90, 2 180, 3 270.
+# If rotation feels mirrored on your device, swap the left-up/right-up values.
+#
+# NOTE: `hyprctl output ... transform` does not exist on the new (Lua) config
+# parser and `hyprctl keyword monitor` is rejected by it — the only runtime
+# path is `hyprctl eval 'hl.monitor({...})'`. Scale/position are re-applied
+# from the live state so this doesn't stomp monitors.lua.
 monitor-sensor 2>/dev/null | while read -r line; do
     [[ -f $LOCK ]] && continue
     case $line in
-        *"normal"*)    transform=normal ;;
-        *"bottom-up"*) transform=180 ;;
-        *"left-up"*)   transform=90 ;;
-        *"right-up"*)  transform=270 ;;
+        *"normal"*)    transform=0 ;;
+        *"bottom-up"*) transform=2 ;;
+        *"left-up"*)   transform=1 ;;
+        *"right-up"*)  transform=3 ;;
         *) continue ;;
     esac
-    hyprctl output "$output_name" transform "$transform" &>/dev/null
+    scale=$(hyprctl monitors -j 2>/dev/null \
+        | jq -r --arg n "$output_name" \
+            '.[] | select(.name == $n) | .scale')
+    [[ -n $scale ]] || continue
+    hyprctl eval "hl.monitor({output = \"$output_name\", mode = \"preferred\", position = \"auto\", scale = $scale, transform = $transform})" &>/dev/null
 done
