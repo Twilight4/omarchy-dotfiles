@@ -8,10 +8,12 @@
 #   1. bloat removal (unused preinstalls + pre-v4 stack + menu-drop list)
 #   2. delta packages (rice picks + official-dotfiles toolset)
 #   3. tracked Omarchy user configs (hypr/omarchy/kitty/imv/gtk)
-#   4. shared configs from the official dotfiles repo (zsh/emacs/git/...)
+#   4. /usr/bin patches from omarchy-patches/ + Omarchy shell restart
+#   5. shared configs from the official dotfiles repo (zsh/emacs/git/...)
 #      + the Omarchy zsh bridge (PATH + XDG symlinks)
-#   5. shell + cursor + plugins + touch stack + home cleanup
-#   6. official post-install workflow + completion message
+#
+#   6. shell + cursor + plugins + touch stack + home cleanup
+#   7. official post-install workflow + completion message
 set -euo pipefail
 
 # Repo root: this script lives at <repo>/.config/.install/install.sh
@@ -49,6 +51,7 @@ source "$REPO_DIR/.config/.install/sudoers.sh"
 source "$REPO_DIR/.config/.install/remove-bloat.sh"
 source "$REPO_DIR/.config/.install/install-packages.sh"
 source "$REPO_DIR/.config/.install/deploy-configs.sh"
+source "$REPO_DIR/.config/.install/apply-system-patches.sh"
 source "$REPO_DIR/.config/.install/fetch-official-dotfiles.sh"
 source "$REPO_DIR/.config/.install/zsh.sh"
 source "$REPO_DIR/.config/.install/setup-cursor.sh"

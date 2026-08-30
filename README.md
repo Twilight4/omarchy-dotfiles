@@ -63,16 +63,23 @@ Run it from anywhere except inside `~/.config` itself.
    ships is excluded.
 3. **deploy-configs** — non-destructive copy of the tracked configs into
    `~/.config` (never `rm -rf`; `omarchy-update` keeps working).
-4. **fetch-official-dotfiles** — clone/pull `Twilight4/dotfiles` and deploy
+
+4. **apply-system-patches** — reinstalls the `/usr/bin` patches from
+   `.config/omarchy-patches/` (`.patched` over the stock file; omarchy
+   package updates overwrite them) and restarts the Omarchy shell stack —
+   a running `omarchy-launch-shell` supervisor keeps the pre-patch script
+   in memory, so killing `omarchy-launch-shell` + `quickshell` (then
+   reload) is required for the patched launcher to take effect.
+5. **fetch-official-dotfiles** — clone/pull `Twilight4/dotfiles` and deploy
    the shared trees (`zsh emacs git btop mpv yazi zathura bat fontconfig
    lsd`) + user scripts; then the **Omarchy zsh bridge**: `~/.local/bin`
    on PATH (Omarchy's agent CLIs / mise stubs) and XDG symlinks so the
    official `.zshenv`'s `XDG_DATA_HOME` redirect keeps Omarchy's
    `~/.local/share/{fonts,applications,icons}` visible.
-5. **zsh / cursor / plugins / cleanup-homedir** — default shell, Bibata via
+6. **zsh / cursor / plugins / cleanup-homedir** — default shell, Bibata via
    gsettings + hyprctl, plugin re-clones, XDG home skeleton (`~/.local` and
    `~/.cache` left intact for Omarchy).
-6. **run-post-install** — runs the official repo's `post-install.sh`
+7. **run-post-install** — runs the official repo's `post-install.sh`
    (same 15-step workflow as the Garuda install), then prints the
    completion message. Changes apply live; no reboot needed.
 
