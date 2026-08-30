@@ -120,6 +120,8 @@ if hl.plugin.hyprexpo ~= nil then
     hl.bind("SUPER + grave", function() hl.plugin.hyprexpo.expo("toggle") end)
 end
 
--- Power/session menu (wlogout), same as the official dotfiles: SUPER+Backspace
--- toggles it. Blur behind it comes from the layer rule in looknfeel.lua.
-o.bind("SUPER + Backspace", "Power menu", "pkill wlogout || wlogout")
+-- Power/session menu: wlogout on the physical power button, replacing
+-- Omarchy's default "omarchy-menu toggle system". Blur behind it comes from
+-- the layer rule in looknfeel.lua.
+hl.unbind("XF86PowerOff")
+o.bind("XF86PowerOff", "Power menu", "pkill wlogout || wlogout", { locked = true })
