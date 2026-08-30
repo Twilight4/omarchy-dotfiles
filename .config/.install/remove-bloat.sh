@@ -64,6 +64,7 @@ bloat=(
     "tmux"
     "starship"
     "eza"
+	"imv"
 
     # Browser — zen-browser-bin replaces it
     "chromium"

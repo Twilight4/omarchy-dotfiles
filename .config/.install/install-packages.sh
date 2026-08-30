@@ -135,6 +135,8 @@ packages=(
     "gnome-clocks"
     "gnome-maps"
     "gnome-weather"
+	"eog"
+	"snapshot"
 
     # ---- user apps ------------------------------------------------------
     "ferdium-bin"
