@@ -61,6 +61,7 @@ packages=(
     "emacs-git"
     "go-task"
     "act"
+	"bun"
     "git-delta"
     "texlive-binextra"
     "texlive-bin"
