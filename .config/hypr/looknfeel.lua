@@ -80,10 +80,6 @@ hl.config({
   },
 })
 
--- Snappier layer pop-ins (dock slide included; per-layer styles come from
--- the layer rules below, only speed/bezier are global).
-hl.animation({ leaf = "layersIn", enabled = true, speed = 8, bezier = "easeOutQuint", style = "fade" })
-hl.animation({ leaf = "layersOut", enabled = true, speed = 8, bezier = "linear", style = "fade" })
 
 -- App dock: slide in/out from its screen edge (bottom) like the quickshell
 -- bar, instead of the global layer fade.

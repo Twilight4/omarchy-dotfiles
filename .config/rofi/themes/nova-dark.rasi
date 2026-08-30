@@ -115,8 +115,8 @@ entry {
 /* Listview --------------------------------------------------- */
 listview {
     cursor:                      "default";
-    columns:                     8;
-    lines:                       4;
+    columns:                     7;
+    lines:                       3;
     cycle:                       true;
     dynamic:                     true;
     scrollbar:                   false;
@@ -166,7 +166,7 @@ element {
 
     spacing:                     16px;
     margin:                      0px;
-    padding:                     16px 0px;
+    padding:                     30px 0px;
 }
 
 element-icon {

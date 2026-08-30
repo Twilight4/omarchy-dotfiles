@@ -46,6 +46,30 @@ if [[ -d $patch_dir ]]; then
     done
 fi
 
+# Shell/plugin QML patches: share/<relpath>.patched -> /usr/share/<relpath>.
+# Same .orig/.patched drift handling as the /usr/bin loop above.
+if [[ -d $patch_dir/share ]]; then
+    while IFS= read -r -d '' p; do
+        rel="${p#"$patch_dir/share/"}"; rel="${rel%.patched}"
+        target="/usr/share/$rel"
+        [[ -e $target ]] || { warn "Patch target missing, skipping: $target"; continue; }
+        if cmp -s "$p" "$target"; then
+            ok "Already patched: $target"
+            continue
+        fi
+        orig="${p%.patched}.orig"
+        if [[ ! -e $orig ]] || ! cmp -s "$target" "$orig"; then
+            sudo cp "$target" "$target.pre-omarchy-patches" \
+                && warn "Upstream changed: saved $target.pre-omarchy-patches"
+        fi
+        if sudo cp "$p" "$target"; then
+            ok "Patched: $target"
+        else
+            warn "Failed to patch: $target"
+        fi
+    done < <(find "$patch_dir/share" -name '*.patched' -print0)
+fi
+
 # .localbin wrappers install to /usr/local/bin (user-owned, precedes
 # /usr/bin in PATH, untouched by package updates).
 if [[ -d $patch_dir ]]; then
