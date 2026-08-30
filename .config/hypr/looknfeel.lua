@@ -52,6 +52,8 @@
 -- wlogout power menu: blur the desktop behind it (same rule as the official
 -- Garuda dotfiles; the layer's namespace is "logout_dialog").
 hl.layer_rule({ match = { namespace = "logout_dialog" }, blur = true })
+-- noanim: skip the layersIn fade so the menu appears instantly.
+hl.layer_rule({ match = { namespace = "logout_dialog" }, no_anim = true })
 
 -- Omarchy ships decoration.blur.enabled=false, which makes layer blur rules
 -- inert. Enable it (params from the official dotfiles). NOTE: blur is global
