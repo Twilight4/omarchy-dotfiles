@@ -61,9 +61,9 @@ hl.layer_rule({ match = { namespace = "omarchy-bar" }, blur = true })
 -- horizontal slide (curves are defined in the Omarchy defaults).
 hl.animation({ leaf = "workspaces", enabled = true, speed = 4, bezier = "easeOutQuint", style = "slide" })
 
--- ignore_opacity=false: blur is masked by each surface's per-pixel alpha, so
--- rounded corners (dock, menus) stay rounded instead of showing a frosted
--- rectangle behind the cut-outs. Frost is softer everywhere as a tradeoff.
+-- Blur params from the official dotfiles. ignore_opacity stays true (the
+-- per-pixel-alpha experiment did not remove the dock's corner rectangle and
+-- dulled the frost on the bar/menus — reverted at user request).
 hl.config({
   decoration = {
     blur = {
@@ -71,7 +71,7 @@ hl.config({
       xray               = false,
       size               = 5,
       passes             = 3,
-      ignore_opacity     = false,
+      ignore_opacity     = true,
       new_optimizations  = true,
       noise              = 0.02,
       contrast           = 1.1,
@@ -79,6 +79,11 @@ hl.config({
     },
   },
 })
+
+-- Snappier layer pop-ins (dock slide included; per-layer styles come from
+-- the layer rules below, only speed/bezier are global).
+hl.animation({ leaf = "layersIn", enabled = true, speed = 8, bezier = "easeOutQuint", style = "fade" })
+hl.animation({ leaf = "layersOut", enabled = true, speed = 8, bezier = "linear", style = "fade" })
 
 -- App dock: slide in/out from its screen edge (bottom) like the quickshell
 -- bar, instead of the global layer fade.
