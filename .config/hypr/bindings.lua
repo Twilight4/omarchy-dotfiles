@@ -28,7 +28,8 @@
 -- o.bind("SUPER + H", nil, "voxtype record toggle")
 -- o.bind("SUPER + PERIOD", nil, "omarchy-shell shell toggle omarchy.emojis")
 -- Touchscreen gesture (hyprgrass): swipe up from the bottom edge toggles the
--- on-screen keyboard. Sensitivity 4.0 is hyprgrass's own tablet recommendation.
+-- on-screen keyboard. Sensitivity 10.0: low values leave the workspace swipe stuck following the
+-- finger after liftoff (screen bounces back); 10.0 ends the swipe cleanly.
 -- Guarded like the official gestures.lua: hyprpm loads plugins AFTER the
 -- config parses, so an unguarded plugin.* config errors at startup/reload
 -- ("unknown option plugin:hyprgrass:sensitivity") whenever the plugin isn't
@@ -37,9 +38,8 @@ if hl.plugin.hyprgrass ~= nil then
     hl.config({
       plugin = {
         hyprgrass = {
-          sensitivity = 4.0,
-          -- px from screen edge that still counts as an edge swipe (default
-          -- 10 was too strict; you had to touch the literal bezel).
+          sensitivity = 10.0,
+          -- px from screen edge that still counts as an edge swipe
           edge_margin = 40,
         },
       },
