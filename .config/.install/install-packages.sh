@@ -63,6 +63,7 @@ packages=(
     "act"
 	"bun"
     "git-delta"
+    "shellcheck"               # shell linter — QA for the install scripts
     "texlive-binextra"
     "texlive-bin"
     "texlive-basic"

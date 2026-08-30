@@ -61,10 +61,9 @@ if hl.plugin.hyprgrass ~= nil then
       action = hl.dsp.window.drag(),
       mouse = true,
     })
-    -- 3-finger long-press, then move = resize the window (README's
-    -- longpress:3 resizewindow pattern).
+    -- 2-finger long-press, then move = resize the window
     hl.plugin.hyprgrass.bind({
-      pattern = { kind = "longpress", fingers = 3 },
+      pattern = { kind = "longpress", fingers = 2 },
       action = hl.dsp.window.resize(),
       mouse = true,
     })
