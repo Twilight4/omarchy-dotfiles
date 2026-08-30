@@ -123,10 +123,11 @@ if hl.plugin.hyprexpo ~= nil then
         gesture_distance = 200,
         cancel_key = "escape",
     }}})
-    -- 2-finger swipe UP on the touchpad opens the overview (native gesture)
-    -- — same finger count as the touchscreen bind. 3-finger horizontal
+    -- 4-finger swipe UP on the touchpad opens the overview (native gesture).
+    -- 2-finger swipes are eaten by touchpad scrolling (verified), so the
+    -- touchpad mirror lives on 4. Touchscreen stays 2. 3-finger horizontal
     -- stays workspace switching, 3-finger up is the app dock.
-    hl.plugin.hyprexpo.gesture({ fingers = 2, direction = "up", action = "expo" })
+    hl.plugin.hyprexpo.gesture({ fingers = 4, direction = "up", action = "expo" })
     hl.bind("SUPER + grave", function() hl.plugin.hyprexpo.expo("toggle") end)
 end
 
@@ -141,6 +142,10 @@ end })
 hl.gesture({ fingers = 3, direction = "up", action = function()
   hl.dispatch(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/dock-toggle.sh"))
 end })
+
+-- Rofi app launcher (config imported from the Garuda dotfiles; same
+-- SUPER+R keybind). pkill toggles an open instance closed.
+o.bind("SUPER + R", "Rofi app launcher", "pkill rofi || rofi -show drun -config ~/.config/rofi/configs/config.rasi")
 
 -- Power/session menu: wlogout on the physical power button, replacing
 -- Omarchy's default "omarchy-menu toggle system". Blur behind it comes from

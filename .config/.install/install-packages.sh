@@ -43,6 +43,8 @@ packages=(
                                # theme via hooks/theme-set.d/wlogout-colors.sh
     "nwg-dock-hyprland"        # app dock (AUR); toggled by 3-finger swipe up
                                # (bindings.lua) via hypr/scripts/dock-toggle.sh
+    "rofi-wayland"             # app launcher; Garuda config in .config/rofi,
+                              # wired to the dock -c button + SUPER+R
 
     # ---- touch stack (2-in-1 panel) -------------------------------------
     "wvkbd"                    # on-screen keyboard (wvkbd-mobintl)
