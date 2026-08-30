@@ -38,6 +38,9 @@ if hl.plugin.hyprgrass ~= nil then
       plugin = {
         hyprgrass = {
           sensitivity = 4.0,
+          -- px from screen edge that still counts as an edge swipe (default
+          -- 10 was too strict; you had to touch the literal bezel).
+          edge_margin = 40,
         },
       },
     })
@@ -45,17 +48,16 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "edge", origin = "down", direction = "up" },
       action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/osk-toggle.sh"),
     })
-    -- 3-finger tap toggles float (README example; taps only register for
-    -- 3+ fingers in this build).
+    -- 2-finger tap toggles float
     hl.plugin.hyprgrass.bind({
-      pattern = { kind = "tap", fingers = 3 },
+      pattern = { kind = "tap", fingers = 2 },
       action = hl.dsp.window.float(),
     })
-    -- 2-finger long-press, then move = drag the window (README example used
-    -- longpress:2 movewindow; mouse=true drives the mouse dispatcher).
+    -- 1-finger long-press, then move = drag the window (README example used
+    -- longpress:1 movewindow; mouse=true drives the mouse dispatcher).
     -- 1-finger longpress isn't supported by this build.
     hl.plugin.hyprgrass.bind({
-      pattern = { kind = "longpress", fingers = 2 },
+      pattern = { kind = "longpress", fingers = 1 },
       action = hl.dsp.window.drag(),
       mouse = true,
     })
@@ -79,25 +81,23 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "edge", origin = "right", direction = "left" },
       action = "workspace",
     })
-    -- Touchscreen: 3-finger swipe up toggles the hyprexpo overview (mirrors
+    -- Touchscreen: 2-finger swipe up toggles the hyprexpo overview (mirrors
     -- the touchpad gesture; discrete bind so it fires once on completion,
     -- not per animation frame). Nil-guarded: hyprexpo may be absent.
     hl.plugin.hyprgrass.bind({
-      pattern = { kind = "swipe", fingers = 3, direction = "up" },
+      pattern = { kind = "swipe", fingers = 2, direction = "up" },
       action = function()
         if hl.plugin.hyprexpo then hl.plugin.hyprexpo.expo("toggle") end
       end,
     })
-    -- 3-finger swipe down closes the active window (mirrors SUPER+Q).
+    -- 2-finger swipe down closes the active window (mirrors SUPER+Q).
     hl.plugin.hyprgrass.bind({
-      pattern = { kind = "swipe", fingers = 3, direction = "down" },
+      pattern = { kind = "swipe", fingers = 2, direction = "down" },
       action = hl.dsp.window.close(),
     })
-    -- 2-finger tap toggles fullscreen on the active window. NOTE: taps may
-    -- only register for 3+ fingers in this hyprgrass build (see 3-tap float
-    -- above) - if this never fires, that's why.
+    -- 3-finger tap toggles fullscreen on the active window.
     hl.plugin.hyprgrass.bind({
-      pattern = { kind = "tap", fingers = 2 },
+      pattern = { kind = "tap", fingers = 3 },
       action = hl.dsp.window.fullscreen(),
     })
 end

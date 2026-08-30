@@ -68,7 +68,10 @@ hl.config({
 hl.config({
   gestures = {
     workspace_swipe_touch        = true,
-    workspace_swipe_cancel_ratio = 0.15,
+    workspace_swipe_cancel_ratio = 0.30, -- short/accidental swipes snap back instead of switching
+    -- more finger travel per workspace -> the follow-the-finger motion is
+    -- calmer (default 300).
+    workspace_swipe_distance     = 450,
   },
 })
 -- Touchpad: 3-finger horizontal swipe switches workspaces (native hyprland
