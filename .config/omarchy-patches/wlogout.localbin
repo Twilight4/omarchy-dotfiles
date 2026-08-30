@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Omarchy sets GDK_SCALE=2 for fractional monitor scales; on the 1.6-scale
+# panel that mismatch renders wlogout far smaller than its 1.0-scale
+# proportions. Force a scale-1 buffer — the compositor upscales the surface
+# back, restoring the 1.0-scale look. (dotfiles: omarchy-dotfiles)
+exec env GDK_SCALE=1 /usr/bin/wlogout "$@"

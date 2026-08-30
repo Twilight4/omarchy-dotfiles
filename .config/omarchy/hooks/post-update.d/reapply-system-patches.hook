@@ -22,6 +22,15 @@ for p in "$patches"/*.patched; do
     fi
 done
 
+for w in "$patches"/*.localbin; do
+    [[ -e $w ]] || continue
+    target="/usr/local/bin/$(basename "$w" .localbin)"
+    if [[ ! -e $target ]] || ! cmp -s "$w" "$target"; then
+        drift_patch=1
+        echo "  - wrapper lost: $target"
+    fi
+done
+
 # Tracked config files only (git ls-files): live dirs also hold untracked
 # runtime files (__pycache__, generated colors.css, ...) that must not count.
 # hyprmoncfg-monitors.lua is excluded too: hyprmoncfgd regenerates it at

@@ -46,6 +46,24 @@ if [[ -d $patch_dir ]]; then
     done
 fi
 
+# .localbin wrappers install to /usr/local/bin (user-owned, precedes
+# /usr/bin in PATH, untouched by package updates).
+if [[ -d $patch_dir ]]; then
+    for w in "$patch_dir"/*.localbin; do
+        [[ -e $w ]] || continue
+        target="/usr/local/bin/$(basename "$w" .localbin)"
+        if cmp -s "$w" "$target" 2>/dev/null; then
+            ok "Already installed: $target"
+            continue
+        fi
+        if sudo cp "$w" "$target" && sudo chmod 755 "$target"; then
+            ok "Installed wrapper: $target"
+        else
+            warn "Failed to install wrapper: $target"
+        fi
+    done
+fi
+
 # Restart the shell stack so the patched launcher actually takes effect.
 # Kill supervisor + quickshell, then reload — the default autostart re-execs
 # omarchy-launch-shell, which now reads the patched file. If the reload
