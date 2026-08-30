@@ -59,17 +59,9 @@ if hl.plugin.hyprgrass ~= nil then
       action = hl.dsp.window.drag(),
       mouse = true,
     })
-    -- 2-finger pinch zooms the FOCUSED app: hyprgrass has no zoom
-    -- dispatcher, so pinch sends Ctrl +/- to the app (browser/documents
-    -- zoom). Needs wtype.
-    hl.plugin.hyprgrass.bind({
-      pattern = { kind = "pinch", fingers = 2, direction = "pinchout" },
-      action = hl.dsp.exec_cmd("wtype -M ctrl -k plus -m ctrl"),
-    })
-    hl.plugin.hyprgrass.bind({
-      pattern = { kind = "pinch", fingers = 2, direction = "pinchin" },
-      action = hl.dsp.exec_cmd("wtype -M ctrl -k minus -m ctrl"),
-    })
+    -- Pinch is deliberately NOT bound: with no hyprgrass pinch bind, the
+    -- gesture passes through to apps, which handle zoom natively
+    -- (browser/web-app default behaviour the user prefers).
     -- 1-finger swipes in from the left/right screen edge switch workspaces
     -- (animated, follows the finger). Bottom edge stays the OSK toggle.
     hl.plugin.hyprgrass.gesture({
