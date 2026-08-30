@@ -39,14 +39,34 @@ output_name=$(hyprctl monitors -j 2>/dev/null \
 # Hyprland transforms are clockwise ints: 0 normal, 1 90, 2 180, 3 270.
 # If rotation feels mirrored on your device, swap the left-up/right-up values.
 #
-# NOTE: `hyprctl output ... transform` does not exist on the new (Lua) config
-# parser and `hyprctl keyword monitor` is rejected by it — the only runtime
-# path is `hyprctl eval 'hl.monitor({...})'`. Scale is re-applied from the
-# live state so this doesn't stomp monitors.lua.
-#
-# NOTE: hyprmoncfgd reverts runtime transforms by re-applying its saved
-# profile on every poll-detected change — it must be disabled
-# (`systemctl --user disable --now hyprmoncfgd`) for this script to work.
+# Rotation goes THROUGH hyprmoncfg: hyprmoncfgd re-applies the active profile
+# on every poll-detected monitor change, so a bare `hyprctl eval` gets
+# reverted within seconds (and races a `save`-based workaround). Instead we
+# rewrite the touch panel's transform in the ACTIVE profile and let
+# `hyprmoncfg apply` make the change — daemon and live state stay in
+# agreement, nothing ever reverts. Falls back to a bare eval when hyprmoncfg
+# isn't managing this setup.
+HYPRMONCFG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/hyprmoncfg"
+
+set_profile_transform() {
+    # $1 = transform int. Returns 1 when hyprmoncfg isn't usable.
+    local transform=$1 active file tmp
+    command -v hyprmoncfg &>/dev/null || return 1
+    active=$(hyprmoncfg status 2>/dev/null | sed -n 's/^Active profile: //p')
+    [[ -n $active && $active != none ]] || return 1
+    # Profile files are slugged (custom layout -> custom-layout.json);
+    # match on the JSON "name" field instead of guessing the slug.
+    file=$(grep -lF "\"name\": \"$active\"" "$HYPRMONCFG_DIR"/profiles/*.json 2>/dev/null | head -1)
+    [[ -n $file ]] || return 1
+    tmp=$(mktemp) || return 1
+    jq --arg d "$TOUCH_OUTPUT_DESC" --argjson t "$transform" \
+        '.outputs |= map(if ((.description // "") | startswith($d))
+                         then .transform = $t else . end)' \
+        "$file" > "$tmp" && mv "$tmp" "$file" || { rm -f "$tmp"; return 1; }
+    # --confirm-timeout 0: no interactive revert prompt (daemon context).
+    hyprmoncfg apply "$active" --confirm-timeout 0 &>/dev/null
+}
+
 last_transform=-1
 monitor-sensor 2>/dev/null | while read -r line; do
     [[ -f $LOCK ]] && continue
@@ -58,11 +78,15 @@ monitor-sensor 2>/dev/null | while read -r line; do
         *) continue ;;
     esac
     [[ $transform == "$last_transform" ]] && continue
-    scale=$(hyprctl monitors -j 2>/dev/null \
-        | jq -r --arg n "$output_name" \
-            '.[] | select(.name == $n) | .scale')
-    [[ -n $scale ]] || continue
-    hyprctl eval "hl.monitor({output = \"$output_name\", mode = \"preferred\", position = \"auto\", scale = $scale, transform = $transform})" &>/dev/null \
-        || continue
+    if ! set_profile_transform "$transform"; then
+        # No hyprmoncfg: bare eval path (`hyprctl output ... transform` does
+        # not exist on the Lua parser; `keyword monitor` is rejected).
+        scale=$(hyprctl monitors -j 2>/dev/null \
+            | jq -r --arg n "$output_name" \
+                '.[] | select(.name == $n) | .scale')
+        [[ -n $scale ]] || continue
+        hyprctl eval "hl.monitor({output = \"$output_name\", mode = \"preferred\", position = \"auto\", scale = $scale, transform = $transform})" &>/dev/null \
+            || continue
+    fi
     last_transform=$transform
 done
