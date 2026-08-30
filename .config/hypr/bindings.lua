@@ -93,9 +93,11 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "swipe", fingers = 3, direction = "down" },
       action = hl.dsp.window.close(),
     })
-    -- 4-finger swipe up toggles fullscreen on the active window.
+    -- 2-finger tap toggles fullscreen on the active window. NOTE: taps may
+    -- only register for 3+ fingers in this hyprgrass build (see 3-tap float
+    -- above) - if this never fires, that's why.
     hl.plugin.hyprgrass.bind({
-      pattern = { kind = "swipe", fingers = 4, direction = "up" },
+      pattern = { kind = "tap", fingers = 2 },
       action = hl.dsp.window.fullscreen(),
     })
 end
