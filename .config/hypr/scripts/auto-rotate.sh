@@ -77,6 +77,19 @@ set_profile_transform() {
     hyprmoncfg apply "$name" --confirm-timeout 0 &>/dev/null
 }
 
+# Touch input has its own transform, independent of the monitor's — rotate it
+# with the panel or touch lands offset/mirrored. `output` pins the touch
+# device to the panel so it never targets an external monitor.
+set_touch_transform() {
+    hyprctl eval "hl.config({ input = { touchdevice = { transform = $1, output = \"$output_name\" } } })" &>/dev/null
+}
+
+# Sync touch with the panel's current transform at startup — the loop below
+# only reacts to accelerometer change events.
+current_transform=$(hyprctl monitors -j 2>/dev/null \
+    | jq -r --arg n "$output_name" '.[] | select(.name == $n) | (.transform // 0)')
+set_touch_transform "${current_transform:-0}"
+
 last_transform=-1
 monitor-sensor 2>/dev/null | while read -r line; do
     [[ -f $LOCK ]] && continue
@@ -98,5 +111,6 @@ monitor-sensor 2>/dev/null | while read -r line; do
         hyprctl eval "hl.monitor({output = \"$output_name\", mode = \"preferred\", position = \"auto\", scale = $scale, transform = $transform})" &>/dev/null \
             || continue
     fi
+    set_touch_transform "$transform"
     last_transform=$transform
 done

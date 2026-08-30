@@ -88,6 +88,11 @@ if hl.plugin.hyprgrass ~= nil then
         if hl.plugin.hyprexpo then hl.plugin.hyprexpo.expo("toggle") end
       end,
     })
+    -- 3-finger swipe down closes the active window (mirrors SUPER+Q).
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "swipe", fingers = 3, direction = "down" },
+      action = hl.dsp.window.close(),
+    })
 end
 -- hyprexpo (expose-style workspace overview, sandwichfarm fork). Same
 -- load-order guard as hyprgrass: hyprpm loads plugins after the config
