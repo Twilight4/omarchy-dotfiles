@@ -41,6 +41,8 @@ packages=(
                                # is dropped by the preinstall remover first
     "wlogout"                  # power menu (AUR); colors track the Omarchy
                                # theme via hooks/theme-set.d/wlogout-colors.sh
+    "nwg-dock-hyprland"        # app dock (AUR); toggled by 3-finger swipe up
+                               # (bindings.lua) via hypr/scripts/dock-toggle.sh
 
     # ---- touch stack (2-in-1 panel) -------------------------------------
     "wvkbd"                    # on-screen keyboard (wvkbd-mobintl)

@@ -18,6 +18,7 @@ deploy_dirs=(
     gtk-3.0
     gtk-4.0
     wlogout
+    nwg-dock-hyprland
 )
 
 for d in "${deploy_dirs[@]}"; do

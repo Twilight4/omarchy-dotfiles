@@ -57,6 +57,9 @@ hl.layer_rule({ match = { namespace = "logout_dialog" }, no_anim = true })
 -- Blur behind the top bar so its transparent mode (double-click toggle) frosts
 -- the desktop instead of going fully clear.
 hl.layer_rule({ match = { namespace = "omarchy-bar" }, blur = true })
+-- App dock (nwg-dock-hyprland): blur behind it, like the Garuda rice
+-- (toggled by 3-finger swipe up — see bindings.lua).
+hl.layer_rule({ match = { namespace = "nwg-dock" }, blur = true })
 -- Omarchy disables workspace-switch animations by default; re-enable with a
 -- horizontal slide (curves are defined in the Omarchy defaults).
 hl.animation({ leaf = "workspaces", enabled = true, speed = 4, bezier = "easeOutQuint", style = "slide" })

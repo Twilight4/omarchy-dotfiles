@@ -105,6 +105,11 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "swipe", fingers = 3, direction = "down" },
       action = hl.dsp.exec_cmd("omarchy-toggle-bar"),
     })
+    -- 3-finger swipe up toggles the nwg app dock (scripts/dock-toggle.sh).
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "swipe", fingers = 3, direction = "up" },
+      action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/dock-toggle.sh"),
+    })
 end
 -- hyprexpo (expose-style workspace overview, sandwichfarm fork). Same
 -- load-order guard as hyprgrass: hyprpm loads plugins after the config
@@ -118,18 +123,23 @@ if hl.plugin.hyprexpo ~= nil then
         gesture_distance = 200,
         cancel_key = "escape",
     }}})
-    -- 3-finger swipe UP on the touchpad opens the overview (native gesture,
-    -- like the Garuda setup). 3-finger horizontal stays workspace switching.
-    hl.plugin.hyprexpo.gesture({ fingers = 3, direction = "up", action = "expo" })
-    -- Keyboard toggle (same key as the official dotfiles).
+    -- 2-finger swipe UP on the touchpad opens the overview (native gesture)
+    -- — same finger count as the touchscreen bind. 3-finger horizontal
+    -- stays workspace switching, 3-finger up is the app dock.
+    hl.plugin.hyprexpo.gesture({ fingers = 2, direction = "up", action = "expo" })
     hl.bind("SUPER + grave", function() hl.plugin.hyprexpo.expo("toggle") end)
 end
 
--- Touchpad mirror: 3-finger swipe down toggles the top bar (native
--- gesture, no plugin). Completes the touchpad 3-finger set: horizontal =
--- workspaces, up = hyprexpo, down = bar.
+-- Touchpad 3-finger set (native gestures, no plugin): horizontal =
+-- workspaces, down = top bar, up = app dock. Hyprexpo lives on 2 fingers,
+-- matching the touchscreen.
 hl.gesture({ fingers = 3, direction = "down", action = function()
   hl.dispatch(hl.dsp.exec_cmd("omarchy-toggle-bar"))
+end })
+
+-- Touchpad: 3-finger swipe up toggles the nwg app dock (dock-toggle.sh).
+hl.gesture({ fingers = 3, direction = "up", action = function()
+  hl.dispatch(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/dock-toggle.sh"))
 end })
 
 -- Power/session menu: wlogout on the physical power button, replacing
