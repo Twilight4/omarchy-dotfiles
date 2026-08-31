@@ -1,13 +1,2 @@
 [font]
 base-size = 10
-
-# Apps menu restyled toward the rofi launcher look (~/.config/rofi/themes):
-# near-black translucent card with blur behind it (layer rule in
-# looknfeel.lua), no visible border, blue selection highlight.
-[menu]
-background = "#040305"
-background-alpha = 0.5
-border = "#cdd6f4"
-border-alpha = 0.0
-selected-background = "#89b4fa"
-selected-background-alpha = 0.25

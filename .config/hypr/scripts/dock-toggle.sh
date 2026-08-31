@@ -10,5 +10,5 @@ else
     # GDK_SCALE=2: GTK3 renders a 2x buffer for the same logical size —
     # without it the 1.6 monitor scale upscales a 1x surface (blurry icons).
     GDK_SCALE=2 nwg-dock-hyprland -i 30 -w 5 -mb 10 -ml 10 -mr 10 \
-        -c "omarchy-menu toggle apps" >/dev/null 2>&1 &
+        -c "$HOME/.config/hypr/scripts/app-launcher.sh" >/dev/null 2>&1 &
 fi

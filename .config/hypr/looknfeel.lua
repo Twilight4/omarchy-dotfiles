@@ -88,6 +88,6 @@ hl.layer_rule({ match = { namespace = "nwg-dock" }, blur = true, animation = "sl
 -- Rofi: blurred like the dock, but instant (no fade wait).
 hl.layer_rule({ match = { namespace = "rofi" }, blur = true, no_anim = true })
 
--- Quickshell apps menu: blurred behind its translucent card (rofi look,
--- colors in ~/.config/omarchy/shell.toml [menu]).
-hl.layer_rule({ match = { namespace = "omarchy-menu" }, blur = true })
+-- Standalone app-grid launcher (.config/qs-applauncher): blurred backdrop,
+-- rofi-style. The omarchy system menu is deliberately left unblurred.
+hl.layer_rule({ match = { namespace = "qs-applauncher" }, blur = true, no_anim = true })

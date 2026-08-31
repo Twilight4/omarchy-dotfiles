@@ -143,9 +143,9 @@ hl.gesture({ fingers = 3, direction = "up", action = function()
   hl.dispatch(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/dock-toggle.sh"))
 end })
 
--- App launcher: quickshell apps menu (touch-native, replaces rofi here —
--- rofi-wayland has no wl_touch). Rofi config stays in .config/rofi.
-o.bind("SUPER + R", "App launcher", "omarchy-menu toggle apps")
+-- App launcher: standalone quickshell app grid (.config/qs-applauncher),
+-- rofi-styled and touch-native (rofi-wayland has no wl_touch).
+o.bind("SUPER + R", "App launcher", os.getenv("HOME") .. "/.config/hypr/scripts/app-launcher.sh")
 
 -- Power/session menu: wlogout on the physical power button, replacing
 -- Omarchy's default "omarchy-menu toggle system". Blur behind it comes from
