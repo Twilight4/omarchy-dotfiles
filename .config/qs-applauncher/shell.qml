@@ -82,7 +82,8 @@ ShellRoot {
           color: panel.fg
           selectionColor: panel.accent
           selectedTextColor: "#11111b"
-          font.pointSize: 13
+          font.family: "monospace"  // same fontconfig alias the omarchy menu uses
+          font.pointSize: 12
           background: Rectangle {
             color: Qt.rgba(0.067, 0.067, 0.106, 0.9)  // #11111b
             radius: 12
@@ -95,11 +96,33 @@ ShellRoot {
             grid.currentIndex = 0
           }
           Keys.onPressed: event => {
+            var ctrl = event.modifiers & Qt.ControlModifier
             if (event.key === Qt.Key_Escape) Qt.quit()
+            // rofi bindings from the Garuda config.rasi: C-j/k move, C-m/RET
+            // accept, C-h/l cursor, C-w del word, C-y primary paste.
+            else if (ctrl && event.key === Qt.Key_J) { grid.incrementCurrentIndex(); event.accepted = true }
+            else if (ctrl && event.key === Qt.Key_K) { grid.decrementCurrentIndex(); event.accepted = true }
             else if (event.key === Qt.Key_Down) { grid.incrementCurrentIndex(); event.accepted = true }
             else if (event.key === Qt.Key_Up) { grid.decrementCurrentIndex(); event.accepted = true }
-            else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+            else if ((ctrl && event.key === Qt.Key_M) || event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
               if (grid.model.length > 0) panel.launch(grid.model[grid.currentIndex].id)
+              event.accepted = true
+            }
+            else if (ctrl && event.key === Qt.Key_Y) {  // primary paste (rofi kb-primary-paste)
+              if (typeof Quickshell.primarySelection === "function") {
+                search.insert(search.cursorPosition, Quickshell.primarySelection() || "")
+              }
+              event.accepted = true
+            }
+            else if (ctrl && event.key === Qt.Key_H) { search.cursorPosition--; event.accepted = true }  // rofi C-h
+            else if (ctrl && event.key === Qt.Key_L) { search.cursorPosition++; event.accepted = true }  // rofi C-l
+            else if (ctrl && event.key === Qt.Key_W) {  // delete word back
+              var p = search.text.slice(0, search.cursorPosition)
+              var s = search.cursorPosition
+              p = p.replace(/\S+\s*$/, "")
+              search.text = p + search.text.slice(s)
+              search.cursorPosition = p.length
+              event.accepted = true
             }
           }
           Component.onCompleted: forceActiveFocus()
@@ -146,7 +169,8 @@ ShellRoot {
               Text {
                 text: modelData.name
                 color: panel.fg
-                font.pointSize: 10
+                font.family: "monospace"
+                font.pointSize: 9
                 anchors.horizontalCenter: parent.horizontalCenter
                 elide: Text.ElideRight
                 width: grid.cellWidth - 24

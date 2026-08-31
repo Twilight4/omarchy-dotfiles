@@ -20,6 +20,7 @@ deploy_dirs=(
     wlogout
     nwg-dock-hyprland
     rofi
+    qs-applauncher
 )
 
 for d in "${deploy_dirs[@]}"; do

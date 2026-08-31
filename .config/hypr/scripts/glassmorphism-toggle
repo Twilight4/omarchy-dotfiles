@@ -1,0 +1,46 @@
+#!/bin/bash
+# Glassmorphism cycler: OFF (stock omarchy, no blur) -> NORMAL (dotfiles
+# 5/3) -> GLASSY (12/4) -> OFF. Writes the state to ~/.cache for the bar
+# widget. `hyprctl keyword` is gone -> `hyprctl eval 'hl.config({...})'`.
+# Migrated from the Garuda official dotfiles.
+# Note: hl.config resets unset blur keys, so every state carries the full
+# param set (mirrors looknfeel.lua's blur block).
+
+set -euo pipefail
+
+STATE_FILE="$HOME/.cache/omarchy-glass-state"
+mkdir -p "$(dirname "$STATE_FILE")"
+
+set_state() {  # $1 = off|normal|glassy
+  echo "$1" > "$STATE_FILE"
+  case "$1" in
+    off)
+      hyprctl eval 'hl.config({decoration={blur={enabled=false}}})' >/dev/null
+      notify-send -t 2000 "Glass: off (stock omarchy)"
+      ;;
+    normal)
+      hyprctl eval 'hl.config({decoration={blur={enabled=true, size=5, passes=3, ignore_opacity=true, new_optimizations=true, noise=0.02, contrast=1.1, brightness=1.1}}})' >/dev/null
+      notify-send -t 2000 "Glass: normal"
+      ;;
+    glassy)
+      hyprctl eval 'hl.config({decoration={blur={enabled=true, size=12, passes=4, ignore_opacity=true, new_optimizations=true, noise=0.02, contrast=1.1, brightness=1.1}}})' >/dev/null
+      notify-send -t 2000 "Glass: glassy"
+      ;;
+  esac
+}
+
+current() {
+  # Trust the state file; fall back to probing blur passes. (Plain `if`,
+  # not `[[ ]] && {...}` — the falsy && chain would trip set -e.)
+  if [[ -f $STATE_FILE ]]; then cat "$STATE_FILE"; return; fi
+  local passes
+  passes=$(hyprctl -j getoption decoration.blur.passes | jq '.int')
+  if (( passes >= 4 )); then echo glassy; else echo normal; fi
+}
+
+case "$(current)" in
+  off)    set_state normal ;;
+  normal) set_state glassy ;;
+  glassy) set_state off ;;
+  *)      set_state normal ;;
+esac

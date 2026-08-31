@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Gamemode: kill animations/shadows/blur/rounding/gaps for max performance;
+# `hyprctl reload` restores the config. Migrated from the Garuda official
+# dotfiles (`hyprctl keyword` -> `hyprctl eval`; `drop_shadow` ->
+# `decoration.shadow.enabled`). State file feeds the bar widget.
+
+set -eu
+
+STATE_FILE="$HOME/.cache/omarchy-gamemode-state"
+mkdir -p "$(dirname "$STATE_FILE")"
+
+if [[ -f $STATE_FILE && $(cat "$STATE_FILE") == on ]]; then
+    hyprctl reload >/dev/null
+    # reload restores looknfeel blur; drop the glass state so the next
+    # glass toggle re-probes instead of trusting a stale file
+    rm -f "$HOME/.cache/omarchy-glass-state"
+    echo off > "$STATE_FILE"
+    notify-send -t 3000 "Gamemode: Off"
+    exit
+fi
+
+hyprctl eval 'hl.config({animations={enabled=false}, decoration={shadow={enabled=false}, blur={enabled=false}, rounding=0}, general={gaps_in=0, gaps_out=0, border_size=1}})' >/dev/null
+echo on > "$STATE_FILE"
+notify-send -t 3000 "Gamemode: On"

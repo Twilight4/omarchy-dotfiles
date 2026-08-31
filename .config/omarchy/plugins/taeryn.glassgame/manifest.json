@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "taeryn.glassgame",
+  "name": "Glass / Gamemode toggles",
+  "version": "1.0.0",
+  "author": "Twilight4",
+  "description": "Bar buttons for the glassmorphism cycler and gamemode scripts (hypr/scripts), always visible with wide touch targets",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Glass / Gamemode",
+    "description": "Glassmorphism (off/normal/glassy) and gamemode toggles",
+    "category": "Compositor",
+    "allowMultiple": false,
+    "defaultSection": "center"
+  }
+}
