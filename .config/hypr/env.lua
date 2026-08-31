@@ -16,3 +16,9 @@ hl.env("MOZ_DBUS_REMOTE", "1")                         -- open links in the runn
 hl.env("XMODIFIERS", "@im=fcitx")
 hl.env("GTK_IM_MODULE", "fcitx")
 hl.env("QT_IM_MODULE", "fcitx")
+
+-- NVIDIA (RTX 3050 Mobile): omarchy's default/hypr/nvidia.lua already sets
+-- NVD_BACKEND, LIBVA_DRIVER_NAME and __GLX_VENDOR_LIBRARY_NAME (verified in
+-- the session env); it does NOT set the software-cursor fallback, which this
+-- GPU still wants (hyprctl already reports hardwareCursorsInUse: false).
+hl.env("WLR_NO_HARDWARE_CURSORS", "1")

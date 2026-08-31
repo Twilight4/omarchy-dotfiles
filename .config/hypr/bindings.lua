@@ -397,6 +397,11 @@ o.bind("SUPER + CTRL + X", "Color picker", "pkill hyprpicker || hyprpicker -a")
 o.bind("SUPER + CTRL + ALT + D", "Display", "omarchy-shell shell toggle omarchy.monitor")
 o.bind("SUPER + CTRL + ALT + N", "Network", "omarchy-shell shell toggle omarchy.network")
 o.bind("SUPER + CTRL + ALT + P", "Power", "omarchy-shell shell toggle omarchy.power")
+
+-- Top bar via the bar-toggle wrapper: single-window chrome (gaps/border)
+-- follows the bar state, see hypr/scripts/bar-toggle
+hl.unbind("SUPER + SHIFT + SPACE")
+o.bind("SUPER + SHIFT + SPACE", "Toggle top bar", "~/.config/hypr/scripts/bar-toggle")
 o.bind("SUPER + CTRL + T", "Toggle menu", "omarchy-menu toggle toggle")
 
 

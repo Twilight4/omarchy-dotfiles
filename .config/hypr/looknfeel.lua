@@ -11,6 +11,19 @@ hl.config({
     special_scale_factor = 0.9,
   },
 })
+
+-- Wake the screen on any input (mouse move or key press brings DPMS back).
+hl.config({
+  misc = {
+    mouse_move_enables_dpms = true,
+    key_press_enables_dpms = true,
+  },
+})
+
+-- Special-workspace reveal (SUPER+M emacs etc.): vertical slide on the
+-- Garuda md3_decel curve — distinct from the plain workspace slide below.
+hl.curve("md3_decel", { type = "bezier", points = { { 0.05, 0.7 }, { 0.1, 1 } } })
+hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 3, bezier = "md3_decel", style = "slidevert" })
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#general
 -- hl.config({
 --   general = {

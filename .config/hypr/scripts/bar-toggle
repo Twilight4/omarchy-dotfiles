@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Toggle the Omarchy bar, then apply the single-window chrome for the new
+# bar state (runtime Hyprland rules — they reset on `hyprctl reload`, which
+# re-applies the config defaults; the next bar toggle re-syncs):
+#   bar hidden  -> a workspace holding a single window loses its gaps and
+#                  border (window fills edge-to-edge; rounding stays on)
+#   bar visible -> normal 3px gaps + visible borders everywhere
+# Multi-window workspaces keep their gaps in both states.
+set -euo pipefail
+
+omarchy-toggle-bar "$@"
+
+if [[ -f $HOME/.local/state/omarchy/toggles/bar-off ]]; then
+    for ws in "w[tv1]s[false]" "f[1]s[false]"; do
+        hyprctl eval "hl.workspace_rule({workspace=\"$ws\", gaps_out=0, gaps_in=0})" >/dev/null
+        hyprctl eval "hl.window_rule({match={float=false, workspace=\"$ws\"}, border_size=0})" >/dev/null
+    done
+else
+    for ws in "w[tv1]s[false]" "f[1]s[false]"; do
+        hyprctl eval "hl.workspace_rule({workspace=\"$ws\", gaps_out=3, gaps_in=3})" >/dev/null
+        hyprctl eval "hl.window_rule({match={float=false, workspace=\"$ws\"}, border_size=2})" >/dev/null
+    done
+fi

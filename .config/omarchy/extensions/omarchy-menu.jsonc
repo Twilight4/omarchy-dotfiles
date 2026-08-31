@@ -21,6 +21,10 @@
   "trigger.toggle.window-gaps": {"when": "false"},
   "trigger.toggle.workspace-layout": {"when": "false"},
 
+  // Top-bar toggle runs through the bar-toggle wrapper (single-window
+  // gaps/border chrome follows the bar state)
+  "trigger.toggle.top-bar": {"icon":"󰍜","label":"Menu Bar","action":"$HOME/.config/hypr/scripts/bar-toggle"},
+
 
   // Setup > Config > Hyprland: submenu of ~/.config/hypr/ configs, opened in the
   // running Emacs (emacsclient -n). Keybindings/Monitors/Input moved in from Setup.

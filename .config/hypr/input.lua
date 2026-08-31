@@ -49,6 +49,9 @@ hl.config({
     -- Caps Lock acts as Left Ctrl (Garuda parity; replaces Omarchy default
     -- "compose:caps,shift:both_capslock_cancel").
     kb_options = "ctrl:nocaps",
+    kb_layout = "pl",
+    repeat_rate = 50,
+    repeat_delay = 300,
 
     -- No mouse acceleration (Garuda parity; Omarchy default is adaptive).
     accel_profile = "flat",
