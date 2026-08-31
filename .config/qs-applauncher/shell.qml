@@ -64,13 +64,31 @@ ShellRoot {
     }
 
     Rectangle {
+      id: backdrop
       anchors.fill: parent
       color: panel.backdrop
+      opacity: 0
 
+      // Swipe-up appear: the grid slides in from the bottom edge (it is
+      // summoned by a 4-finger swipe up) while the backdrop fades in.
       Column {
-        anchors.fill: parent
-        anchors.margins: 24
+        id: launcher
+        x: 24
+        width: parent.width - 48
+        height: parent.height - 48
+        y: parent.height
+        opacity: 0
         spacing: 16
+
+        Component.onCompleted: appear.start()
+
+        ParallelAnimation {
+          id: appear
+          NumberAnimation { target: launcher; property: "y"; to: 24; duration: 260; easing.type: Easing.OutCubic }
+          NumberAnimation { target: launcher; property: "opacity"; to: 1; duration: 200 }
+          NumberAnimation { target: backdrop; property: "opacity"; to: 1; duration: 240 }
+        }
+
 
         // ---- search ----------------------------------------------------
         TextField {

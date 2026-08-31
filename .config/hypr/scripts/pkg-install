@@ -18,9 +18,9 @@ fzf_args=(
 pkg_names=$(yay -Slq | fzf "${fzf_args[@]}")
 
 if [[ -n $pkg_names ]]; then
-  source omarchy-sudo-keepalive
-
+  # No omarchy-sudo-keepalive: its `sudo -v` handshake prompts for a password
+  # even under NOPASSWD sudoers. yay installs and updatedb run passwordless.
   echo "$pkg_names" | tr '\n' ' ' | xargs yay -S --noconfirm
-  sudo updatedb
+  sudo -n updatedb 2>/dev/null || true
   omarchy-show-done
 fi
