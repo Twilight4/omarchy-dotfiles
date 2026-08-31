@@ -24,10 +24,11 @@ BarWidget {
     WidgetButton {
       bar: root.bar
       text: "\uF043"  // nf droplet
+      // theme urgent/accent are grey and read as "off"; use the launcher blue
+      activeColor: "#89b4fa"
       active: root.glassState !== "off"
       dimmed: root.glassState === "off"
-      horizontalMargin: 11
-      fixedHeight: parent.height
+      horizontalMargin: 7.5
       onPressed: root.bar && root.bar.run(
         Quickshell.env("HOME") + "/.config/hypr/scripts/glassmorphism-toggle")
     }
@@ -35,9 +36,9 @@ BarWidget {
     WidgetButton {
       bar: root.bar
       text: "\uF11B"  // nf gamepad
+      activeColor: "#89b4fa"
       active: root.gameOn
-      horizontalMargin: 11
-      fixedHeight: parent.height
+      horizontalMargin: 7.5
       onPressed: root.bar && root.bar.run(
         Quickshell.env("HOME") + "/.config/hypr/scripts/gamemode")
     }
