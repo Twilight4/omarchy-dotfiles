@@ -1,4 +1,6 @@
-# Restorable/regenerated content (clones via `omarchy plugin clone`) — except
+# Restorable/regenerated content (clones via `omarchy plugin clone`) —
+# except taeryn.menu (back button, rofi keys — live SUPER+SPACE menu) and
+# taeryn.clipboard (rofi keys matching the menu — SUPER+C overlay).
 .config/omarchy/plugins/*
 !.config/omarchy/plugins/taeryn.menu/
 !.config/omarchy/plugins/taeryn.clipboard/
