@@ -160,3 +160,226 @@ o.bind("SUPER + R", "Apps menu", "omarchy-menu toggle apps")
 -- the layer rule in looknfeel.lua.
 hl.unbind("XF86PowerOff")
 o.bind("XF86PowerOff", "Power menu", "pkill wlogout || wlogout", { locked = true })
+
+-- ---------------------------------------------------------------------------
+-- 2026-08-31: Garuda dotfiles migration (dotfiles/.config/hypr/configs/
+-- keybinds.lua + ws-scripts/). Letter workspaces, special-workspace stack,
+-- ws-scripts, Garuda menu keys. Displaced Omarchy menus (Network, Toggle
+-- menu, Power, ...) stay reachable through the SUPER+SPACE root menu.
+-- ---------------------------------------------------------------------------
+
+-- === Unbind replaced/dropped Omarchy defaults ==============================
+
+-- Browsers -> ws-zen; system menu -> power button (wlogout, above)
+hl.unbind("SUPER + SHIFT + RETURN")                      -- Browser
+hl.unbind("SUPER + SHIFT + B")                           -- Browser
+hl.unbind("SUPER + SHIFT + ALT + B")                     -- Browser (private) -> theme menu
+hl.unbind("SUPER + SHIFT + F")                           -- File manager
+hl.unbind("SUPER + ALT + SHIFT + F")                     -- File manager (cwd)
+hl.unbind("SUPER + ESCAPE")                              -- System menu
+hl.unbind("SUPER + SHIFT + SLASH")                       -- Passwords
+hl.unbind("SUPER + SHIFT + W")                           -- Omawrite
+hl.unbind("SUPER + SHIFT + X")                           -- X
+hl.unbind("SUPER + ALT + RETURN")                        -- Tmux
+hl.unbind("SUPER + CTRL + RETURN")                       -- Herdr
+hl.unbind("SUPER + ALT + K")                             -- Tmux keybindings
+hl.unbind("SUPER + CTRL + K")                            -- Herdr keybindings -> addmaster
+hl.unbind("SUPER + CTRL + Q")                            -- Calculator
+hl.unbind("SUPER + CTRL + T")                            -- Activity
+hl.unbind("SUPER + SHIFT + A")                           -- ChatGPT
+hl.unbind("SUPER + SHIFT + ALT + A")                     -- Grok
+hl.unbind("SUPER + SHIFT + ALT + E")                     -- New email
+hl.unbind("SUPER + SHIFT + ALT + G")                     -- WhatsApp
+hl.unbind("SUPER + SHIFT + ALT + M")                     -- Music TUI
+hl.unbind("SUPER + SHIFT + ALT + X")                     -- X Post
+hl.unbind("SUPER + SHIFT + ALT + LEFT")                  -- Move workspace to left monitor
+hl.unbind("SUPER + SHIFT + ALT + RIGHT")                 -- Move workspace to right monitor
+hl.unbind("SUPER + SHIFT + ALT + UP")                    -- Move workspace to up monitor
+hl.unbind("SUPER + SHIFT + ALT + DOWN")                  -- Move workspace to down monitor
+hl.unbind("SUPER + SHIFT + CTRL + A")                    -- Agent
+hl.unbind("SUPER + SHIFT + CTRL + G")                    -- Google Messages
+hl.unbind("SUPER + SHIFT + D")                           -- Docker
+hl.unbind("SUPER + SHIFT + E")                           -- Email
+hl.unbind("SUPER + SHIFT + G")                           -- Signal
+hl.unbind("SUPER + SHIFT + M")                           -- Music
+hl.unbind("SUPER + SHIFT + N")                           -- Editor
+hl.unbind("SUPER + SHIFT + O")                           -- Obsidian
+hl.unbind("SUPER + SHIFT + P")                           -- Google Photos
+hl.unbind("SUPER + SHIFT + S")                           -- Google Maps -> center window
+hl.unbind("SUPER + SHIFT + BACKSPACE")                   -- Toggle window gaps
+
+-- Letter workspaces replace the numeric workspace/move/silent-move binds.
+for key_code = 10, 19 do
+  hl.unbind("SUPER + code:" .. key_code)                 -- Switch to workspace N
+  hl.unbind("SUPER + SHIFT + code:" .. key_code)         -- Move window to workspace N
+  hl.unbind("SUPER + SHIFT + ALT + code:" .. key_code)   -- Move window silently to workspace N
+end
+
+-- Workspace cycling and directional focus -> Garuda focus/master binds
+hl.unbind("SUPER + TAB")                                 -- Next workspace -> focus next monitor
+hl.unbind("SUPER + SHIFT + TAB")                         -- Previous workspace
+hl.unbind("SUPER + CTRL + TAB")                          -- Former workspace
+hl.unbind("SUPER + LEFT")                                -- Focus left
+hl.unbind("SUPER + RIGHT")                               -- Focus right
+hl.unbind("SUPER + UP")                                  -- Focus above
+hl.unbind("SUPER + DOWN")                                -- Focus below
+hl.unbind("SUPER + SHIFT + LEFT")                        -- Swap window left
+hl.unbind("SUPER + SHIFT + RIGHT")                       -- Swap window right
+hl.unbind("SUPER + SHIFT + UP")                          -- Swap window up
+hl.unbind("SUPER + SHIFT + DOWN")                        -- Swap window down
+hl.unbind("CTRL + ALT + TAB")                            -- Focus next monitor
+hl.unbind("CTRL + ALT + SHIFT + TAB")                    -- Focus previous monitor
+
+-- Tiling keys reassigned
+hl.unbind("SUPER + W")                                   -- Close window -> SUPER+Q
+hl.unbind("SUPER + J")                                   -- Toggle split -> cyclenext
+hl.unbind("SUPER + O")                                   -- Pop window out -> workspace 3
+hl.unbind("SUPER + P")                                   -- Pseudo -> workspace 5
+hl.unbind("SUPER + L")                                   -- Workspace layout -> special:other
+hl.unbind("SUPER + CTRL + Delete")                       -- Toggle laptop display -> uwsm stop
+
+-- Window groups: unused
+hl.unbind("SUPER + G")                                   -- Toggle grouping
+hl.unbind("SUPER + ALT + G")                             -- Out of group -> glassmorphism
+hl.unbind("SUPER + ALT + LEFT")                          -- Into group left
+hl.unbind("SUPER + ALT + RIGHT")                         -- Into group right
+hl.unbind("SUPER + ALT + UP")                            -- Into group top
+hl.unbind("SUPER + ALT + DOWN")                          -- Into group bottom
+hl.unbind("SUPER + ALT + TAB")                           -- Group next -> move workspace to monitor
+hl.unbind("SUPER + ALT + SHIFT + TAB")                   -- Group previous
+hl.unbind("SUPER + CTRL + LEFT")                         -- Grouped focus left
+hl.unbind("SUPER + CTRL + RIGHT")                        -- Grouped focus right
+hl.unbind("SUPER + ALT + mouse_down")                    -- Group scroll next
+hl.unbind("SUPER + ALT + mouse_up")                      -- Group scroll previous
+for key_code = 10, 14 do
+  hl.unbind("SUPER + ALT + code:" .. key_code)           -- Switch to group window N
+end
+
+-- Universal clipboard keys re-homed
+hl.unbind("SUPER + C")                                   -- Universal copy -> clipboard manager
+hl.unbind("SUPER + V")                                   -- Universal paste (dropped)
+hl.unbind("SUPER + X")                                   -- Universal cut -> Keybindings menu
+hl.unbind("SUPER + CTRL + V")                            -- Clipboard manager -> SUPER+C
+
+-- Notifications reshuffled to Garuda keys
+hl.unbind("SUPER + comma")                               -- Dismiss last -> CTRL+SPACE
+hl.unbind("SUPER + SHIFT + comma")                       -- Dismiss all -> SUPER+CTRL+C
+hl.unbind("SUPER + CTRL + comma")                        -- Silencing -> SUPER+CTRL+D
+
+-- Moved Omarchy toggles/menus
+hl.unbind("SUPER + CTRL + L")                            -- Lock -> SUPER+Y
+hl.unbind("SUPER + CTRL + I")                            -- Idle lock -> SUPER+CTRL+Y (ws-emacs takes key)
+hl.unbind("SUPER + CTRL + N")                            -- Nightlight -> SUPER+backslash
+hl.unbind("SUPER + CTRL + C")                            -- Capture menu -> SUPER+CTRL+V
+hl.unbind("SUPER + CTRL + D")                            -- Display -> SUPER+CTRL+ALT+D
+hl.unbind("SUPER + CTRL + ALT + D")                      -- Calendar (kept on SUPER+SHIFT+C)
+hl.unbind("SUPER + SHIFT + CTRL + SPACE")                -- Theme menu -> SUPER+SHIFT+ALT+B
+hl.unbind("SUPER + CTRL + SPACE")                        -- Background switcher -> SUPER+ALT+B
+hl.unbind("SUPER + K")                                   -- Keybindings -> SUPER+X
+hl.unbind("SUPER + CTRL + X")                            -- Dictation -> F1; key -> color picker
+hl.unbind("F9")                                          -- Dictation push-to-talk start/stop
+
+-- ws-scripts keys: these Omarchy menus give way (root menu still has them)
+hl.unbind("SUPER + CTRL + W")                            -- Network -> ws-zen
+hl.unbind("SUPER + CTRL + O")                            -- Toggle menu -> ws-ferdium
+hl.unbind("SUPER + CTRL + P")                            -- Power -> ws-cliamp
+
+-- === Garuda bindings =======================================================
+
+-- WM focus / master layout (ALT+TAB keeps the Omarchy combined focus+reveal)
+o.bind("SUPER + TAB", "Focus next monitor", hl.dsp.focus({ monitor = "+1" }))
+o.bind("SUPER + ALT + TAB", "Move workspace to next monitor", hl.dsp.workspace.move({ monitor = "+1" }))
+o.bind("SUPER + J", "Focus next window", hl.dsp.layout("cyclenext"))
+o.bind("SUPER + K", "Focus previous window", hl.dsp.layout("cycleprev"))
+o.bind("SUPER + CTRL + K", "Add master window", hl.dsp.layout("addmaster"))
+o.bind("SUPER + CTRL + J", "Remove master window", hl.dsp.layout("removemaster"))
+o.bind("SUPER + SHIFT + J", "Swap with next window", hl.dsp.layout("swapnext"))
+o.bind("SUPER + SHIFT + K", "Swap with previous window", hl.dsp.layout("swapprev"))
+
+-- Resize
+o.bind("SUPER + ALT + H", "Resize window left", hl.dsp.window.resize({ x = -60, y = 0, relative = true }), { repeating = true })
+o.bind("SUPER + ALT + J", "Resize window down", hl.dsp.window.resize({ x = 0, y = 60, relative = true }), { repeating = true })
+o.bind("SUPER + ALT + K", "Resize window up", hl.dsp.window.resize({ x = 0, y = -60, relative = true }), { repeating = true })
+o.bind("SUPER + ALT + L", "Resize window right", hl.dsp.window.resize({ x = 60, y = 0, relative = true }), { repeating = true })
+
+-- Workspaces 1-6 on letters (I W O U P E)
+o.bind("SUPER + I", "Workspace 1 (main)", hl.dsp.focus({ workspace = "1" }))
+o.bind("SUPER + W", "Workspace 2 (browser)", hl.dsp.focus({ workspace = "2" }))
+o.bind("SUPER + O", "Workspace 3 (ferdium)", hl.dsp.focus({ workspace = "3" }))
+o.bind("SUPER + U", "Workspace 4 (freetube)", hl.dsp.focus({ workspace = "4" }))
+o.bind("SUPER + P", "Workspace 5 (music)", hl.dsp.focus({ workspace = "5" }))
+o.bind("SUPER + E", "Workspace 6 (extra)", hl.dsp.focus({ workspace = "6" }))
+
+-- Apps on workspaces (open-or-focus ws-scripts)
+o.bind("SUPER + CTRL + I", "Emacs workspace", "~/.config/hypr/ws-scripts/ws-emacs")
+o.bind("SUPER + CTRL + W", "Zen browser workspace", "~/.config/hypr/ws-scripts/ws-zen")
+o.bind("SUPER + CTRL + U", "FreeTube workspace", "~/.config/hypr/ws-scripts/ws-freetube")
+o.bind("SUPER + CTRL + O", "Ferdium workspace", "~/.config/hypr/ws-scripts/ws-ferdium")
+o.bind("SUPER + CTRL + P", "Music workspace", "~/.config/hypr/ws-scripts/ws-cliamp")
+o.bind("SUPER + CTRL + N", "Clocks / weather / calculator", 'bash -c "uwsm app -- gnome-clocks & uwsm app -- gnome-weather & uwsm app -- gnome-calculator &"')
+
+-- Move window to workspace (SHIFT) / silently (ALT)
+o.bind("SUPER + SHIFT + I", "Move window to workspace 1", hl.dsp.window.move({ workspace = "1" }))
+o.bind("SUPER + SHIFT + W", "Move window to workspace 2", hl.dsp.window.move({ workspace = "2" }))
+o.bind("SUPER + SHIFT + O", "Move window to workspace 3", hl.dsp.window.move({ workspace = "3" }))
+o.bind("SUPER + SHIFT + U", "Move window to workspace 4", hl.dsp.window.move({ workspace = "4" }))
+o.bind("SUPER + SHIFT + P", "Move window to workspace 5", hl.dsp.window.move({ workspace = "5" }))
+o.bind("SUPER + SHIFT + E", "Move window to workspace 6", hl.dsp.window.move({ workspace = "6" }))
+o.bind("SUPER + ALT + I", "Move window to workspace 1 (silent)", hl.dsp.window.move({ workspace = "1", follow = false }))
+o.bind("SUPER + ALT + W", "Move window to workspace 2 (silent)", hl.dsp.window.move({ workspace = "2", follow = false }))
+o.bind("SUPER + ALT + O", "Move window to workspace 3 (silent)", hl.dsp.window.move({ workspace = "3", follow = false }))
+o.bind("SUPER + ALT + U", "Move window to workspace 4 (silent)", hl.dsp.window.move({ workspace = "4", follow = false }))
+o.bind("SUPER + ALT + P", "Move window to workspace 5 (silent)", hl.dsp.window.move({ workspace = "5", follow = false }))
+o.bind("SUPER + ALT + E", "Move window to workspace 6 (silent)", hl.dsp.window.move({ workspace = "6", follow = false }))
+
+-- Special workspaces
+o.bind("SUPER + L", "Toggle special:other", hl.dsp.workspace.toggle_special("other"))
+o.bind("SUPER + comma", "Toggle special:scratchpad", hl.dsp.workspace.toggle_special("scratchpad"))
+o.bind("SUPER + M", "Toggle special:comma", hl.dsp.workspace.toggle_special("comma"))
+o.bind("SUPER + N", "Toggle special:floating", hl.dsp.workspace.toggle_special("floating"))
+
+-- SUPER+H: toggle special:magic and pull the active window into it
+o.bind("SUPER + H", "Toggle special:magic with window", function()
+    hl.dispatch(hl.dsp.workspace.toggle_special("magic"))
+    hl.dispatch(hl.dsp.window.move({ workspace = "+0" }))
+    hl.dispatch(hl.dsp.workspace.toggle_special("magic"))
+    hl.dispatch(hl.dsp.window.move({ workspace = "special:magic" }))
+    hl.dispatch(hl.dsp.workspace.toggle_special("magic"))
+end)
+
+o.bind("SUPER + SHIFT + L", "Move window to special:other", hl.dsp.window.move({ workspace = "special:other", follow = false }))
+o.bind("SUPER + SHIFT + comma", "Move window to special:scratchpad", hl.dsp.window.move({ workspace = "special:scratchpad", follow = false }))
+o.bind("SUPER + SHIFT + M", "Move window to special:comma", hl.dsp.window.move({ workspace = "special:comma", follow = false }))
+o.bind("SUPER + SHIFT + N", "Move window to special:floating", hl.dsp.window.move({ workspace = "special:floating", follow = false }))
+
+-- WM ops / session
+o.bind("SUPER + Q", "Close window", hl.dsp.window.close())
+o.bind("SUPER + SHIFT + S", "Center window", hl.dsp.window.center())
+o.bind("SUPER + D", "Toggle app dock", "~/.config/hypr/scripts/dock-toggle.sh")
+o.bind("CTRL + ALT + End", "Sync dashboard (kitty)", "uwsm app -- kitty -1 --class kitty-sync -T kitty-sync --session ~/.config/kitty/session-sync")
+o.bind("SUPER + CTRL + End", "Power off", "systemctl poweroff")
+o.bind("SUPER + CTRL + Delete", "End session (uwsm stop)", "uwsm stop")
+
+-- Tools
+o.bind("SUPER + ALT + T", "Gamemode", "~/.config/hypr/scripts/gamemode")
+o.bind("SUPER + ALT + G", "Glassmorphism", "~/.config/hypr/scripts/glassmorphism-toggle")
+
+-- Omarchy features re-homed to Garuda keys
+o.bind("SUPER + X", "Keybindings", "omarchy-menu-keybindings")
+o.bind("SUPER + C", "Clipboard manager", "omarchy-shell shell toggle omarchy.clipboard")
+o.bind("SUPER + Y", "Lock system", "omarchy-system-lock")
+o.bind("SUPER + SHIFT + ALT + B", "Theme menu", "omarchy-menu toggle theme")
+o.bind("SUPER + ALT + B", "Background switcher", "omarchy-menu toggle background")
+o.bind("SUPER + CTRL + C", "Dismiss all notifications", "omarchy-shell notifications dismissAll")
+o.bind("CTRL + SPACE", "Dismiss last notification", "omarchy-shell notifications dismissOne")
+o.bind("SUPER + CTRL + V", "Capture menu", "omarchy-menu toggle capture")
+o.bind("SUPER + CTRL + X", "Color picker", "pkill hyprpicker || hyprpicker -a")
+o.bind("SUPER + CTRL + ALT + D", "Display", "omarchy-shell shell toggle omarchy.monitor")
+
+o.bind_toggle("SUPER + backslash", "Toggle nightlight", "nightlight")
+o.bind_toggle("SUPER + CTRL + Y", "Toggle locking on idle", "idle")
+o.bind_toggle("SUPER + CTRL + D", "Toggle silencing notifications", "notification-silencing")
+
+if o.cmd_present("voxtype") then
+  o.bind("F1", "Toggle dictation", "voxtype record toggle")
+end

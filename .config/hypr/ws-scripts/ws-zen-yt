@@ -1,0 +1,16 @@
+#!/bin/bash
+# Focus (or open) the Zen YouTube-profile window on the music workspace (ws5).
+# Detection is workspace-based, not title-based: plain zen windows are ruled to
+# ws2, so any zen window on ws5 is the YouTube-profile one. (Title matching
+# spawned a duplicate per press whenever the tab wasn't a "YouTube — Zen
+# Browser" title — e.g. YouTube Music.)
+
+TARGET_WS=5
+
+if hyprctl -j clients | jq -e --arg ws "$TARGET_WS" \
+  '.[] | select(.class == "zen" and .workspace.id == ($ws | tonumber))' >/dev/null; then
+  hyprctl dispatch "hl.dsp.focus({workspace=$TARGET_WS})"
+  hyprctl dispatch 'hl.dsp.focus({window="class:^(zen)$"})'
+else
+  hyprctl dispatch "hl.dsp.exec_cmd([=[[workspace $TARGET_WS] uwsm app -- zen-browser -P Youtube]=])"
+fi
