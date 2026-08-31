@@ -116,24 +116,28 @@ ShellRoot {
           Keys.onPressed: event => {
             var ctrl = event.modifiers & Qt.ControlModifier
             if (event.key === Qt.Key_Escape) Qt.quit()
-            // rofi bindings from the Garuda config.rasi: C-j/k move, C-m/RET
-            // accept, C-h/l cursor, C-w del word, C-y primary paste.
+            // Rofi-style Emacs keys (same set as the SUPER+SPACE taeryn.menu
+            // and the taeryn.clipboard overlay): C-j/k move, C-m/C-l/RET
+            // accept, C-g cancels, C-h cursor back, C-w del word, C-y pastes
+            // the clipboard, PageUp/Down jump six cells.
             else if (ctrl && event.key === Qt.Key_J) { grid.incrementCurrentIndex(); event.accepted = true }
             else if (ctrl && event.key === Qt.Key_K) { grid.decrementCurrentIndex(); event.accepted = true }
             else if (event.key === Qt.Key_Down) { grid.incrementCurrentIndex(); event.accepted = true }
             else if (event.key === Qt.Key_Up) { grid.decrementCurrentIndex(); event.accepted = true }
-            else if ((ctrl && event.key === Qt.Key_M) || event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+            else if (event.key === Qt.Key_PageDown) { for (var i = 0; i < 6; i++) grid.incrementCurrentIndex(); event.accepted = true }
+            else if (event.key === Qt.Key_PageUp) { for (var i = 0; i < 6; i++) grid.decrementCurrentIndex(); event.accepted = true }
+            else if ((ctrl && (event.key === Qt.Key_M || event.key === Qt.Key_L)) || event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
               if (grid.model.length > 0) panel.launch(grid.model[grid.currentIndex].id)
               event.accepted = true
             }
-            else if (ctrl && event.key === Qt.Key_Y) {  // primary paste (rofi kb-primary-paste)
-              if (typeof Quickshell.primarySelection === "function") {
-                search.insert(search.cursorPosition, Quickshell.primarySelection() || "")
-              }
+            else if (ctrl && event.key === Qt.Key_G) Qt.quit()
+            else if (ctrl && event.key === Qt.Key_Y) {  // paste clipboard (menu parity)
+              var pasted = ""
+              try { pasted = String(Quickshell.clipboardText || "") } catch (err) { pasted = "" }
+              if (pasted) search.insert(search.cursorPosition, pasted)
               event.accepted = true
             }
-            else if (ctrl && event.key === Qt.Key_H) { search.cursorPosition--; event.accepted = true }  // rofi C-h
-            else if (ctrl && event.key === Qt.Key_L) { search.cursorPosition++; event.accepted = true }  // rofi C-l
+            else if (ctrl && event.key === Qt.Key_H) { search.cursorPosition--; event.accepted = true }
             else if (ctrl && event.key === Qt.Key_W) {  // delete word back
               var p = search.text.slice(0, search.cursorPosition)
               var s = search.cursorPosition

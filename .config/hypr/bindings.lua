@@ -235,7 +235,7 @@ hl.unbind("SUPER + W")                                   -- Close window -> SUPE
 hl.unbind("SUPER + J")                                   -- Toggle split -> cyclenext
 hl.unbind("SUPER + O")                                   -- Pop window out -> workspace 3
 hl.unbind("SUPER + P")                                   -- Pseudo -> workspace 5
-hl.unbind("SUPER + L")                                   -- Workspace layout -> special:other
+
 hl.unbind("SUPER + CTRL + Delete")                       -- Toggle laptop display -> uwsm stop
 
 -- Window groups: unused
@@ -257,22 +257,22 @@ end
 
 -- Universal clipboard keys re-homed
 hl.unbind("SUPER + C")                                   -- Universal copy -> clipboard manager
-hl.unbind("SUPER + V")                                   -- Universal paste (dropped)
+hl.unbind("SUPER + V")                                   -- Universal paste -> dismiss last notification
 hl.unbind("SUPER + X")                                   -- Universal cut -> Keybindings menu
-hl.unbind("SUPER + CTRL + V")                            -- Clipboard manager -> SUPER+C
+hl.unbind("SUPER + SHIFT + C")                           -- Calendar -> SUPER+CTRL+ALT+C
+hl.unbind("SUPER + CTRL + V")                            -- Clipboard manager -> SUPER+C (taeryn.clipboard)
 
 -- Notifications reshuffled to Garuda keys
-hl.unbind("SUPER + comma")                               -- Dismiss last -> CTRL+SPACE
-hl.unbind("SUPER + SHIFT + comma")                       -- Dismiss all -> SUPER+CTRL+C
+hl.unbind("SUPER + comma")                               -- Dismiss last -> SUPER+V
+hl.unbind("SUPER + SHIFT + comma")                       -- Dismiss all -> SUPER+CTRL+SPACE
 hl.unbind("SUPER + CTRL + comma")                        -- Silencing -> SUPER+CTRL+D
 
 -- Moved Omarchy toggles/menus
 hl.unbind("SUPER + CTRL + L")                            -- Lock -> SUPER+Y
 hl.unbind("SUPER + CTRL + I")                            -- Idle lock -> SUPER+CTRL+Y (ws-emacs takes key)
 hl.unbind("SUPER + CTRL + N")                            -- Nightlight -> SUPER+backslash
-hl.unbind("SUPER + CTRL + C")                            -- Capture menu -> SUPER+CTRL+V
 hl.unbind("SUPER + CTRL + D")                            -- Display -> SUPER+CTRL+ALT+D
-hl.unbind("SUPER + CTRL + ALT + D")                      -- Calendar (kept on SUPER+SHIFT+C)
+hl.unbind("SUPER + CTRL + ALT + D")                      -- Calendar -> SUPER+CTRL+ALT+C
 hl.unbind("SUPER + SHIFT + CTRL + SPACE")                -- Theme menu -> SUPER+SHIFT+ALT+B
 hl.unbind("SUPER + CTRL + SPACE")                        -- Background switcher -> SUPER+ALT+B
 hl.unbind("SUPER + K")                                   -- Keybindings -> SUPER+X
@@ -330,10 +330,20 @@ o.bind("SUPER + ALT + W", "Move window to workspace 2 (silent)", hl.dsp.window.m
 o.bind("SUPER + ALT + O", "Move window to workspace 3 (silent)", hl.dsp.window.move({ workspace = "3", follow = false }))
 o.bind("SUPER + ALT + U", "Move window to workspace 4 (silent)", hl.dsp.window.move({ workspace = "4", follow = false }))
 o.bind("SUPER + ALT + P", "Move window to workspace 5 (silent)", hl.dsp.window.move({ workspace = "5", follow = false }))
-o.bind("SUPER + ALT + E", "Move window to workspace 6 (silent)", hl.dsp.window.move({ workspace = "6", follow = false }))
+
+-- Free workspaces 7-9 on digits 1/2/3 (non-standard apps: maps, drive...)
+o.bind("SUPER + code:10", "Workspace 7 (free)", hl.dsp.focus({ workspace = "7" }))
+o.bind("SUPER + code:11", "Workspace 8 (free)", hl.dsp.focus({ workspace = "8" }))
+o.bind("SUPER + code:12", "Workspace 9 (free)", hl.dsp.focus({ workspace = "9" }))
+o.bind("SUPER + SHIFT + code:10", "Move window to workspace 7", hl.dsp.window.move({ workspace = "7" }))
+o.bind("SUPER + SHIFT + code:11", "Move window to workspace 8", hl.dsp.window.move({ workspace = "8" }))
+o.bind("SUPER + SHIFT + code:12", "Move window to workspace 9", hl.dsp.window.move({ workspace = "9" }))
+o.bind("SUPER + ALT + code:10", "Move window to workspace 7 (silent)", hl.dsp.window.move({ workspace = "7", follow = false }))
+o.bind("SUPER + ALT + code:11", "Move window to workspace 8 (silent)", hl.dsp.window.move({ workspace = "8", follow = false }))
+o.bind("SUPER + ALT + code:12", "Move window to workspace 9 (silent)", hl.dsp.window.move({ workspace = "9", follow = false }))
 
 -- Special workspaces
-o.bind("SUPER + L", "Toggle special:other", hl.dsp.workspace.toggle_special("other"))
+-- (special:other dropped: SUPER+L returns to Omarchy's workspace-layout toggle)
 o.bind("SUPER + comma", "Toggle special:scratchpad", hl.dsp.workspace.toggle_special("scratchpad"))
 o.bind("SUPER + M", "Toggle special:comma", hl.dsp.workspace.toggle_special("comma"))
 o.bind("SUPER + N", "Toggle special:floating", hl.dsp.workspace.toggle_special("floating"))
@@ -347,7 +357,7 @@ o.bind("SUPER + H", "Toggle special:magic with window", function()
     hl.dispatch(hl.dsp.workspace.toggle_special("magic"))
 end)
 
-o.bind("SUPER + SHIFT + L", "Move window to special:other", hl.dsp.window.move({ workspace = "special:other", follow = false }))
+
 o.bind("SUPER + SHIFT + comma", "Move window to special:scratchpad", hl.dsp.window.move({ workspace = "special:scratchpad", follow = false }))
 o.bind("SUPER + SHIFT + M", "Move window to special:comma", hl.dsp.window.move({ workspace = "special:comma", follow = false }))
 o.bind("SUPER + SHIFT + N", "Move window to special:floating", hl.dsp.window.move({ workspace = "special:floating", follow = false }))
@@ -366,15 +376,15 @@ o.bind("SUPER + ALT + G", "Glassmorphism", "~/.config/hypr/scripts/glassmorphism
 
 -- Omarchy features re-homed to Garuda keys
 o.bind("SUPER + X", "Keybindings", "omarchy-menu-keybindings")
-o.bind("SUPER + C", "Clipboard manager", "omarchy-shell shell toggle omarchy.clipboard")
+o.bind("SUPER + C", "Clipboard manager", "omarchy-shell shell toggle taeryn.clipboard")
 o.bind("SUPER + Y", "Lock system", "omarchy-system-lock")
 o.bind("SUPER + SHIFT + ALT + B", "Theme menu", "omarchy-menu toggle theme")
 o.bind("SUPER + ALT + B", "Background switcher", "omarchy-menu toggle background")
-o.bind("SUPER + CTRL + C", "Dismiss all notifications", "omarchy-shell notifications dismissAll")
-o.bind("CTRL + SPACE", "Dismiss last notification", "omarchy-shell notifications dismissOne")
-o.bind("SUPER + CTRL + V", "Capture menu", "omarchy-menu toggle capture")
+o.bind("SUPER + CTRL + SPACE", "Dismiss all notifications", "omarchy-shell notifications dismissAll")
+o.bind("SUPER + V", "Dismiss last notification", "omarchy-shell notifications dismissOne")
 o.bind("SUPER + CTRL + X", "Color picker", "pkill hyprpicker || hyprpicker -a")
 o.bind("SUPER + CTRL + ALT + D", "Display", "omarchy-shell shell toggle omarchy.monitor")
+o.bind("SUPER + CTRL + ALT + C", "Calendar", { webapp = "https://app.hey.com/calendar/weeks/" })
 
 o.bind_toggle("SUPER + backslash", "Toggle nightlight", "nightlight")
 o.bind_toggle("SUPER + CTRL + Y", "Toggle locking on idle", "idle")
