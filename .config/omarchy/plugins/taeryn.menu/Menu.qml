@@ -1181,6 +1181,8 @@ Item {
           // Touchscreen back button (top-right corner): pops one page (same
           // as C+h / Backspace without a filter). Hidden on the root page;
           // "‹" is a plain punctuation glyph, always present in the font.
+          // Shaded pill (ConfirmDialog's Util.alpha(foreground, 0.08) fill)
+          // so it reads as a button, brighter on hover.
           Item {
             id: headerBack
             visible: !root.dmenuActive && root.activeMenu !== "root"
@@ -1188,13 +1190,23 @@ Item {
             height: parent.height
             anchors.right: parent.right
 
-            Text {
+            Rectangle {
               anchors.centerIn: parent
-              text: "‹"
-              color: root.foreground
-              opacity: backMouse.containsMouse ? 1 : 0.58
-              font.family: root.fontFamily
-              font.pixelSize: Math.round(Style.font.heading * 1.9)
+              width: parent.width - Style.space(8)
+              height: parent.height - Style.space(8)
+              radius: Math.min(root.cornerRadius, height / 2)
+              color: Util.alpha(root.foreground, backMouse.containsMouse ? 0.18 : 0.08)
+              border.width: backMouse.containsMouse ? 1 : 0
+              border.color: Util.alpha(root.foreground, 0.35)
+
+              Text {
+                anchors.centerIn: parent
+                text: "‹"
+                color: root.foreground
+                opacity: backMouse.containsMouse ? 1 : 0.58
+                font.family: root.fontFamily
+                font.pixelSize: Math.round(Style.font.heading * 1.9)
+              }
             }
 
             MouseArea {
