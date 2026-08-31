@@ -1,0 +1,26 @@
+#!/bin/bash
+# pkg-install - fzf TUI for picking packages from the official repos AND the
+# AUR in one list (merge of omarchy-pkg-install and omarchy-pkg-aur-install).
+# `yay -Slq` lists both sources; `yay -S` installs from either, no aur/ prefix.
+
+fzf_args=(
+  --multi
+  --preview 'yay -Sii {1}'
+  --preview-label='alt-p: toggle description, alt-j/k: scroll, tab: multi-select'
+  --preview-label-pos='bottom'
+  --preview-window 'down:65%:wrap'
+  --bind 'alt-p:toggle-preview'
+  --bind 'alt-d:preview-half-page-down,alt-u:preview-half-page-up'
+  --bind 'alt-k:preview-up,alt-j:preview-down'
+  --color 'pointer:green,marker:green'
+)
+
+pkg_names=$(yay -Slq | fzf "${fzf_args[@]}")
+
+if [[ -n $pkg_names ]]; then
+  source omarchy-sudo-keepalive
+
+  echo "$pkg_names" | tr '\n' ' ' | xargs yay -S --noconfirm
+  sudo updatedb
+  omarchy-show-done
+fi

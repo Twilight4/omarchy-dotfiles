@@ -110,6 +110,12 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "swipe", fingers = 3, direction = "up" },
       action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/dock-toggle.sh"),
     })
+    -- 4-finger swipe up toggles the big-icons app launcher (touch-native,
+    -- rofi has no wl_touch): 2 fingers = expo, 3 = dock, 4 = launcher.
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "swipe", fingers = 4, direction = "up" },
+      action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/app-launcher.sh"),
+    })
 end
 -- hyprexpo (expose-style workspace overview, sandwichfarm fork). Same
 -- load-order guard as hyprgrass: hyprpm loads plugins after the config
@@ -143,9 +149,11 @@ hl.gesture({ fingers = 3, direction = "up", action = function()
   hl.dispatch(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/dock-toggle.sh"))
 end })
 
--- App launcher: standalone quickshell app grid (.config/qs-applauncher),
--- rofi-styled and touch-native (rofi-wayland has no wl_touch).
-o.bind("SUPER + R", "App launcher", os.getenv("HOME") .. "/.config/hypr/scripts/app-launcher.sh")
+-- App launcher split by input method: SUPER+R opens the classic Omarchy
+-- apps menu (keyboard flow); the big-icons quickshell grid
+-- (.config/qs-applauncher) is the touch flow via the 4-finger swipe-up
+-- gesture and the nwg dock launcher button.
+o.bind("SUPER + R", "Apps menu", "omarchy-menu toggle apps")
 
 -- Power/session menu: wlogout on the physical power button, replacing
 -- Omarchy's default "omarchy-menu toggle system". Blur behind it comes from

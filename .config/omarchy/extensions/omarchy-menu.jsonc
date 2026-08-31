@@ -1,30 +1,163 @@
 {
-  // Extend the Quickshell Omarchy menu with JSONC.
-  //
-  // IDs are object keys. The parent is inferred from the dotted id, so
-  // "personal.notes" appears under "personal", and "personal" appears on the
-  // root menu. Reuse an existing id to override/extend it.
-  //
-  // Fields:
-  //   icon        Nerd Font glyph shown in the icon column.
-  //   label       Visible row title.
-  //   action      Shell command to run. If omitted, the row is a submenu.
-  //   target      Existing submenu id to open. Use for links/aliases.
-  //   provider    Runtime provider function/command returning JSON rows.
-  //   aliases     alternate `omarchy menu summon <name>` routes; also searchable.
-  //   description Optional subtitle and extra search text.
-  //   when        Shell condition; hide row when it fails.
-  //   checked     Shell condition; append ✓ when it succeeds.
-  //
-  // Examples:
-  // "personal": {"icon":"","label":"Personal"},
-  // "personal.notes": {"icon":"󰎞","label":"Notes","action":"omarchy-launch-editor ~/notes"},
-  // "personal.files": {"icon":"","label":"Files","action":"uwsm-app -- nautilus ~/Documents"},
-  //
-  // Only use provider when a provider_name function or command named "name"
-  // returns JSON rows. Static submenus only need dotted ids.
-  //
-  // Example: replace the default About action by reusing the same id. Existing
-  // fields are kept unless overridden.
-  // "about": {"icon":"","label":"About","action":"omarchy-launch-or-focus-tui \"zsh -c 'fastfetch; read -k 1'\""},
+  // Taeryn's menu overrides, merged over the stock definitions. User entries
+  // are normalized before the merge, so rows here re-declare every stock field
+  // they keep (a partial override resets the rest). Rows are hidden with
+  // "when": "false" down to every descendant, or search would still surface
+  // them (search checks each row's own guard only). Regenerate that block
+  // after an omarchy update adds stock entries:
+  //   grep -oE '^  "[a-z0-9._-]+"' /usr/share/omarchy/default/omarchy/omarchy-menu.jsonc \
+  //     | tr -d ' "' | grep -E '^(learn|system|update|install\.(aur|service|development|editor|terminal|browser|ai|style\.font)|remove\.(development|browser|preinstalls)|style\.font)(\.|$)' | sort
+
+  "apps": {"icon":"󰀻","label":"Apps","aliases":["app","applications"],"provider":"apps","when":"false"},
+  "update": {"icon":"","label":"Update","aliases":[],"action":"omarchy-launch-floating-terminal-with-presentation omarchy-update"},
+  "style.unlock": {"icon":"󰟵","label":"Unlock","aliases":["unlock"],"action":"omarchy-shell lock explore","description":"Preview and choose a lock screen design"},
+  "install.package": {"icon":"󰣇","label":"Package","action":"xdg-terminal-exec --app-id=org.omarchy.terminal $HOME/.config/hypr/scripts/pkg-install","description":"Search official repos and the AUR together"},
+  "install.style.theme": {"icon":"󰸌","label":"Theme","action":"omarchy-launch-floating-terminal-with-presentation omarchy-theme-install","parent":"install"},
+  "install.style.background": {"icon":"","label":"Background","action":"omarchy-theme-bg-install","parent":"install"},
+
+  // ---- generated: descendants of the removed subtrees (see header) ----
+// ---- generated: descendants of the removed subtrees (see header) ----
+  "install.ai": {"when": "false"},
+  "install.ai.chatgpt": {"when": "false"},
+  "install.ai.dictation": {"when": "false"},
+  "install.ai.grok-bot": {"when": "false"},
+  "install.ai.lm-studio": {"when": "false"},
+  "install.ai.ollama": {"when": "false"},
+  "install.aur": {"when": "false"},
+  "install.browser": {"when": "false"},
+  "install.browser.brave": {"when": "false"},
+  "install.browser.brave-origin": {"when": "false"},
+  "install.browser.chrome": {"when": "false"},
+  "install.browser.edge": {"when": "false"},
+  "install.browser.firefox": {"when": "false"},
+  "install.browser.zen": {"when": "false"},
+  "install.development": {"when": "false"},
+  "install.development.clojure": {"when": "false"},
+  "install.development.docker-dbs": {"when": "false"},
+  "install.development.dotnet": {"when": "false"},
+  "install.development.elixir": {"when": "false"},
+  "install.development.elixir.elixir": {"when": "false"},
+  "install.development.elixir.phoenix": {"when": "false"},
+  "install.development.go": {"when": "false"},
+  "install.development.java": {"when": "false"},
+  "install.development.javascript": {"when": "false"},
+  "install.development.javascript.bun": {"when": "false"},
+  "install.development.javascript.deno": {"when": "false"},
+  "install.development.javascript.node": {"when": "false"},
+  "install.development.ocaml": {"when": "false"},
+  "install.development.php": {"when": "false"},
+  "install.development.php.laravel": {"when": "false"},
+  "install.development.php.php": {"when": "false"},
+  "install.development.php.symfony": {"when": "false"},
+  "install.development.python": {"when": "false"},
+  "install.development.rails": {"when": "false"},
+  "install.development.rust": {"when": "false"},
+  "install.development.scala": {"when": "false"},
+  "install.development.zig": {"when": "false"},
+  "install.editor": {"when": "false"},
+  "install.editor.cursor": {"when": "false"},
+  "install.editor.emacs": {"when": "false"},
+  "install.editor.helix": {"when": "false"},
+  "install.editor.sublime": {"when": "false"},
+  "install.editor.vim": {"when": "false"},
+  "install.editor.vscode": {"when": "false"},
+  "install.editor.zed": {"when": "false"},
+  "install.service": {"when": "false"},
+  "install.service.1password": {"when": "false"},
+  "install.service.bitwarden": {"when": "false"},
+  "install.service.chromium-account": {"when": "false"},
+  "install.service.dropbox": {"when": "false"},
+  "install.service.nordvpn": {"when": "false"},
+  "install.service.once": {"when": "false"},
+  "install.service.signal": {"when": "false"},
+  "install.service.spotify": {"when": "false"},
+  "install.service.tailscale": {"when": "false"},
+  "install.style.font": {"when": "false"},
+  "install.style.font.bitstream": {"when": "false"},
+  "install.style.font.cascadia": {"when": "false"},
+  "install.style.font.fira": {"when": "false"},
+  "install.style.font.iosevka": {"when": "false"},
+  "install.style.font.meslo": {"when": "false"},
+  "install.style.font.victor": {"when": "false"},
+  "install.terminal": {"when": "false"},
+  "install.terminal.alacritty": {"when": "false"},
+  "install.terminal.foot": {"when": "false"},
+  "install.terminal.ghostty": {"when": "false"},
+  "install.terminal.kitty": {"when": "false"},
+  "learn": {"when": "false"},
+  "learn.arch": {"when": "false"},
+  "learn.bash": {"when": "false"},
+  "learn.community": {"when": "false"},
+  "learn.herdr-keybindings": {"when": "false"},
+  "learn.hyprland": {"when": "false"},
+  "learn.keybindings": {"when": "false"},
+  "learn.neovim": {"when": "false"},
+  "learn.omarchy": {"when": "false"},
+  "learn.tmux-keybindings": {"when": "false"},
+  "remove.browser": {"when": "false"},
+  "remove.browser.brave": {"when": "false"},
+  "remove.browser.brave-origin": {"when": "false"},
+  "remove.browser.chrome": {"when": "false"},
+  "remove.browser.edge": {"when": "false"},
+  "remove.browser.firefox": {"when": "false"},
+  "remove.browser.zen": {"when": "false"},
+  "remove.development": {"when": "false"},
+  "remove.development.clojure": {"when": "false"},
+  "remove.development.dotnet": {"when": "false"},
+  "remove.development.elixir": {"when": "false"},
+  "remove.development.elixir.elixir": {"when": "false"},
+  "remove.development.elixir.phoenix": {"when": "false"},
+  "remove.development.go": {"when": "false"},
+  "remove.development.java": {"when": "false"},
+  "remove.development.javascript": {"when": "false"},
+  "remove.development.javascript.bun": {"when": "false"},
+  "remove.development.javascript.deno": {"when": "false"},
+  "remove.development.javascript.node": {"when": "false"},
+  "remove.development.ocaml": {"when": "false"},
+  "remove.development.php": {"when": "false"},
+  "remove.development.php.laravel": {"when": "false"},
+  "remove.development.php.php": {"when": "false"},
+  "remove.development.php.symfony": {"when": "false"},
+  "remove.development.python": {"when": "false"},
+  "remove.development.rails": {"when": "false"},
+  "remove.development.rust": {"when": "false"},
+  "remove.development.scala": {"when": "false"},
+  "remove.development.zig": {"when": "false"},
+  "remove.preinstalls": {"when": "false"},
+  "style.font": {"when": "false"},
+  "system": {"when": "false"},
+  "system.hibernate": {"when": "false"},
+  "system.lock": {"when": "false"},
+  "system.logout": {"when": "false"},
+  "system.reboot": {"when": "false"},
+  "system.screensaver": {"when": "false"},
+  "system.shutdown": {"when": "false"},
+  "system.suspend": {"when": "false"},
+  "update.channel": {"when": "false"},
+  "update.channel.dev": {"when": "false"},
+  "update.channel.edge": {"when": "false"},
+  "update.channel.rc": {"when": "false"},
+  "update.channel.stable": {"when": "false"},
+  "update.config": {"when": "false"},
+  "update.config.hyprland": {"when": "false"},
+  "update.config.hyprsunset": {"when": "false"},
+  "update.config.plymouth": {"when": "false"},
+  "update.config.shell": {"when": "false"},
+  "update.config.tmux": {"when": "false"},
+  "update.firmware": {"when": "false"},
+  "update.hardware": {"when": "false"},
+  "update.hardware.audio": {"when": "false"},
+  "update.hardware.bluetooth": {"when": "false"},
+  "update.hardware.trackpad": {"when": "false"},
+  "update.hardware.wifi": {"when": "false"},
+  "update.omarchy": {"when": "false"},
+  "update.password": {"when": "false"},
+  "update.password.drive": {"when": "false"},
+  "update.password.user": {"when": "false"},
+  "update.process": {"when": "false"},
+  "update.process.hyprsunset": {"when": "false"},
+  "update.process.shell": {"when": "false"},
+  "update.themes": {"when": "false"},
+  "update.time": {"when": "false"},
+  "update.timezone": {"when": "false"},
 }
