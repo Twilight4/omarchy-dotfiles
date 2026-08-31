@@ -24,11 +24,10 @@ BarWidget {
     WidgetButton {
       bar: root.bar
       text: "\uF043"  // nf droplet
-      // theme urgent/accent are grey and read as "off"; use the launcher blue
-      activeColor: "#89b4fa"
+      activeColor: "#ffffff"  // bright vs the grey theme foreground
       active: root.glassState !== "off"
       dimmed: root.glassState === "off"
-      horizontalMargin: 7.5
+      horizontalMargin: 5.5  // tuck 1px closer to the gamepad (matches indicator pitch)
       onPressed: root.bar && root.bar.run(
         Quickshell.env("HOME") + "/.config/hypr/scripts/glassmorphism-toggle")
     }
@@ -36,8 +35,9 @@ BarWidget {
     WidgetButton {
       bar: root.bar
       text: "\uF11B"  // nf gamepad
-      activeColor: "#89b4fa"
+      activeColor: "#ffffff"
       active: root.gameOn
+      dimmed: !root.gameOn  // off = 45% grey like the inactive indicators, not full-bright
       horizontalMargin: 7.5
       onPressed: root.bar && root.bar.run(
         Quickshell.env("HOME") + "/.config/hypr/scripts/gamemode")
