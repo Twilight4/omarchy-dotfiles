@@ -16,6 +16,17 @@
   "install.style.background": {"icon":"","label":"Background","action":"omarchy-theme-bg-install","parent":"install"},
   "style.hyprland": {"when": "false"},
 
+  // Setup > Config > Hyprland: submenu of ~/.config/hypr/ configs, opened in the
+  // running Emacs (emacsclient -n). Keybindings/Monitors/Input moved in from Setup.
+  "setup.config.hyprland": {"icon":"","label":"Hyprland","aliases":["hyprland configs"]},
+  "setup.config.hyprland.main": {"icon":"","label":"Main","aliases":["hyprland.lua"],"action":"emacsclient -n \"$HOME/.config/hypr/hyprland.lua\"","description":"hyprland.lua"},
+  "setup.keybindings": {"icon":"","label":"Keybindings","aliases":[],"when":"[[ -f ~/.config/hypr/bindings.lua ]]","parent":"setup.config.hyprland","action":"emacsclient -n \"$HOME/.config/hypr/bindings.lua\"","description":"bindings.lua"},
+  "setup.monitors": {"icon":"󰍹","label":"Monitors","aliases":[],"parent":"setup.config.hyprland","action":"emacsclient -n \"$HOME/.config/hypr/monitors.lua\"","description":"monitors.lua"},
+  "setup.input": {"icon":"","label":"Input","aliases":[],"when":"[[ -f ~/.config/hypr/input.lua ]]","parent":"setup.config.hyprland","action":"emacsclient -n \"$HOME/.config/hypr/input.lua\"","description":"input.lua"},
+  "setup.config.hyprland.windowrules": {"icon":"","label":"Window Rules","aliases":["windowrules"],"action":"emacsclient -n \"$HOME/.config/hypr/windowrules.lua\"","description":"windowrules.lua"},
+  "setup.config.hyprland.looknfeel": {"icon":"󰍹","label":"Look & Feel","aliases":["looknfeel"],"action":"emacsclient -n \"$HOME/.config/hypr/looknfeel.lua\"","description":"looknfeel.lua"},
+  "setup.config.hyprland.autostart": {"icon":"","label":"Autostart","aliases":["autostart"],"action":"emacsclient -n \"$HOME/.config/hypr/autostart.lua\"","description":"autostart.lua"},
+
   // ---- generated: descendants of the removed subtrees (see header) ----
   "install.ai": {"when": "false"},
   "install.ai.chatgpt": {"when": "false"},
