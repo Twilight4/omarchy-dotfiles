@@ -4,6 +4,9 @@
 # Ported from the Garuda dotfiles dock-toggle-hyprland: the waybar half is
 # Garuda-only and the Garuda -g window-class groups were dropped. The
 # launcher button (-c) opens the big-icons app launcher (app-launcher.sh).
+# Gaps follow the dock (and bar): re-sync after every toggle. The Hyprland
+# layer events in looknfeel.lua cover the dock too — this keeps it exact
+# even when the layer namespace timing races the config eval.
 if pgrep -f nwg-dock-hyprland >/dev/null; then
     pkill -f nwg-dock-hyprland
 else
@@ -12,3 +15,5 @@ else
     GDK_SCALE=2 nwg-dock-hyprland -i 30 -w 5 -mb 10 -ml 10 -mr 10 \
         -c "$HOME/.config/hypr/scripts/app-launcher.sh" >/dev/null 2>&1 &
 fi
+
+"$HOME/.config/hypr/scripts/gaps-sync"

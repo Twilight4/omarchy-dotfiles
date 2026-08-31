@@ -388,6 +388,10 @@ o.bind("SUPER + CTRL + ALT + N", "Network", "omarchy-shell shell toggle omarchy.
 o.bind("SUPER + CTRL + ALT + P", "Power", "omarchy-shell shell toggle omarchy.power")
 o.bind("SUPER + CTRL + T", "Toggle menu", "omarchy-menu toggle toggle")
 
+-- Top bar via the bar-toggle wrapper so gaps re-sync on every toggle
+hl.unbind("SUPER + SHIFT + SPACE")
+o.bind("SUPER + SHIFT + SPACE", "Toggle top bar", "~/.config/hypr/scripts/bar-toggle")
+
 o.bind_toggle("SUPER + backslash", "Toggle nightlight", "nightlight")
 o.bind_toggle("SUPER + CTRL + Y", "Toggle locking on idle", "idle")
 o.bind_toggle("SUPER + CTRL + D", "Toggle silencing notifications", "notification-silencing")

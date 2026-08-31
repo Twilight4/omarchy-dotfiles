@@ -19,7 +19,7 @@ deploy_dirs=(
     gtk-4.0
     wlogout
     nwg-dock-hyprland
-    rofi
+    xremap
     qs-applauncher
 )
 

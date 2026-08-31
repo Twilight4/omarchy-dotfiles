@@ -1,5 +1,10 @@
 -- Extra autostart processes.
+-- Stock Omarchy already imports the session environment (systemctl --user
+-- import-environment + dbus-update-activation-environment --systemd --all),
+-- launches the shell/bar, udiskie, portals and the polkit agent — the Garuda
+-- gtkthemes / launch-variables / launch-portals lines are not needed here.
 -- o.launch_on_start("my-service")
+
 -- Cursor theme (Bibata, same as the official dotfiles; gtk-3.0/4.0
 -- settings.ini carry the GTK side, setup-cursor.sh applies it live)
 hl.env("XCURSOR_THEME", "Bibata-Modern-Classic")
@@ -15,6 +20,7 @@ o.launch_on_start("hyprctl setcursor Bibata-Modern-Classic 24")
 -- Exits silently when the sensor/panel is absent; `auto-rotate.sh lock`
 -- freezes the transform (e.g. reading lying down).
 o.launch_on_start(os.getenv("HOME") .. "/.config/hypr/scripts/auto-rotate.sh")
+
 -- Load hyprpm plugins (hyprgrass touch gestures), then re-parse the config
 -- ONCE so the guarded hyprgrass binds in bindings.lua register: hyprpm loads
 -- plugins after the initial config parse, so without this the gestures are
@@ -23,3 +29,32 @@ o.launch_on_start(os.getenv("HOME") .. "/.config/hypr/scripts/auto-rotate.sh")
 o.launch_on_start(
   'sh -c \'L="${XDG_RUNTIME_DIR:-/tmp}/hyprpm-reloaded"; [ -f "$L" ] || { hyprpm reload -n; touch "$L"; sleep 1; hyprctl reload; }\''
 )
+
+-- Session apps (imported from the Garuda autostart; omarchy-native services
+-- like swaync/polkit/wallpaper/bar have their omarchy equivalents already).
+hl.on("hyprland.start", function()
+    -- Key remapper (Emacs-style binds, scoped to Zen)
+    hl.exec_cmd('uwsm app -d "Xremap key remapper" -- xremap ~/.config/xremap/config.yml --watch=config,device')
+    hl.exec_cmd('uwsm app -d "Emacs server" -- emacs --daemon')
+    hl.exec_cmd("uwsm app -- udev-block-notify")
+
+    -- Workspaces: emacs (1), zen (2), ferdium (3), freetube (4), music (5)
+    hl.exec_cmd("~/.config/hypr/ws-scripts/ws-emacs")
+    hl.exec_cmd("~/.config/hypr/ws-scripts/ws-zen")
+    hl.exec_cmd("uwsm app -- freetube --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto --enable-features=VaapiVideoDecodeLinuxGL --gpu-context=wayland")
+    -- Music workspace (ws5): cliamp TUI with Mixed playlist playing at -20 dB
+    hl.exec_cmd("uwsm app -- kitty --class kitty-cliamp -e cliamp --vol -20 --playlist Mixed --auto-play")
+    hl.exec_cmd("uwsm app -- ferdium --socket=wayland --ozone-platform-hint=auto --ozone-platform=wayland --enable-features-WaylandWindowDecorations")
+
+    -- App dock along the bottom edge (same invocation as dock-toggle.sh;
+    -- GDK_SCALE=2 avoids blurry icons on the 1.6-scale panel)
+    hl.exec_cmd([[uwsm app -d "App dock" -- sh -c 'GDK_SCALE=2 nwg-dock-hyprland -i 30 -w 5 -mb 10 -ml 10 -mr 10 -c "$HOME/.config/hypr/scripts/app-launcher.sh"']])
+
+
+    -- Land on an empty workspace (7 = first free, SUPER+1)
+    hl.exec_cmd([[sleep 5 && hyprctl dispatch 'hl.dsp.focus({workspace="7"})']])
+
+    -- Gaps follow bar/dock visibility (corrects the optimistic initial
+    -- state if the bar toggle flag was left off last session)
+    hl.exec_cmd("sleep 6 && $HOME/.config/hypr/scripts/gaps-sync")
+end)

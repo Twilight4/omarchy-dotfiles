@@ -16,6 +16,15 @@
   "install.style.background": {"icon":"","label":"Background","action":"omarchy-theme-bg-install","parent":"install"},
   "style.hyprland": {"when": "false"},
 
+  // Toggle menu: hide Window Gaps + Workspace Layout. Gaps are driven by the
+  // bar/dock visibility (looknfeel.lua), the layout is pinned to master.
+  "trigger.toggle.window-gaps": {"when": "false"},
+  "trigger.toggle.workspace-layout": {"when": "false"},
+
+  // Top-bar toggle runs through the bar-toggle wrapper (gaps follow the
+  // bar/dock visibility, see hypr/scripts/gaps-sync)
+  "trigger.toggle.top-bar": {"icon":"󰍜","label":"Menu Bar","action":"$HOME/.config/hypr/scripts/bar-toggle"},
+
   // Setup > Config > Hyprland: submenu of ~/.config/hypr/ configs, opened in the
   // running Emacs (emacsclient -n). Keybindings/Monitors/Input moved in from Setup.
   "setup.config.hyprland": {"icon":"","label":"Hyprland","aliases":["hyprland configs"]},

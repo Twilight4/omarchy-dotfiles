@@ -92,12 +92,32 @@ hl.config({
 })
 
 
--- App dock: slide in/out from its screen edge (bottom) like the quickshell
--- bar, instead of the global layer fade.
-hl.layer_rule({ match = { namespace = "nwg-dock" }, blur = true, animation = "slide" })
+-- Gaps follow the bar/dock: while the Omarchy bar or the nwg dock is
+-- visible the normal gaps apply; with both hidden, windows go edge-to-edge.
+-- ponytail: state starts optimistic (bar on, dock off); a config reload
+-- while both are hidden keeps the gaps until the next bar/dock toggle —
+-- probe layer state at load if that ever matters.
+local base_gaps = { gaps_in = 5, gaps_out = 10 }  -- Omarchy defaults
+local bars = { ["omarchy-bar"] = true, ["nwg-dock"] = false }
+local function sync_gaps()
+  if bars["omarchy-bar"] or bars["nwg-dock"] then
+    hl.config({ general = base_gaps })
+  else
+    hl.config({ general = { gaps_in = 0, gaps_out = 0 } })
+  end
+end
+hl.on("layer.opened", function(layer)
+  if bars[layer.namespace] ~= nil then bars[layer.namespace] = true; sync_gaps() end
+end)
+hl.on("layer.closed", function(layer)
+  if bars[layer.namespace] ~= nil then bars[layer.namespace] = false; sync_gaps() end
+end)
 
--- Rofi: blurred like the dock, but instant (no fade wait).
-hl.layer_rule({ match = { namespace = "rofi" }, blur = true, no_anim = true })
+-- App dock: slide in/out from its screen edge (bottom) like the quickshell
+-- bar, instead of the global layer fade. No blur: the dock style.css runs
+-- 0.80 opacity which looks better crisp (user preference, 2026-08-31).
+hl.layer_rule({ match = { namespace = "nwg-dock" }, blur = false, animation = "slide" })
+
 
 -- Standalone app-grid launcher (.config/qs-applauncher): blurred backdrop,
 -- rofi-style. The omarchy system menu is deliberately left unblurred.
