@@ -46,15 +46,10 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("uwsm app -- kitty --class kitty-cliamp -e cliamp --vol -20 --playlist Mixed --auto-play")
     hl.exec_cmd("uwsm app -- ferdium --socket=wayland --ozone-platform-hint=auto --ozone-platform=wayland --enable-features-WaylandWindowDecorations")
 
-    -- App dock along the bottom edge (same invocation as dock-toggle.sh;
-    -- GDK_SCALE=2 avoids blurry icons on the 1.6-scale panel)
-    hl.exec_cmd([[uwsm app -d "App dock" -- sh -c 'GDK_SCALE=2 nwg-dock-hyprland -i 30 -w 5 -mb 10 -ml 10 -mr 10 -c "$HOME/.config/hypr/scripts/app-launcher.sh"']])
-
+    -- App dock along the bottom edge: dock-toggle.sh launches it in
+    -- auto-hide mode and nudges it visible (same path as SUPER+D)
+    hl.exec_cmd('uwsm app -d "App dock" -- ~/.config/hypr/scripts/dock-toggle.sh')
 
     -- Land on an empty workspace (7 = first free, SUPER+1)
     hl.exec_cmd([[sleep 5 && hyprctl dispatch 'hl.dsp.focus({workspace="7"})']])
-
-    -- Gaps follow bar/dock visibility (corrects the optimistic initial
-    -- state if the bar toggle flag was left off last session)
-    hl.exec_cmd("sleep 6 && $HOME/.config/hypr/scripts/gaps-sync")
 end)

@@ -46,9 +46,12 @@
 
 hl.config({
   input = {
-    -- Swap Caps Lock and Left Ctrl (replaces Omarchy default
+    -- Caps Lock acts as Left Ctrl (Garuda parity; replaces Omarchy default
     -- "compose:caps,shift:both_capslock_cancel").
-    kb_options = "ctrl:swapcaps",
+    kb_options = "ctrl:nocaps",
+
+    -- No mouse acceleration (Garuda parity; Omarchy default is adaptive).
+    accel_profile = "flat",
 
     -- Touchpad (ported from the official dotfiles general.lua — 2-in-1 panel)
     touchpad = {

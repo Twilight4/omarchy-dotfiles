@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-# Toggle the Omarchy bar, then re-sync gaps (they follow bar/dock visibility).
-# Wraps omarchy-toggle-bar so every bar toggle path (keybind, menu) keeps the
-# gap state consistent.
-set -euo pipefail
-
-omarchy-toggle-bar "$@"
-exec "$HOME/.config/hypr/scripts/gaps-sync"

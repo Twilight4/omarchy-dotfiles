@@ -121,9 +121,20 @@ end
 -- load-order guard as hyprgrass: hyprpm loads plugins after the config
 -- parses (autostart.lua re-parses once the plugins are in).
 if hl.plugin.hyprexpo ~= nil then
+    -- Background follows the Omarchy theme (parsed from the theme state;
+    -- omarchy theme set reloads the config, so this re-reads on change).
+    local expo_bg = "rgb(101315)"
+    local theme_file = io.open(os.getenv("HOME") .. "/.local/state/omarchy/current/theme/kitty.conf", "r")
+    if theme_file then
+        for line in theme_file:lines() do
+            local hex = line:match("^background%s+#(%x+)")
+            if hex then expo_bg = "rgb(" .. hex .. ")" end
+        end
+        theme_file:close()
+    end
     hl.config({ plugin = { hyprexpo = {
         columns = 3,
-        bg_col = "rgb(111111)",
+        bg_col = expo_bg,
         workspace_method = "center current",
         skip_empty = 0,
         gesture_distance = 200,
@@ -388,9 +399,7 @@ o.bind("SUPER + CTRL + ALT + N", "Network", "omarchy-shell shell toggle omarchy.
 o.bind("SUPER + CTRL + ALT + P", "Power", "omarchy-shell shell toggle omarchy.power")
 o.bind("SUPER + CTRL + T", "Toggle menu", "omarchy-menu toggle toggle")
 
--- Top bar via the bar-toggle wrapper so gaps re-sync on every toggle
-hl.unbind("SUPER + SHIFT + SPACE")
-o.bind("SUPER + SHIFT + SPACE", "Toggle top bar", "~/.config/hypr/scripts/bar-toggle")
+
 
 o.bind_toggle("SUPER + backslash", "Toggle nightlight", "nightlight")
 o.bind_toggle("SUPER + CTRL + Y", "Toggle locking on idle", "idle")
