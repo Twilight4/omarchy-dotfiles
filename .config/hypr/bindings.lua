@@ -235,7 +235,7 @@ hl.unbind("SUPER + W")                                   -- Close window -> SUPE
 hl.unbind("SUPER + J")                                   -- Toggle split -> cyclenext
 hl.unbind("SUPER + O")                                   -- Pop window out -> workspace 3
 hl.unbind("SUPER + P")                                   -- Pseudo -> workspace 5
-
+hl.unbind("SUPER + L")                                   -- Workspace layout (layout pinned to master, looknfeel.lua)
 hl.unbind("SUPER + CTRL + Delete")                       -- Toggle laptop display -> uwsm stop
 
 -- Window groups: unused
@@ -257,9 +257,9 @@ end
 
 -- Universal clipboard keys re-homed
 hl.unbind("SUPER + C")                                   -- Universal copy -> clipboard manager
-hl.unbind("SUPER + V")                                   -- Universal paste -> dismiss last notification
+hl.unbind("SUPER + V")                                   -- Universal paste (left free)
 hl.unbind("SUPER + X")                                   -- Universal cut -> Keybindings menu
-hl.unbind("SUPER + SHIFT + C")                           -- Calendar -> SUPER+CTRL+ALT+C
+hl.unbind("SUPER + SHIFT + C")                           -- Calendar (removed at user request)
 hl.unbind("SUPER + CTRL + V")                            -- Clipboard manager -> SUPER+C (taeryn.clipboard)
 
 -- Notifications reshuffled to Garuda keys
@@ -279,10 +279,10 @@ hl.unbind("SUPER + K")                                   -- Keybindings -> SUPER
 hl.unbind("SUPER + CTRL + X")                            -- Dictation -> F1; key -> color picker
 hl.unbind("F9")                                          -- Dictation push-to-talk start/stop
 
--- ws-scripts keys: these Omarchy menus give way (root menu still has them)
-hl.unbind("SUPER + CTRL + W")                            -- Network -> ws-zen
-hl.unbind("SUPER + CTRL + O")                            -- Toggle menu -> ws-ferdium
-hl.unbind("SUPER + CTRL + P")                            -- Power -> ws-cliamp
+-- ws-scripts keys: these Omarchy menus move to new keys (bound below)
+hl.unbind("SUPER + CTRL + W")                            -- Network -> SUPER+CTRL+ALT+N
+hl.unbind("SUPER + CTRL + O")                            -- Toggle menu -> SUPER+CTRL+T
+hl.unbind("SUPER + CTRL + P")                            -- Power -> SUPER+CTRL+ALT+P
 
 -- === Garuda bindings =======================================================
 
@@ -381,10 +381,12 @@ o.bind("SUPER + Y", "Lock system", "omarchy-system-lock")
 o.bind("SUPER + SHIFT + ALT + B", "Theme menu", "omarchy-menu toggle theme")
 o.bind("SUPER + ALT + B", "Background switcher", "omarchy-menu toggle background")
 o.bind("SUPER + CTRL + SPACE", "Dismiss all notifications", "omarchy-shell notifications dismissAll")
-o.bind("SUPER + V", "Dismiss last notification", "omarchy-shell notifications dismissOne")
+o.bind("SUPER + period", "Dismiss last notification", "omarchy-shell notifications dismissOne")
 o.bind("SUPER + CTRL + X", "Color picker", "pkill hyprpicker || hyprpicker -a")
 o.bind("SUPER + CTRL + ALT + D", "Display", "omarchy-shell shell toggle omarchy.monitor")
-o.bind("SUPER + CTRL + ALT + C", "Calendar", { webapp = "https://app.hey.com/calendar/weeks/" })
+o.bind("SUPER + CTRL + ALT + N", "Network", "omarchy-shell shell toggle omarchy.network")
+o.bind("SUPER + CTRL + ALT + P", "Power", "omarchy-shell shell toggle omarchy.power")
+o.bind("SUPER + CTRL + T", "Toggle menu", "omarchy-menu toggle toggle")
 
 o.bind_toggle("SUPER + backslash", "Toggle nightlight", "nightlight")
 o.bind_toggle("SUPER + CTRL + Y", "Toggle locking on idle", "idle")

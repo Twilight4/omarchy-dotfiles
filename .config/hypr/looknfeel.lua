@@ -1,5 +1,16 @@
 -- Change the default Omarchy look'n'feel.
 
+
+-- Master layout only (Garuda parity): pin the layout engine + its params.
+-- The workspace-layout toggle keybind is unbound in bindings.lua.
+hl.config({
+  general = { layout = "master" },
+  master = {
+    orientation = "right",
+    new_on_top = true,
+    special_scale_factor = 0.9,
+  },
+})
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#general
 -- hl.config({
 --   general = {

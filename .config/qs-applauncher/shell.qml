@@ -57,6 +57,13 @@ ShellRoot {
       Qt.quit()
     }
 
+    // Directional grid navigation: h/l move one cell, j/k move one row
+    // (6 columns). Clamped at the edges.
+    function move(delta) {
+      if (grid.model.length === 0) return
+      grid.currentIndex = Math.max(0, Math.min(grid.model.length - 1, grid.currentIndex + delta))
+    }
+
     Component.onCompleted: refreshApps()
     Connections {
       target: DesktopEntries.applications
@@ -116,17 +123,19 @@ ShellRoot {
           Keys.onPressed: event => {
             var ctrl = event.modifiers & Qt.ControlModifier
             if (event.key === Qt.Key_Escape) Qt.quit()
-            // Rofi-style Emacs keys (same set as the SUPER+SPACE taeryn.menu
-            // and the taeryn.clipboard overlay): C-j/k move, C-m/C-l/RET
-            // accept, C-g cancels, C-h cursor back, C-w del word, C-y pastes
-            // the clipboard, PageUp/Down jump six cells.
-            else if (ctrl && event.key === Qt.Key_J) { grid.incrementCurrentIndex(); event.accepted = true }
-            else if (ctrl && event.key === Qt.Key_K) { grid.decrementCurrentIndex(); event.accepted = true }
-            else if (event.key === Qt.Key_Down) { grid.incrementCurrentIndex(); event.accepted = true }
-            else if (event.key === Qt.Key_Up) { grid.decrementCurrentIndex(); event.accepted = true }
-            else if (event.key === Qt.Key_PageDown) { for (var i = 0; i < 6; i++) grid.incrementCurrentIndex(); event.accepted = true }
-            else if (event.key === Qt.Key_PageUp) { for (var i = 0; i < 6; i++) grid.decrementCurrentIndex(); event.accepted = true }
-            else if ((ctrl && (event.key === Qt.Key_M || event.key === Qt.Key_L)) || event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+            // Rofi-style Emacs keys: C-h/j/k/l navigate the grid like arrow
+            // keys (h/l = one cell, j/k = one row; plain Up/Down match), C-m
+            // or RET accepts, C-g cancels, C-w deletes a word, C-y pastes
+            // the clipboard, PageUp/Down jump three rows.
+            else if (ctrl && event.key === Qt.Key_J) { panel.move(6); event.accepted = true }
+            else if (ctrl && event.key === Qt.Key_K) { panel.move(-6); event.accepted = true }
+            else if (ctrl && event.key === Qt.Key_H) { panel.move(-1); event.accepted = true }
+            else if (ctrl && event.key === Qt.Key_L) { panel.move(1); event.accepted = true }
+            else if (event.key === Qt.Key_Down) { panel.move(6); event.accepted = true }
+            else if (event.key === Qt.Key_Up) { panel.move(-6); event.accepted = true }
+            else if (event.key === Qt.Key_PageDown) { panel.move(18); event.accepted = true }
+            else if (event.key === Qt.Key_PageUp) { panel.move(-18); event.accepted = true }
+            else if ((ctrl && event.key === Qt.Key_M) || event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
               if (grid.model.length > 0) panel.launch(grid.model[grid.currentIndex].id)
               event.accepted = true
             }
@@ -137,7 +146,6 @@ ShellRoot {
               if (pasted) search.insert(search.cursorPosition, pasted)
               event.accepted = true
             }
-            else if (ctrl && event.key === Qt.Key_H) { search.cursorPosition--; event.accepted = true }
             else if (ctrl && event.key === Qt.Key_W) {  // delete word back
               var p = search.text.slice(0, search.cursorPosition)
               var s = search.cursorPosition
