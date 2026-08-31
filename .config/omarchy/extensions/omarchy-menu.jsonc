@@ -6,17 +6,17 @@
   // them (search checks each row's own guard only). Regenerate that block
   // after an omarchy update adds stock entries:
   //   grep -oE '^  "[a-z0-9._-]+"' /usr/share/omarchy/default/omarchy/omarchy-menu.jsonc \
-  //     | tr -d ' "' | grep -E '^(learn|system|update|install\.(aur|service|development|editor|terminal|browser|ai|style\.font)|remove\.(development|browser|preinstalls)|style\.font)(\.|$)' | sort
+  //     | tr -d ' "' | grep -E '^(learn|system|update|install\.(aur|service|development|editor|terminal|browser|ai|style\.font)|remove\.(development|browser|preinstalls)|style\.(font|hyprland))(\.|$)' | sort
 
   "apps": {"icon":"󰀻","label":"Apps","aliases":["app","applications"],"provider":"apps","when":"false"},
   "update": {"icon":"","label":"Update","aliases":[],"action":"omarchy-launch-floating-terminal-with-presentation omarchy-update"},
   "style.unlock": {"icon":"󰟵","label":"Unlock","aliases":["unlock"],"action":"omarchy-shell lock explore","description":"Preview and choose a lock screen design"},
   "install.package": {"icon":"󰣇","label":"Package","action":"xdg-terminal-exec --app-id=org.omarchy.terminal $HOME/.config/hypr/scripts/pkg-install","description":"Search official repos and the AUR together"},
   "install.style.theme": {"icon":"󰸌","label":"Theme","action":"omarchy-launch-floating-terminal-with-presentation omarchy-theme-install","parent":"install"},
-  "install.style.background": {"icon":"","label":"Background","action":"omarchy-theme-bg-install","parent":"install"},
+  "install.style.background": {"icon":"","label":"Background","action":"omarchy-theme-bg-install","parent":"install"},
+  "style.hyprland": {"when": "false"},
 
   // ---- generated: descendants of the removed subtrees (see header) ----
-// ---- generated: descendants of the removed subtrees (see header) ----
   "install.ai": {"when": "false"},
   "install.ai.chatgpt": {"when": "false"},
   "install.ai.dictation": {"when": "false"},
