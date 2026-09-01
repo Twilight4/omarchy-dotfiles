@@ -32,8 +32,15 @@ PREINSTALL_REMOVER="$(command -v omarchy-remove-preinstalls || true)"
 if [[ -x $PREINSTALL_REMOVER ]]; then
     info "Launching Omarchy's preinstall remover (interactive gum confirm)..."
     # Declining (non-zero exit from gum confirm) is a valid choice, not a
-    # failure — treat it as "skipped", not an abort.
-    "$PREINSTALL_REMOVER" || warn "Preinstall remover skipped or partially failed."
+    # failure — treat it as "skipped", not an abort. gum's TUI can't render
+    # through a pipe (`install.sh | tee`), so pin it to the real terminal;
+    # its output bypasses the tee log by design.
+    if [[ -r /dev/tty && -w /dev/tty ]]; then
+        "$PREINSTALL_REMOVER" </dev/tty >/dev/tty 2>&1 \
+            || warn "Preinstall remover skipped or partially failed."
+    else
+        warn "No TTY — skipping interactive preinstall remover."
+    fi
 else
     warn "omarchy-remove-preinstalls not found — skipping (not an Omarchy 4 install?)."
 fi
