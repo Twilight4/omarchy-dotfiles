@@ -156,8 +156,8 @@ packages=(
     "smassh-bin"
 )
 
-# -bin swap: the source bibata package conflicts with bibata-cursor-theme-bin
-_uninstallPackages bibata-cursor-theme
+# -bin swaps: source packages conflict with their -bin variants
+_uninstallPackages bibata-cursor-theme freetube megacmd
 
 _installPackages "${packages[@]}"
 
