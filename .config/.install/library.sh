@@ -21,8 +21,11 @@ warn() { printf '%sWARN: %s%s\n' "$_C_WARN" "$*" "$_C_OFF"; }
 err()  { printf '%sERROR: %s%s\n' "$_C_ERR" "$*" "$_C_OFF" >&2; }
 
 #--------------------------------------------------------- package detection
-# Exit-code based: `pacman -Qq` is locale- and color-proof.
-_isInstalled() { pacman -Qq "$1" &>/dev/null; }
+# Literal-name check. pacman 7's `pacman -Q` also matches *provides*, which
+# lies for swap lists (e.g. installed bibata-cursor-theme-bin provides
+# "bibata-cursor-theme"), while `pacman -R` needs the literal installed
+# name — comparing -Qq's output name filters out provides matches.
+_isInstalled() { [[ "$(pacman -Qq "$1" 2>/dev/null)" == "$1" ]]; }
 
 # Keep only names that actually exist in the repos or AUR (`yay -Si` covers
 # both); warn (on stderr, so stdout stays a clean package list for the

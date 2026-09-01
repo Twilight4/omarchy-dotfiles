@@ -156,8 +156,10 @@ packages=(
     "smassh-bin"
 )
 
-# -bin swaps: source packages conflict with their -bin variants
-_uninstallPackages bibata-cursor-theme freetube megacmd
+# Variant swaps: legacy variants conflict with (or shadow via provides) the
+# declared array picks — remove the loser first. No-ops where absent.
+_uninstallPackages bibata-cursor-theme freetube megacmd \
+    noise-suppression-for-voice-git xdg-ninja-git
 
 _installPackages "${packages[@]}"
 
