@@ -35,8 +35,8 @@ info "Installing delta packages..."
 packages=(
     # ---- rice picks -----------------------------------------------------
     "kitty"                    # terminal (alacritty removed in remove-bloat.sh)
-    "bibata-cursor-theme"      # cursor theme, same as official dotfiles
-    "zen-browser-bin"          # browser (chromium removed in remove-bloat.sh)
+    "bibata-cursor-theme-bin"  # cursor theme (-bin: prebuilt; the source pkg
+                               # regenerates all cursors via python-clickgen)
     "cliamp-bin"               # official variant; omarchy's cliamp preinstall
                                # is dropped by the preinstall remover first
     "wlogout"                  # power menu (AUR); colors track the Omarchy
@@ -63,18 +63,13 @@ packages=(
     "pkgfile"
 
     # ---- editor / dev ---------------------------------------------------
-    "emacs-git"
+    "emacs-wayland"            # prebuilt (repo); emacs-git compiled from
+                               # source and dragged in the texlive toolchain
     "go-task"
     "act"
 	"bun"
     "git-delta"
     "shellcheck"               # shell linter — QA for the install scripts
-    "texlive-binextra"
-    "texlive-bin"
-    "texlive-basic"
-    "texlive-latexextra"
-    "texlive-plaingeneric"
-    "texlive-fontsrecommended"
     "words"
     "hunspell"
     "hunspell-en_us"
@@ -104,12 +99,12 @@ packages=(
     "qrencode"
     "chafa"
     "perl-image-exiftool"
-    "xdg-ninja-git"
+    "xdg-ninja"
     "wget"
     "net-tools"
     "speedtest-cli"
     "proxychains-ng"
-    "freerdp2"
+    "freerdp"                  # repo v3 (freerdp2 AUR = slow cmake build)
     "acpi"
     "udiskie"
     "usbutils"
@@ -126,12 +121,12 @@ packages=(
     # ---- media ----------------------------------------------------------
     "mpv-mpris"
     "yt-dlp"
-    "noise-suppression-for-voice-git"
+    "noise-suppression-for-voice"   # repo prebuilt (the -git pkg compiles)
 
     # ---- desktop extras -------------------------------------------------
     "zathura"
     "zathura-pdf-poppler"
-    "wlr-randr-git"
+    "wlr-randr"          # repo prebuilt
     "yad"
     "zenity"
     "nautilus-open-any-terminal"
@@ -146,9 +141,9 @@ packages=(
 
     # ---- user apps ------------------------------------------------------
     "ferdium-bin"
-    "freetube"
-    "megacmd"                  # MEGAcmd — engine for the omaga-sync plugin
-                               # (widget + services: setup-plugins.sh)
+    "freetube-bin"            # prebuilt (source pkg builds Electron via pnpm)
+    "megacmd-bin"              # prebuilt MEGAcmd (source pkg compiles the whole SDK);
+                               # engine for the omaga-sync plugin (setup-plugins.sh)
     "torbrowser-launcher"
     "onionshare"
     "privatebin-cli"
@@ -160,7 +155,7 @@ packages=(
     "figlet"
     "lolcat"
     "cbonsai"
-    "cmatrix-git"
+    "cmatrix"              # repo prebuilt
     "smassh-bin"
 )
 

@@ -31,7 +31,7 @@ _isInstalled() { pacman -Qq "$1" &>/dev/null; }
 _filterAvailable() {
     local pkg
     for pkg in "$@"; do
-        if yay -Si "$pkg" &>/dev/null; then
+        if yay -Si "$pkg" &>/dev/null || yay -Si --aur "$pkg" &>/dev/null; then
             printf '%s\n' "$pkg"
         else
             warn "Package not found in repos/AUR, skipping: $pkg" >&2
