@@ -156,6 +156,9 @@ packages=(
     "smassh-bin"
 )
 
+# -bin swap: the source bibata package conflicts with bibata-cursor-theme-bin
+_uninstallPackages bibata-cursor-theme
+
 _installPackages "${packages[@]}"
 
 ok "Delta packages installed."
