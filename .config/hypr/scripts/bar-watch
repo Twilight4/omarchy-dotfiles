@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Single-window chrome follows the bar state, regardless of HOW the bar was
+# toggled (SUPER+SHIFT+SPACE, menu, 3-finger swipe): every path runs
+# `omarchy-toggle bar-off`, which flips the same flag file — poll it and
+# sync runtime Hyprland rules on change. Also re-syncs every ~5s while the
+# bar is hidden, because `hyprctl reload` clears runtime rules (self-heal,
+# no toggle needed).
+#   bar hidden  -> single-window workspaces lose gaps + border (edge-to-edge)
+#   bar visible -> 3px gaps + 2px border (the config defaults)
+# Multi-window workspaces keep their gaps in both states.
+set -u
+FLAG="$HOME/.local/state/omarchy/toggles/bar-off"
+sync_rules() {
+    local gaps=3 border=2
+    [[ -f $FLAG ]] && { gaps=0; border=0; }   # hidden: edge-to-edge
+    local ws float
+    for spec in 'w[tv1]s[false]|false' 'f[1]s[false]|true'; do
+        ws=${spec%|*} float=${spec#*|}
+        hyprctl eval "hl.workspace_rule({workspace=\"$ws\", gaps_out=$gaps, gaps_in=$gaps})" >/dev/null
+        hyprctl eval "hl.window_rule({match={float=$float, workspace=\"$ws\"}, border_size=$border})" >/dev/null
+    done
+}
+
+exec 9>"${XDG_RUNTIME_DIR:-/tmp}/bar-watch.lock"
+flock -n 9 || exit 0   # single instance across config reloads
+
+last=""
+tick=0
+while sleep 0.5; do
+    cur=on; [[ -f $FLAG ]] && cur=off
+    tick=$(( (tick + 1) % 10 ))
+    if [[ $cur != "$last" ]]; then
+        sync_rules; last=$cur
+    elif [[ $cur == off && $tick -eq 0 ]] \
+         && ! hyprctl workspacerules | grep -qF 'w[tv1]s[false]'; then
+        sync_rules   # reload cleared the runtime rules while hidden
+    fi
+done

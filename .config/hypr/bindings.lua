@@ -398,10 +398,11 @@ o.bind("SUPER + CTRL + ALT + D", "Display", "omarchy-shell shell toggle omarchy.
 o.bind("SUPER + CTRL + ALT + N", "Network", "omarchy-shell shell toggle omarchy.network")
 o.bind("SUPER + CTRL + ALT + P", "Power", "omarchy-shell shell toggle omarchy.power")
 
--- Top bar via the bar-toggle wrapper: single-window chrome (gaps/border)
--- follows the bar state, see hypr/scripts/bar-toggle
+-- Top bar. Single-window chrome (gaps/border) follows the bar state via
+-- scripts/bar-watch, which watches the bar-off flag — covers every toggle
+-- path (keybind, menu, 3-finger swipe)
 hl.unbind("SUPER + SHIFT + SPACE")
-o.bind("SUPER + SHIFT + SPACE", "Toggle top bar", "~/.config/hypr/scripts/bar-toggle")
+o.bind("SUPER + SHIFT + SPACE", "Toggle top bar", "omarchy-toggle-bar")
 o.bind("SUPER + CTRL + T", "Toggle menu", "omarchy-menu toggle toggle")
 
 

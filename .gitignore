@@ -2,7 +2,7 @@
 # except taeryn.menu (back button, rofi keys — live SUPER+SPACE menu),
 # taeryn.clipboard (rofi keys matching the menu — SUPER+C overlay),
 # taeryn.notifications (+ msg-incoming.mp3 sound on new popups) and
-# taeryn.image-picker (C-j/k left/right in the background switcher).
+# taeryn.image-picker (C-j left / C-k right in the background switcher).
 .config/omarchy/plugins/*
 !.config/omarchy/plugins/taeryn.menu/
 !.config/omarchy/plugins/taeryn.clipboard/

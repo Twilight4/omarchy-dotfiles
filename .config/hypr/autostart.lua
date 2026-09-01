@@ -21,6 +21,10 @@ o.launch_on_start("hyprctl setcursor Bibata-Modern-Classic 24")
 -- freezes the transform (e.g. reading lying down).
 o.launch_on_start(os.getenv("HOME") .. "/.config/hypr/scripts/auto-rotate.sh")
 
+-- Single-window chrome follows the bar state: bar-watch polls the bar-off
+-- flag (every toggle path flips it) and syncs runtime gaps/border rules.
+o.launch_on_start(os.getenv("HOME") .. "/.config/hypr/scripts/bar-watch")
+
 -- Load hyprpm plugins (hyprgrass touch gestures), then re-parse the config
 -- ONCE so the guarded hyprgrass binds in bindings.lua register: hyprpm loads
 -- plugins after the initial config parse, so without this the gestures are
