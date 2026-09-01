@@ -104,7 +104,6 @@ packages=(
     "net-tools"
     "speedtest-cli"
     "proxychains-ng"
-    "freerdp"                  # repo v3 (freerdp2 AUR = slow cmake build)
     "acpi"
     "udiskie"
     "usbutils"
@@ -126,7 +125,6 @@ packages=(
     # ---- desktop extras -------------------------------------------------
     "zathura"
     "zathura-pdf-poppler"
-    "wlr-randr"          # repo prebuilt
     "yad"
     "zenity"
     "nautilus-open-any-terminal"
@@ -155,7 +153,6 @@ packages=(
     "figlet"
     "lolcat"
     "cbonsai"
-    "cmatrix"              # repo prebuilt
     "smassh-bin"
 )
 
