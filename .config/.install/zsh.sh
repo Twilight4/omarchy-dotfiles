@@ -2,8 +2,7 @@
 # Sourced by install.sh — use `return`, not `exit`.
 # Modified copy of the official dotfiles zsh.sh (same logic, trimmed banner).
 
-read -rp "This will set the default shell to Zsh. Press any key to continue or Ctrl+C to exit..." -n 1 -s
-echo
+info "Setting Zsh as the default shell."
 
 zsh_path=$(command -v zsh) || { err "zsh not found in PATH."; return 1; }
 
@@ -19,6 +18,5 @@ if [[ $default_shell != "$zsh_path" ]]; then
         return 1
     fi
 else
-    echo
     info "Zsh is already the default shell."
 fi

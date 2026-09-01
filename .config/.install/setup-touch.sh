@@ -15,7 +15,11 @@ info "Setting up the touch stack..."
 # post-install.sh step 1 does the same plus hyprexpo when run interactively.
 if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] && command -v hyprpm &>/dev/null; then
     hyprpm update || warn "hyprpm update failed."
-    hyprpm add https://github.com/horriblename/hyprgrass 2>/dev/null \
+    # Pin: last commit compatible with Hyprland 0.56.x stable — main tracks
+    # the 0.57-dev keybinds reorg and the v0.8.2 tag needs the older Log.hpp
+    # layout. Bump when Hyprland stable moves past 0.56.
+    HYPRGRASS_REV=56473e9e0b2da34bb3b871e90f40b3fc3d41ba9b
+    hyprpm add https://github.com/horriblename/hyprgrass "$HYPRGRASS_REV" 2>/dev/null \
         || info "hyprgrass repo already added."
     hyprpm enable hyprgrass || warn "hyprpm enable hyprgrass failed."
     hyprpm reload || warn "hyprpm reload failed."
