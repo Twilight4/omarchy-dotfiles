@@ -108,7 +108,7 @@ fi
 for sub in fonts applications icons; do
     std="$HOME/.local/share/$sub"
     red="$HOME/.config/.local/share/$sub"
-    mkdir -p "$std"
+    mkdir -p "$std" "$(dirname "$red")" # ln won't create the redirect parent
     if [[ -L $red ]]; then
         continue # already bridged
     fi
