@@ -14,7 +14,6 @@ deploy_dirs=(
     systemd
     omarchy
     kitty
-    imv
     gtk-3.0
     gtk-4.0
     wlogout

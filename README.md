@@ -15,7 +15,7 @@ what differs on top.
 |---|---|
 | `.config/hypr/` | Hyprland Lua configs (Omarchy 4 layout) + Bibata cursor block |
 | `.config/omarchy/` | quickshell `shell.json` layout, hooks, branding, extensions, `themed/` |
-| `.config/kitty/`, `.config/imv/` | terminal + image viewer |
+| `.config/kitty/` | terminal |
 | `.config/gtk-3.0/`, `.config/gtk-4.0/` | Bibata cursor settings |
 | `.config/wlogout/` | wlogout power menu; `colors.css` is generated from the current Omarchy theme (`generate-colors.sh`, re-run by the `theme-set.d/wlogout-colors.sh` hook on every theme change) |
 | `.config/systemd/user/` | fcitx5 override (frees input-method-v2 for wvkbd) |
