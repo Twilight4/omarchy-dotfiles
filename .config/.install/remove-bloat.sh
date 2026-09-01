@@ -56,15 +56,16 @@ bloat=(
     # Terminal — kitty replaces it
     "alacritty"
 
-    # Document viewer — zathura replaces it
+    # Document viewer — zathura replaces it (sushi depends on evince,
+    # so both must go in one transaction)
     "evince"
+    "sushi"
 
     # Shell/CLI conflicts with the official-dotfiles setup
     # (zsh + p10k, lsd, no multiplexer)
     "tmux"
     "starship"
     "eza"
-	"imv"
 
     # Browser — zen-browser-bin replaces it
     "chromium"
