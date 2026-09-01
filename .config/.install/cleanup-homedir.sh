@@ -10,8 +10,7 @@
 # - ~/.cache is left in place for the same reason (running session apps).
 # - The stock-file removals (~/.bash*, capitalized XDG dirs, ...) are kept.
 
-read -rp "This will tidy the \$HOME directory (create XDG skeleton, relocate stray dotfiles). Press any key to continue or Ctrl+C to exit..." -n 1 -s
-echo
+info "Tidying \$HOME (create XDG skeleton, relocate stray dotfiles)."
 
 # Create necessary directories
 directories=(
