@@ -1281,7 +1281,7 @@ Item {
               required property int childCount
 
               readonly property bool hasCursor: root.cursorActive && row.index === root.selectedIndex
-              readonly property bool isApp: row.kind === "app"
+              readonly property bool isApp: row.kind === "app" || row.appIcon.length > 0
               readonly property bool hasIcon: row.icon.length > 0 || row.isApp
 
               width: ListView.view.width

@@ -25,6 +25,7 @@ function normalizeItem(id, raw) {
     parent: parent,
     kind: kind,
     icon: value.icon || "",
+    appIcon: value.appIcon || "",
     iconFont: value.iconFont || "",
     label: value.label || id,
     title: value.title || "",
