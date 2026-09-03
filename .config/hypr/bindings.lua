@@ -81,6 +81,13 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "edge", origin = "right", direction = "left" },
       action = "workspace",
     })
+    -- 2-finger horizontal swipe anywhere switches workspaces (follows the
+    -- finger). Replaces Hyprland's native workspace_swipe_touch, whose core
+    -- state machine wedges — disabled in input.lua.
+    hl.plugin.hyprgrass.gesture({
+      pattern = { kind = "swipe", fingers = 2, direction = "horizontal" },
+      action = "workspace",
+    })
     -- Touchscreen: 2-finger swipe up toggles the hyprexpo overview (mirrors
     -- the touchpad gesture; discrete bind so it fires once on completion,
     -- not per animation frame). Nil-guarded: hyprexpo may be absent.

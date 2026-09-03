@@ -68,12 +68,12 @@ hl.config({
   },
 })
 
--- Touchscreen workspace swipes (hyprgrass docs recommendation): 3-finger
+-- Touchscreen workspace swipes (hyprgrass docs recommendation):
 -- horizontal touch swipe switches workspaces; a small cancel ratio avoids
 -- accidental switches on short swipes.
 hl.config({
   gestures = {
-    workspace_swipe_touch        = true,
+    workspace_swipe_touch        = false, -- native core touch swipe state machine wedges (touches get stuck shifting workspaces); hyprgrass 2-finger swipe in bindings.lua replaces it
     workspace_swipe_cancel_ratio = 0.10, -- short/accidental swipes snap back instead of switching
     -- more finger travel per workspace -> the follow-the-finger motion is calmer
     workspace_swipe_distance     = 300,
