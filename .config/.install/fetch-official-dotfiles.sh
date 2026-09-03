@@ -48,6 +48,7 @@ shared_configs=(
     bat          # bat + bat-extras config
     fontconfig   # font rendering preferences
     lsd          # ls replacement theme/icons
+    cliamp       # music player playlists (config.toml stays local)
 )
 
 info "Deploying shared configs from the official repo..."
