@@ -84,7 +84,7 @@ if [[ -d $OFFICIAL_DIR/.config/omp ]]; then
 fi
 
 #------------------------------------------------------- omarchy zsh bridge
-# Two Omarchy-specific patches to the freshly deployed zsh config. Both are
+# Three Omarchy-specific patches to the freshly deployed zsh config. All are
 # idempotent and re-applied on every install run (the official repo's
 # .zshenv may be re-deployed over them).
 ZSHENV="$HOME/.config/zsh/.zshenv"
@@ -120,3 +120,24 @@ for sub in fonts applications icons; do
     ln -s "$std" "$red"
     ok "Bridged ~/.config/.local/share/$sub -> ~/.local/share/$sub"
 done
+# 3) mise bridge: /usr/share/omarchy/default/bash/env-bootstrap hardcodes
+#    ~/.local/share/mise/shims on PATH (login shells + uwsm session), but the
+#    XDG redirect moves mise's real data dir. Symlink the standard path at the
+#    redirect so zsh (XDG set) and bash/ssh (XDG unset) share one tool tree —
+#    otherwise they drift and stale shims report "not a valid shim".
+std="$HOME/.local/share/mise"
+red="$HOME/.config/.local/share/mise"
+if [[ -d $std && ! -L $std ]]; then
+    if [[ -d $red ]]; then
+        mv "$std" "$std.pre-xdg-$(date +%Y%m%d%H%M%S)" # both trees exist: archive the stale one
+    else
+        mkdir -p "$(dirname "$red")"
+        mv "$std" "$red" # adopt the pre-XDG tree as the real one
+    fi
+fi
+mkdir -p "$red" # a dangling symlink resolves once mise installs its first tool
+if [[ ! -L $std ]]; then
+    mkdir -p "$(dirname "$std")" # ln won't create the standard-dir parent
+    ln -s "$red" "$std"
+    ok "Bridged ~/.local/share/mise -> ~/.config/.local/share/mise"
+fi
