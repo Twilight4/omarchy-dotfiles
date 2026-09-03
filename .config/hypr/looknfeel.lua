@@ -76,8 +76,9 @@ hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 3, bezier = "m
 -- wlogout power menu: blur the desktop behind it (same rule as the official
 -- Garuda dotfiles; the layer's namespace is "logout_dialog").
 hl.layer_rule({ match = { namespace = "logout_dialog" }, blur = true })
--- noanim: skip the layersIn fade so the menu appears instantly.
-hl.layer_rule({ match = { namespace = "logout_dialog" }, no_anim = true })
+-- Fade the menu in/out (the layer rule's animation name maps to the
+-- built-in layers fade).
+hl.layer_rule({ match = { namespace = "logout_dialog" }, animation = "fade" })
 -- Blur behind the top bar so its transparent mode (double-click toggle) frosts
 -- the desktop instead of going fully clear.
 hl.layer_rule({ match = { namespace = "omarchy-bar" }, blur = true })

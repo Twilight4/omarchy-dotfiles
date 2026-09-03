@@ -75,8 +75,10 @@ bloat=(
     "eza"
 
     # Browser — zen-browser-bin replaces it
-    "chromium"
     "brave-browser"
+    # chromium STAYS on purpose: omarchy-launch-webapp's --app= mode needs a
+    # chromium-family browser (zen is Firefox-based, no app mode); removing it
+    # broke every webapp with uwsm's 'Path "--app=..." does not exist'.
 
     # Unused pre-installed apps (not covered by the preinstall remover)
     "1password-beta"
