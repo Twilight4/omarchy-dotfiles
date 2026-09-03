@@ -20,6 +20,7 @@ deploy_dirs=(
     nwg-dock-hyprland
     xremap
     qs-applauncher
+    cliamp
 )
 
 for d in "${deploy_dirs[@]}"; do

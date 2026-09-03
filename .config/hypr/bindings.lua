@@ -218,6 +218,8 @@ hl.unbind("SUPER + SHIFT + O")                           -- Obsidian
 hl.unbind("SUPER + SHIFT + P")                           -- Google Photos
 hl.unbind("SUPER + SHIFT + S")                           -- Google Maps -> center window
 hl.unbind("SUPER + SHIFT + BACKSPACE")                   -- Toggle window gaps
+hl.unbind("SUPER + S")                                   -- Toggle scratchpad (tiling.lua) -> SUPER+comma in this layout
+hl.unbind("SUPER + ALT + S")                             -- Move window to scratchpad -> SUPER+SHIFT+comma in this layout
 
 -- Letter workspaces replace the numeric workspace/move/silent-move binds.
 for key_code = 10, 19 do

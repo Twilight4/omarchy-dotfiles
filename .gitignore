@@ -12,5 +12,8 @@
 !.config/omarchy/plugins/taeryn.glassgame/
 .config/omarchy/*.bak.*
 .config/wlogout/colors.css
+.config/cliamp/cliamp.log
+.config/cliamp/cliamp.sock
+.config/cliamp/cliamp.sock.pid
 __pycache__/
 *.pyc
