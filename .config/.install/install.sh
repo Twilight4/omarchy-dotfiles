@@ -38,8 +38,12 @@ if ! pacman -Qq omarchy &>/dev/null; then
     echo "WARNING: the 'omarchy' package is not installed."
     echo "This repo layers on top of a stock Omarchy install; continue only if"
     echo "you know what you're doing."
-    read -rp "Continue anyway? (y/n) " cont
-    [[ $cont == "y" ]] || exit 1
+    if command -v gum >/dev/null; then
+        gum confirm "Continue anyway?" || exit 1
+    else
+        read -rp "Continue anyway? (y/n) " cont
+        [[ $cont == "y" ]] || exit 1
+    fi
 fi
 
 ################

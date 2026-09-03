@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Sourced by install.sh — runs FIRST after confirm-start: NOPASSWD up front
 # means the remaining modules never stop for a password prompt (install.sh
-# already primed the cache with sudo -v).
+# already primed the cache with sudo -v). The yes/no answer was pre-asked by
+# confirm-start.sh (preflight) into ADD_SUDOER.
 #
 # Omarchy variant vs the official sudoers-hooks.sh:
 # - The NOPASSWD rule goes into a DROP-IN (/etc/sudoers.d/99-<user>-nopasswd)
@@ -12,8 +13,7 @@
 # - The snap-pac section is dropped: Omarchy has no snap-pac alpm hooks (its
 #   snapshot flow is limine-snapper-sync, which needs no hook handling).
 
-read -rp "Add $USER to sudoers with NOPASSWD (drop-in /etc/sudoers.d/99-$USER-nopasswd)? (y/n) " add_sudoer
-if [[ $add_sudoer == "y" ]]; then
+if [[ ${ADD_SUDOER:-0} == 1 ]]; then
     dropin="/etc/sudoers.d/99-$USER-nopasswd"
     sudoers_line="$USER ALL=(ALL:ALL) NOPASSWD: ALL"
 

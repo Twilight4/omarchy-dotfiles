@@ -11,7 +11,8 @@
 #      it removes that this rice still wants (e.g. cliamp) is cleanly
 #      reinstalled afterwards by install-packages.sh from the official
 #      variants (cliamp-bin, gnome-calculator instead of omacalc).
-#      Interactive: it asks via gum confirm — declining skips it.
+#      Pre-answered by the confirm-start.sh preflight (REMOVE_PREINSTALLS);
+#      its own gum confirm is stripped before running.
 #
 #   2. This rice's own removal list — only what Omarchy's remover does NOT
 #      cover: the pre-v4 stack, migration removals, and desktop-app picks.
@@ -29,20 +30,19 @@ info "Removing bloat..."
 PREINSTALL_REMOVER="$(command -v omarchy-remove-preinstalls || true)"
 [[ -n $PREINSTALL_REMOVER ]] || PREINSTALL_REMOVER=/usr/share/omarchy/bin/omarchy-remove-preinstalls
 
-if [[ -x $PREINSTALL_REMOVER ]]; then
-    info "Launching Omarchy's preinstall remover (interactive gum confirm)..."
-    # Declining (non-zero exit from gum confirm) is a valid choice, not a
-    # failure — treat it as "skipped", not an abort. gum's TUI can't render
-    # through a pipe (`install.sh | tee`), so pin it to the real terminal;
-    # its output bypasses the tee log by design.
-    if [[ -r /dev/tty && -w /dev/tty ]]; then
-        "$PREINSTALL_REMOVER" </dev/tty >/dev/tty 2>&1 \
-            || warn "Preinstall remover skipped or partially failed."
+if [[ ${REMOVE_PREINSTALLS:-0} == 1 ]]; then
+    if [[ -x $PREINSTALL_REMOVER ]]; then
+        info "Removing Omarchy preinstalls (confirmed in preflight)..."
+        # The remover's own `gum confirm` is pre-answered by the preflight —
+        # rewrite it to `true` and run the body. If upstream rewrites the
+        # script, the sed no-ops and its gum confirm simply asks again.
+        sed 's/^if gum confirm .*; then/if true; then/' "$PREINSTALL_REMOVER" | bash \
+            || warn "Preinstall remover partially failed."
     else
-        warn "No TTY — skipping interactive preinstall remover."
+        warn "omarchy-remove-preinstalls not found — skipping (not an Omarchy 4 install?)."
     fi
 else
-    warn "omarchy-remove-preinstalls not found — skipping (not an Omarchy 4 install?)."
+    info "Preinstall remover declined in preflight — skipping."
 fi
 
 #------------------------------------------------------- this rice's drops
