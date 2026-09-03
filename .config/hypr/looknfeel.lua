@@ -17,6 +17,10 @@ hl.config({
   misc = {
     mouse_move_enables_dpms = true,
     key_press_enables_dpms = true,
+    -- Animate mouse-drag window resizes. Keyboard resize (resizeactive,
+    -- SUPER+ALT+HJKL) is dispatcher-driven and Hyprland never animates
+    -- those; only layout-driven geometry (e.g. scrolling colresize) animates.
+    animate_manual_resizes = true,
   },
 })
 
