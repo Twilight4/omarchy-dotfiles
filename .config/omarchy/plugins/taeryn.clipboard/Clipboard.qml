@@ -366,7 +366,7 @@ Item {
           } else if (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_J) {
             // Rofi-style Emacs keys (same set as the taeryn.menu menu):
             // C+j/C+k move, C+m/C+l accept (Return branch), C+g cancels,
-            // C+w deletes the last filter word, C+y pastes the clipboard.
+            // C+w clears the filter, C+y pastes the clipboard.
             root.select(1)
             event.accepted = true
           } else if (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_K) {
@@ -377,11 +377,10 @@ Item {
             else if (displayModel.count > 0) root.cursorActive = true
             event.accepted = true
           } else if (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_G) {
-            if (root.filterText) root.setFilter("")
-            else root.close()
+            root.close()
             event.accepted = true
           } else if (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_W && root.filterText) {
-            root.setFilter(root.filterText.replace(/\s+$/, "").replace(/\S+$/, ""))
+            root.setFilter("")
             event.accepted = true
           } else if (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_Y) {
             var pasted = ""

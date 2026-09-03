@@ -894,6 +894,15 @@ Item {
     function showHistory(): string {
       return service.showRecentHistory()
     }
+    // One-key toggle for SUPER+CTRL+SPACE: toasts on screen -> dismiss them
+    // all (hide), nothing on screen -> replay the recorded history (show).
+    function toggleHistory(): string {
+      if (popupModel.count > 0) {
+        service.clearPopups()
+        return "ok"
+      }
+      return service.showRecentHistory()
+    }
 
     // `clear` forgets the recorded history; the toasts on screen stay put.
     function clear(): string {

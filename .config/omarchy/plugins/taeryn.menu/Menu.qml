@@ -1094,7 +1094,7 @@ Item {
           } else if (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_J) {
             // Rofi-style Emacs keys (mirrors nova-dark.rasi): C+j/C+k move,
             // C+m/C+l accept (Return branch), C+h goes back a page, C+g
-            // cancels like Escape, C+w deletes the last filter word, C+y
+            // cancels like Escape, C+w clears the filter, C+y
             // pastes the clipboard.
             root.select(1)
             event.accepted = true
@@ -1105,11 +1105,10 @@ Item {
             root.goBack()
             event.accepted = true
           } else if (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_G) {
-            if (root.filterText) root.setFilter("")
-            else root.cancel()
+            root.cancel()
             event.accepted = true
           } else if (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_W && root.filterText) {
-            root.setFilter(root.filterText.replace(/\s+$/, "").replace(/\S+$/, ""))
+            root.setFilter("")
             event.accepted = true
           } else if (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_Y) {
             var pasted = ""

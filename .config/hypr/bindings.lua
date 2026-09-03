@@ -53,11 +53,12 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "tap", fingers = 2 },
       action = hl.dsp.window.float(),
     })
-    -- 1-finger long-press, then move = drag the window (README example used
-    -- longpress:1 movewindow; mouse=true drives the mouse dispatcher).
-    -- 1-finger longpress isn't supported by this build.
+    -- 3-finger long-press, then move = drag the window (hyprgrass has no
+    -- double-tap-hold gesture; 1-finger long-press was dropped because apps
+    -- like browsers use it for the context menu). mouse=true drives the
+    -- mouse dispatcher.
     hl.plugin.hyprgrass.bind({
-      pattern = { kind = "longpress", fingers = 1 },
+      pattern = { kind = "longpress", fingers = 3 },
       action = hl.dsp.window.drag(),
       mouse = true,
     })
@@ -279,6 +280,7 @@ hl.unbind("SUPER + CTRL + V")                            -- Clipboard manager ->
 hl.unbind("SUPER + comma")                               -- Dismiss last -> SUPER+V
 hl.unbind("SUPER + SHIFT + comma")                       -- Dismiss all -> SUPER+CTRL+SPACE
 hl.unbind("SUPER + CTRL + comma")                        -- Silencing -> SUPER+CTRL+D
+hl.unbind("SUPER + SHIFT + ALT + comma")                 -- Open notification history -> merged into the SUPER+CTRL+SPACE toggle
 
 -- Moved Omarchy toggles/menus
 hl.unbind("SUPER + CTRL + L")                            -- Lock -> SUPER+Y
@@ -393,7 +395,7 @@ o.bind("SUPER + C", "Clipboard manager", "omarchy-shell shell toggle taeryn.clip
 o.bind("SUPER + Y", "Lock system", "omarchy-system-lock")
 o.bind("SUPER + SHIFT + ALT + B", "Theme menu", "omarchy-menu toggle theme")
 o.bind("SUPER + ALT + B", "Background switcher", "omarchy-menu toggle background")
-o.bind("SUPER + CTRL + SPACE", "Dismiss all notifications", "omarchy-shell notifications dismissAll")
+o.bind("SUPER + CTRL + SPACE", "Toggle notification history", "omarchy-shell notifications toggleHistory")
 o.bind("SUPER + period", "Dismiss last notification", "omarchy-shell notifications dismissOne")
 o.bind("SUPER + CTRL + X", "Color picker", "pkill hyprpicker || hyprpicker -a")
 o.bind("SUPER + CTRL + ALT + D", "Display", "omarchy-shell shell toggle omarchy.monitor")
@@ -409,7 +411,10 @@ o.bind("SUPER + CTRL + T", "Toggle menu", "omarchy-menu toggle toggle")
 
 
 
-o.bind_toggle("SUPER + backslash", "Toggle nightlight", "nightlight")
+-- Night light: toggle + 10% temperature steps, all with notifications
+o.bind("SUPER + backslash", "Toggle nightlight", "~/.config/hypr/scripts/nightlight.sh toggle")
+o.bind("SUPER + ALT + backslash", "Night light warmer (-10%)", "~/.config/hypr/scripts/nightlight.sh warmer")
+o.bind("SUPER + SHIFT + backslash", "Night light cooler (+10%)", "~/.config/hypr/scripts/nightlight.sh cooler")
 o.bind_toggle("SUPER + CTRL + Y", "Toggle locking on idle", "idle")
 o.bind_toggle("SUPER + CTRL + D", "Toggle silencing notifications", "notification-silencing")
 
