@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "taeryn.webapps",
+  "name": "Web apps button",
+  "version": "1.0.0",
+  "author": "Twilight4",
+  "description": "Bar button opening the webapps menu (omarchy-menu route 'webapps'), wide touch target",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Web apps",
+    "description": "Button that toggles the web apps menu",
+    "category": "Launcher",
+    "allowMultiple": false,
+    "defaultSection": "left"
+  }
+}
