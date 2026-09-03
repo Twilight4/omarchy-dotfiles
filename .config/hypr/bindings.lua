@@ -387,6 +387,10 @@ o.bind("SUPER + CTRL + Delete", "End session (uwsm stop)", "uwsm stop")
 
 -- Tools
 o.bind("SUPER + ALT + T", "Gamemode", "~/.config/hypr/scripts/gamemode")
+-- Touchscreen recovery: hyprgrass edge-swipe can wedge the gesture state
+-- when a finger rests on the screen edge mid-swipe (upstream issue #147) —
+-- reload the plugin to reset it.
+o.bind("SUPER + SHIFT + ALT + T", "Reset touch gestures", "~/.config/hypr/scripts/touch-reset.sh")
 o.bind("SUPER + ALT + G", "Glassmorphism", "~/.config/hypr/scripts/glassmorphism-toggle")
 
 -- Omarchy features re-homed to Garuda keys

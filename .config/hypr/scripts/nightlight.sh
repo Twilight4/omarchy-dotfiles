@@ -11,7 +11,7 @@ notify() { notify-send -a nightlight "Night light" "$1"; }
 
 case "${1:-}" in
   toggle)
-    omarchy-toggle nightlight
+    omarchy-toggle-nightlight
     temp=$(omarchy-toggle-nightlight --status | jq -r '.temperature // empty')
     if [[ -n $temp && $temp -lt 6000 ]]; then
       notify "On (${temp}K)"
