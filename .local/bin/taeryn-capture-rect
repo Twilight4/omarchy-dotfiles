@@ -1,0 +1,55 @@
+#!/bin/bash
+# Touch-friendly screenshot capture for the taeryn.capture bar button.
+#
+# Usage:
+#   taeryn-capture-rect <monitor> full
+#   taeryn-capture-rect <monitor> <x> <y> <w> <h>   (logical px, monitor-local)
+#
+# Mirrors omarchy-capture-screenshot's post-processing: save to the Pictures
+# dir, wl-copy, and an editable notification. Geometry math is logical-layout
+# coordinates, the same space slurp/grim use.
+# ponytail: monitors with a rotation transform (transform != 0) are not
+# mapped — add the transform swap from omarchy-capture-region if one is ever
+# attached.
+
+MON="$1"
+MODE="${2:-full}"
+
+[[ -f ~/.config/user-dirs.dirs ]] && source ~/.config/user-dirs.dirs
+OUTPUT_DIR="${OMARCHY_SCREENSHOT_DIR:-${XDG_PICTURES_DIR:-$HOME/Pictures}}"
+mkdir -p "$OUTPUT_DIR"
+
+MON_JSON=$(hyprctl monitors -j | jq -r --arg m "$MON" '.[] | select(.name == $m)')
+[[ -n $MON_JSON ]] || { echo "unknown monitor: $MON" >&2; exit 1; }
+
+if [[ $MODE == full ]]; then
+  GEO=$(echo "$MON_JSON" | jq -r '"\(.x),\(.y) \(.width / .scale | floor)x\(.height / .scale | floor)"')
+else
+  read -r MX MY <<<"$(echo "$MON_JSON" | jq -r '"\(.x) \(.y)"')"
+  GEO="$((MX + $2)),$((MY + $3)) $4x$5"
+fi
+
+# Software-composited cursors get baked into grim captures; force hardware
+# cursors for the capture and restore the user's setting after (same dance as
+# omarchy-capture-screenshot).
+NO_HW_CURSORS=$(hyprctl getoption cursor:no_hardware_cursors -j | jq '.int')
+restore_cursors() {
+  hyprctl eval "hl.config({ cursor = { no_hardware_cursors = $NO_HW_CURSORS } })" &>/dev/null ||
+    hyprctl keyword cursor:no_hardware_cursors "$NO_HW_CURSORS" &>/dev/null
+}
+trap restore_cursors EXIT
+hyprctl eval "hl.config({ cursor = { no_hardware_cursors = 0 } })" &>/dev/null ||
+  hyprctl keyword cursor:no_hardware_cursors 0 &>/dev/null
+
+FILENAME="screenshot-$(date +'%Y-%m-%d_%H-%M-%S').png"
+FILEPATH="$OUTPUT_DIR/$FILENAME"
+
+grim -g "$GEO" "$FILEPATH" || exit 1
+echo "$FILEPATH"
+wl-copy --type image/png <"$FILEPATH"
+
+# Best-effort: the capture is already saved and copied; a notification outage
+# must not report it as failed.
+omarchy-notification-send "Screenshot saved to clipboard and file" "Edit with Super + Alt + , (or click this)" \
+  --image "$FILEPATH" \
+  --exec "${OMARCHY_SCREENSHOT_EDITOR:-tensaku-edit}" "$FILEPATH" || true

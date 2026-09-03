@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "taeryn.webcam",
+  "name": "Webcam button",
+  "version": "1.0.0",
+  "author": "Twilight4",
+  "description": "Bar button toggling the front webcam popup (webcam2.sh / kill ffplay)",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Webcam",
+    "description": "Pop the front webcam on/off",
+    "category": "Launcher",
+    "allowMultiple": false,
+    "defaultSection": "left"
+  }
+}

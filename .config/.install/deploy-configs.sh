@@ -41,6 +41,14 @@ for sub in applications icons; do
     ok "Deployed ~/.local/share/$sub"
 done
 
+# Tracked user scripts (~/.local/bin): webcam pop-ups (webcam0/2.sh) and the
+# taeryn-capture-rect helper the taeryn.capture bar plugin calls.
+if [[ -d $REPO_DIR/.local/bin ]]; then
+    mkdir -p "$HOME/.local/bin"
+    cp -a "$REPO_DIR/.local/bin/." "$HOME/.local/bin/"
+    ok "Deployed ~/.local/bin"
+fi
+
 # wlogout colors are generated from the current Omarchy theme (colors.css is
 # gitignored); the theme-set.d/wlogout-colors.sh hook regenerates on theme
 # changes, but seed it once here so a fresh deploy has colors immediately.

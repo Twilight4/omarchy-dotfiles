@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "taeryn.capture",
+  "name": "Screenshot button",
+  "version": "1.0.0",
+  "author": "Twilight4",
+  "description": "Bar button opening a touch-native screenshot picker (drag = region, tap = full screen)",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Screenshot",
+    "description": "Touch-friendly screenshot capture",
+    "category": "Launcher",
+    "allowMultiple": false,
+    "defaultSection": "left"
+  }
+}

@@ -7,8 +7,8 @@
           "id": "taeryn.glassgame"
         },
         {
-          "id": "omarchy.indicators",
-          "alwaysShow": true
+          "id": "taeryn.indicators",
+          "collapsed": true
         },
         {
           "id": "omarchy.keyboard-layout"
@@ -37,6 +37,12 @@
         },
         {
           "id": "taeryn.webapps"
+        },
+        {
+          "id": "taeryn.capture"
+        },
+        {
+          "id": "taeryn.webcam"
         }
       ],
       "right": [
