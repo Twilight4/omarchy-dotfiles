@@ -88,6 +88,25 @@ if [[ -d $patch_dir ]]; then
     done
 fi
 
+# uinput for xremap: udev rule (root:input 0660) + boot-time module load.
+# Without these xremap exits with "Failed to prepare an output device
+# (Permission denied)". Load the module first so the trigger has a sysfs
+# node to apply the rule to.
+sudo modprobe uinput &>/dev/null || true
+uinput_rule="/etc/udev/rules.d/99-uinput.rules"
+if ! cmp -s "$REPO_DIR/.config/.install/system/99-uinput.rules" "$uinput_rule" 2>/dev/null; then
+    sudo cp "$REPO_DIR/.config/.install/system/99-uinput.rules" "$uinput_rule" \
+        && sudo udevadm control --reload \
+        && sudo udevadm trigger --sysname-match=uinput \
+        && ok "Installed: $uinput_rule" \
+        || warn "Failed to install $uinput_rule"
+fi
+if ! grep -qx uinput /etc/modules-load.d/uinput.conf 2>/dev/null; then
+    sudo cp "$REPO_DIR/.config/.install/system/uinput.conf" /etc/modules-load.d/uinput.conf \
+        && ok "Installed: /etc/modules-load.d/uinput.conf" \
+        || warn "Failed to install modules-load uinput.conf"
+fi
+
 # Restart the shell stack so the patched launcher actually takes effect.
 # Kill supervisor + quickshell, then reload — the default autostart re-execs
 # omarchy-launch-shell, which now reads the patched file. If the reload

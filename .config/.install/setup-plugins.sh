@@ -53,3 +53,17 @@ else
     fi
     rm -rf "$omaga_tmp"
 fi
+
+# taeryn.* shell-plugin clones are tracked in this repo and deployed by
+# deploy-configs.sh (deployed before this module runs). Their enablement
+# lives only in ~/.config/omarchy/shell.json, which omarchy updates can
+# reset — re-assert it so the installer self-heals (enable is idempotent).
+for p in taeryn.clipboard taeryn.image-picker taeryn.notifications taeryn.menu; do
+    omarchy plugin enable "$p" &>/dev/null \
+        || warn "Plugin enable failed: $p (deployed to ~/.config/omarchy/plugins?)"
+done
+for p in omarchy.clipboard omarchy.image-picker omarchy.notifications omarchy.menu; do
+    omarchy plugin disable "$p" &>/dev/null \
+        || warn "Plugin disable failed: $p"
+done
+ok "taeryn plugin clones enabled (stock counterparts disabled)"

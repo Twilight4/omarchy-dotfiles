@@ -3,11 +3,13 @@
 # taeryn.clipboard (rofi keys matching the menu — SUPER+C overlay),
 # taeryn.notifications (+ msg-incoming.mp3 sound on new popups) and
 # taeryn.image-picker (C-j left / C-k right in the background switcher).
+# taeryn.glassgame is tracked too (own bar widget, not a restorable clone).
 .config/omarchy/plugins/*
 !.config/omarchy/plugins/taeryn.menu/
 !.config/omarchy/plugins/taeryn.clipboard/
 !.config/omarchy/plugins/taeryn.notifications/
 !.config/omarchy/plugins/taeryn.image-picker/
+!.config/omarchy/plugins/taeryn.glassgame/
 .config/omarchy/*.bak.*
 .config/wlogout/colors.css
 __pycache__/

@@ -1,0 +1,6 @@
+# xremap (Emacs-key mirroring into the browser) creates its output device
+# through uinput. Stock Omarchy ships no rule for it: /dev/uinput stays
+# root-only 0600 and xremap exits with
+#   "Error: Failed to prepare an output device — Permission denied".
+# Group+mode rather than TAG+="uaccess": deterministic, no logind timing.
+KERNEL=="uinput", MODE="0660", GROUP="input"
