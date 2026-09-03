@@ -24,7 +24,11 @@ if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] && command -v hyprpm &>/dev/null; t
     hyprpm enable hyprgrass || warn "hyprpm enable hyprgrass failed."
     hyprpm reload || warn "hyprpm reload failed."
     ok "hyprgrass installed/enabled."
-    hyprpm add https://github.com/sandwichfarm/hyprexpo 2>/dev/null \
+    # Pin: last rev that builds against Hyprland 0.56.2 stable — HEAD
+    # includes the moved hyprland-git header desktop/view/window/Window.hpp
+    # (0.56.2 has desktop/view/Window.hpp) and fails to compile.
+    HYPREXPO_REV=21077e4a9c1f4c62d2750fc634c4b41c0c792396
+    hyprpm add https://github.com/sandwichfarm/hyprexpo "$HYPREXPO_REV" 2>/dev/null \
         || info "hyprexpo repo already added."
     hyprpm enable hyprexpo || warn "hyprpm enable hyprexpo failed."
     hyprpm reload || warn "hyprpm reload failed."
