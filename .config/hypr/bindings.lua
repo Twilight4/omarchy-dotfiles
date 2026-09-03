@@ -163,7 +163,6 @@ end })
 -- (.config/qs-applauncher) is the touch flow via the 4-finger swipe-up
 -- gesture and the nwg dock launcher button.
 o.bind("SUPER + R", "Apps menu", "omarchy-menu toggle apps")
-
 -- Power/session menu: wlogout on the physical power button, replacing
 -- Omarchy's default "omarchy-menu toggle system". Blur behind it comes from
 -- the layer rule in looknfeel.lua.
@@ -218,6 +217,10 @@ hl.unbind("SUPER + SHIFT + S")                           -- Google Maps -> cente
 hl.unbind("SUPER + SHIFT + BACKSPACE")                   -- Toggle window gaps
 hl.unbind("SUPER + S")                                   -- Toggle scratchpad (tiling.lua) -> SUPER+comma in this layout
 hl.unbind("SUPER + ALT + S")                             -- Move window to scratchpad -> SUPER+SHIFT+comma in this layout
+-- Bound AFTER the unbind above: the unbind clears stock tiling.lua's
+-- scratchpad toggle on this combo (and would clear this bind too if it
+-- stayed up by the SUPER+R apps menu line).
+o.bind("SUPER + S", "Web apps menu", "omarchy-menu toggle webapps")
 
 -- Letter workspaces replace the numeric workspace/move/silent-move binds.
 for key_code = 10, 19 do

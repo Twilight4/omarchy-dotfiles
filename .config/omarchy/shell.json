@@ -34,6 +34,9 @@
         },
         {
           "id": "omarchy.workspaces"
+        },
+        {
+          "id": "taeryn.webapps"
         }
       ],
       "right": [
