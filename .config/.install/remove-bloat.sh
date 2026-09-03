@@ -76,13 +76,13 @@ bloat=(
 
     # Browser — zen-browser-bin replaces it
     "chromium"
+    "brave-browser"
 
     # Unused pre-installed apps (not covered by the preinstall remover)
     "1password-beta"
     "1password-cli"
     "signal-desktop"
     "spotify"
-    "localsend"
     "typora"
 )
 

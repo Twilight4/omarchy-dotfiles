@@ -144,6 +144,9 @@ packages=(
                                # engine for the omaga-sync plugin (setup-plugins.sh)
     "torbrowser-launcher"
     "onionshare"
+    "localsend"               # LAN file sharing (was on the bloat list; now
+                               # wanted as the default drop-over app)
+    "cliphist"                # clipboard history store for wl-clipboard
     "privatebin-cli"
 
     # ---- terminal toys --------------------------------------------------
