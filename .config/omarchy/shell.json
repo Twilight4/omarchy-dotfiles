@@ -4,14 +4,14 @@
     "layout": {
       "center": [
         {
-          "id": "taeryn.glassgame"
+          "id": "omarchy.keyboard-layout"
         },
         {
           "id": "taeryn.indicators",
           "collapsed": true
         },
         {
-          "id": "omarchy.keyboard-layout"
+          "id": "taeryn.glassgame"
         },
         {
           "id": "omarchy.system-update"
@@ -47,10 +47,11 @@
       ],
       "right": [
         {
-          "id": "omarchy.agents"
+          "id": "taeryn.tray",
+          "expanded": true
         },
         {
-          "id": "omarchy.tray"
+          "id": "omarchy.agents"
         },
         {
           "id": "bisma.omaga-sync"

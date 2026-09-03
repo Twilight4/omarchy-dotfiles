@@ -20,7 +20,11 @@ BarWidget {
   // pin/hide state, so it survives reloads. Defaults to collapsed — hover
   // cannot reveal anything on a touchscreen, so a click toggle is the reveal.
   readonly property bool drawerCollapsed: setting("collapsed", true) === true
-  readonly property bool revealInactiveIndicators: !drawerCollapsed && (alwaysShowIndicators || indicatorAreaHovered || indicatorItemHovered || (bar && bar.centerSectionRevealHeld === true && bar.centerHoverRevealSuppressed !== true))
+  // Pure click toggle, no hover reveal anywhere (touch: press registers as
+  // hover and release removes it, so hover-gated content flashed and hid).
+  // Active indicators stay visible even collapsed; inactive ones show only
+  // while the drawer is open.
+  readonly property bool revealInactiveIndicators: !drawerCollapsed
 
   signal refreshRequested()
 
@@ -246,7 +250,7 @@ BarWidget {
     Item {
       id: activeHorizontalArea
 
-      implicitWidth: root.drawerCollapsed ? 0 : activeHorizontalBlock.implicitWidth
+      implicitWidth: activeHorizontalBlock.implicitWidth  // active icons always shown, collapsed or not
       implicitHeight: Math.max(activeHorizontalBlock.implicitHeight, root.barSize)
       width: implicitWidth
       height: implicitHeight
@@ -309,7 +313,7 @@ BarWidget {
       id: activeVerticalArea
 
       implicitWidth: Math.max(activeVerticalBlock.implicitWidth, root.barSize)
-      implicitHeight: root.drawerCollapsed ? 0 : activeVerticalBlock.implicitHeight
+      implicitHeight: activeVerticalBlock.implicitHeight
       width: implicitWidth
       height: implicitHeight
       clip: true

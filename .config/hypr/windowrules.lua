@@ -33,7 +33,7 @@ hl.window_rule({ match = { class = "^org.gnome.clocks" },     float = true, cent
 
 -- Media / popups
 hl.window_rule({ match = { class = "mpv" },   float = true, center = true, opaque = true, size = { 1100, 620 } })
-hl.window_rule({ match = { title = "^Webcam$" }, float = true, center = true, opaque = true, size = { 1100, 620 } })  -- webcam2.sh ffplay popup
+hl.window_rule({ match = { title = "^Webcam$" }, float = true, center = true, opaque = true, size = { 770, 434 } })  -- webcam2.sh ffplay popup
 hl.window_rule({ match = { class = "zenity" },      float = true, center = true })
 hl.window_rule({ match = { class = "xdg-desktop-portal-gtk" }, float = true, center = true })
 hl.window_rule({ match = { class = "xdg-desktop-portal-kde" }, float = true, center = true })
