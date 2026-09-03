@@ -16,12 +16,12 @@ BarWidget {
   WidgetButton {
     id: btn
     bar: root.bar
-    text: "\uf03d"  // nf-fa-video-camera
+    text: "\uf030"  // nf-fa-camera (capture gave this glyph up for the crop icon)
     horizontalMargin: 5.5
     // pgrep -x (exact process name), not -f: an -f pattern would match the
     // bash -lc wrapper's own command line and the toggle would kill itself.
     onPressed: root.bar && root.bar.run(
-      "pgrep -x ffplay >/dev/null && pkill -x ffplay || exec ~/.local/bin/webcam2.sh"
+      "pgrep -x ffplay >/dev/null && pkill -x ffplay || exec ~/.config/.local/bin/webcam2.sh"
     )
   }
 }

@@ -281,6 +281,7 @@ hl.unbind("SUPER + comma")                               -- Dismiss last -> SUPE
 hl.unbind("SUPER + SHIFT + comma")                       -- Dismiss all -> SUPER+CTRL+SPACE
 hl.unbind("SUPER + CTRL + comma")                        -- Silencing -> SUPER+CTRL+D
 hl.unbind("SUPER + SHIFT + ALT + comma")                 -- Open notification history -> merged into the SUPER+CTRL+SPACE toggle
+hl.unbind("SUPER + ALT + comma")                          -- Invoke last notification -> SUPER+ALT+period in this layout
 
 -- Moved Omarchy toggles/menus
 hl.unbind("SUPER + CTRL + L")                            -- Lock -> SUPER+Y

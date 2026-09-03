@@ -49,12 +49,13 @@ for sub in applications icons; do
     ok "Deployed ~/.local/share/$sub"
 done
 
-# Tracked user scripts (~/.local/bin): webcam pop-ups (webcam0/2.sh) and the
-# taeryn-capture-rect helper the taeryn.capture bar plugin calls.
-if [[ -d $REPO_DIR/.local/bin ]]; then
-    mkdir -p "$HOME/.local/bin"
-    cp -a "$REPO_DIR/.local/bin/." "$HOME/.local/bin/"
-    ok "Deployed ~/.local/bin"
+# Tracked user scripts (~/.config/.local/bin, the same layout as the Garuda
+# repo): webcam pop-ups (webcam0/2.sh) and the taeryn-capture-rect helper the
+# taeryn.capture bar plugin calls.
+if [[ -d $REPO_DIR/.config/.local/bin ]]; then
+    mkdir -p "$HOME/.config/.local/bin"
+    cp -a "$REPO_DIR/.config/.local/bin/." "$HOME/.config/.local/bin/"
+    ok "Deployed ~/.config/.local/bin"
 fi
 
 # wlogout colors are generated from the current Omarchy theme (colors.css is

@@ -9,7 +9,7 @@ import qs.Ui
 // (slurp over a hyprpicker freeze) is pointer-only, so finger input never
 // reaches it on the tablet. Drag draws a selection; a bare tap captures the
 // whole screen; Esc or right-click cancels. The geometry goes to
-// ~/.local/bin/taeryn-capture-rect, which mirrors the stock post-processing
+// ~/.config/.local/bin/taeryn-capture-rect, which mirrors the stock post-processing
 // (save to Pictures, wl-copy, editable notification).
 
 BarWidget {
@@ -18,7 +18,7 @@ BarWidget {
 
   property bool picking: false
 
-  readonly property string captureScript: Quickshell.env("HOME") + "/.local/bin/taeryn-capture-rect"
+  readonly property string captureScript: Quickshell.env("HOME") + "/.config/.local/bin/taeryn-capture-rect"
 
   implicitWidth: btn.implicitWidth
   implicitHeight: btn.implicitHeight
@@ -51,7 +51,7 @@ BarWidget {
   WidgetButton {
     id: btn
     bar: root.bar
-    text: "\uf030"  // nf-fa-camera
+    text: "\uf125"  // nf-fa-crop (reads as "select a region" — the screenshot glyph)
     horizontalMargin: 5.5
     onPressed: root.startPick()
   }

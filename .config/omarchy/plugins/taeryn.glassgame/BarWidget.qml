@@ -13,6 +13,12 @@ BarWidget {
 
   property string glassState: "normal"
   property bool gameOn: false
+  // Shares the taeryn.indicators chevron: hidden while its drawer is
+  // collapsed. The collapsed flag persists in shell.json (rewritten on every
+  // toggle), so watching the file is the whole coupling.
+  property bool indicatorsCollapsed: true
+
+  visible: !indicatorsCollapsed
 
   implicitWidth: row.implicitWidth
   implicitHeight: row.implicitHeight
@@ -56,5 +62,24 @@ BarWidget {
     watchChanges: true
     onFileChanged: reload()
     onLoaded: root.gameOn = String(text()).trim() === "on"
+  }
+
+  FileView {
+    path: Quickshell.env("HOME") + "/.config/omarchy/shell.json"
+    watchChanges: true
+    onFileChanged: reload()
+    onLoaded: {
+      try {
+        var layout = JSON.parse(String(text())).bar.layout
+        var sections = ["left", "center", "right"]
+        for (var s = 0; s < sections.length; s++) {
+          var list = layout[sections[s]] || []
+          for (var i = 0; i < list.length; i++) {
+            if (list[i] && list[i].id === "taeryn.indicators")
+              root.indicatorsCollapsed = list[i].collapsed !== false
+          }
+        }
+      } catch (e) {}  // mid-write partial JSON: keep the previous state
+    }
   }
 }
