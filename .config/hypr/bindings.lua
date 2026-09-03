@@ -249,7 +249,7 @@ hl.unbind("SUPER + W")                                   -- Close window -> SUPE
 hl.unbind("SUPER + J")                                   -- Toggle split -> cyclenext
 hl.unbind("SUPER + O")                                   -- Pop window out -> workspace 3
 hl.unbind("SUPER + P")                                   -- Pseudo -> workspace 5
-hl.unbind("SUPER + L")                                   -- Workspace layout (layout pinned to master, looknfeel.lua)
+hl.unbind("SUPER + L")                                   -- Workspace layout -> scripts/layout-toggle.sh (master <-> scrolling)
 hl.unbind("SUPER + CTRL + Delete")                       -- Toggle laptop display -> uwsm stop
 
 -- Window groups: unused
@@ -304,8 +304,10 @@ hl.unbind("SUPER + CTRL + P")                            -- Power -> SUPER+CTRL+
 -- WM focus / master layout (ALT+TAB keeps the Omarchy combined focus+reveal)
 o.bind("SUPER + TAB", "Focus next monitor", hl.dsp.focus({ monitor = "+1" }))
 o.bind("SUPER + ALT + TAB", "Move workspace to next monitor", hl.dsp.workspace.move({ monitor = "+1" }))
-o.bind("SUPER + J", "Focus next window", hl.dsp.layout("cyclenext"))
-o.bind("SUPER + K", "Focus previous window", hl.dsp.layout("cycleprev"))
+-- Generic cyclenext (not master-only layoutmsg): survives dwindle/scrolling
+-- workspaces set by the layout toggle.
+o.bind("SUPER + J", "Focus next window", hl.dsp.window.cycle_next())
+o.bind("SUPER + K", "Focus previous window", hl.dsp.window.cycle_next({ next = false }))
 o.bind("SUPER + CTRL + K", "Add master window", hl.dsp.layout("addmaster"))
 o.bind("SUPER + CTRL + J", "Remove master window", hl.dsp.layout("removemaster"))
 o.bind("SUPER + SHIFT + J", "Swap with next window", hl.dsp.layout("swapnext"))
@@ -358,18 +360,35 @@ o.bind("SUPER + ALT + code:11", "Move window to workspace 8 (silent)", hl.dsp.wi
 o.bind("SUPER + ALT + code:12", "Move window to workspace 9 (silent)", hl.dsp.window.move({ workspace = "9", follow = false }))
 
 -- Special workspaces
--- (special:other dropped: SUPER+L returns to Omarchy's workspace-layout toggle)
+-- (special:other dropped; SUPER+L is the master/scrolling layout switch)
 o.bind("SUPER + comma", "Toggle special:scratchpad", hl.dsp.workspace.toggle_special("scratchpad"))
 o.bind("SUPER + M", "Toggle special:comma", hl.dsp.workspace.toggle_special("comma"))
 o.bind("SUPER + N", "Toggle special:floating", hl.dsp.workspace.toggle_special("floating"))
 
--- SUPER+H: toggle special:magic and pull the active window into it
+-- SUPER+H: magic workspace as a window stash. The classic 5-dispatch recipe
+-- only ever moved windows IN (pressing it on a normal workspace stashed the
+-- window; pressing it again stashed the NEXT window) — nothing ever came
+-- back. State-aware version: stash the focused window when magic is empty,
+-- reveal magic when it holds windows, pull the focused window back out to the
+-- underlying tiling workspace when magic is visible.
+-- Note: hl.get_active_workspace() reports the TILING workspace under the
+-- special; the visible special itself comes from
+-- hl.get_active_special_workspace().
 o.bind("SUPER + H", "Toggle special:magic with window", function()
-    hl.dispatch(hl.dsp.workspace.toggle_special("magic"))
-    hl.dispatch(hl.dsp.window.move({ workspace = "+0" }))
-    hl.dispatch(hl.dsp.workspace.toggle_special("magic"))
-    hl.dispatch(hl.dsp.window.move({ workspace = "special:magic" }))
-    hl.dispatch(hl.dsp.workspace.toggle_special("magic"))
+    local sp = hl.get_active_special_workspace()
+    if sp ~= nil and sp.name == "special:magic" then
+        if hl.get_active_window() ~= nil then
+            hl.dispatch(hl.dsp.window.move({ workspace = tostring(hl.get_active_workspace().id), follow = false }))
+        end
+        hl.dispatch(hl.dsp.workspace.toggle_special("magic"))
+    else
+        local magic = hl.get_workspace("special:magic")
+        if magic ~= nil and magic.windows > 0 then
+            hl.dispatch(hl.dsp.workspace.toggle_special("magic"))
+        else
+            hl.dispatch(hl.dsp.window.move({ workspace = "special:magic", follow = false }))
+        end
+    end
 end)
 
 
@@ -412,6 +431,9 @@ o.bind("SUPER + CTRL + ALT + P", "Power", "omarchy-shell shell toggle omarchy.po
 hl.unbind("SUPER + SHIFT + SPACE")
 o.bind("SUPER + SHIFT + SPACE", "Toggle top bar", "omarchy-toggle-bar")
 o.bind("SUPER + CTRL + T", "Toggle menu", "omarchy-menu toggle toggle")
+-- Per-workspace layout switch (master <-> scrolling), state persists across
+-- reloads via ~/.local/state/omarchy/workspace-layouts/
+o.bind("SUPER + L", "Toggle workspace layout (master/scrolling)", "~/.config/hypr/scripts/layout-toggle.sh")
 
 
 

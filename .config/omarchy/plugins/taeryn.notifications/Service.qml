@@ -162,6 +162,11 @@ Item {
   // msg-incoming.mp3). Restored-but-silenced rows never pass through here,
   // and DND-silenced notifications return before the call site.
   function playIncomingSound() {
+    // Restart, not just start: setting running = true on an already-running
+    // Process is a no-op, so bursts of notifications played only the first
+    // sound and dropped the rest until paplay exited. Kill + start makes
+    // every popup audible immediately (new sound cuts the old one off).
+    soundProc.running = false
     soundProc.running = true
   }
 

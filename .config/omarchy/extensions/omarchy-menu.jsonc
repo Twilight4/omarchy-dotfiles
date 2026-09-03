@@ -16,10 +16,18 @@
   "install.style.background": {"icon":"","label":"Background","action":"omarchy-theme-bg-install","parent":"install"},
   "style.hyprland": {"when": "false"},
 
-  // Toggle menu: hide Window Gaps + Workspace Layout. Gaps are driven by the
-  // bar/dock visibility (looknfeel.lua), the layout is pinned to master.
+  // Toggle menu: hide Window Gaps (gaps are driven by the bar/dock
+  // visibility, looknfeel.lua). Workspace Layout is re-homed to our
+  // master <-> scrolling toggle (stock cycles dwindle <-> scrolling, but
+  // general:layout is pinned to master on this box).
   "trigger.toggle.window-gaps": {"when": "false"},
-  "trigger.toggle.workspace-layout": {"when": "false"},
+  "trigger.toggle.workspace-layout": {"icon":"󱂬","label":"Workspace Layout","aliases":["layout","scrolling","master"],"action":"$HOME/.config/hypr/scripts/layout-toggle.sh"},
+
+  // Share > PrivateBin: paste the clipboard or a picked file to
+  // privatebin.net (privatebin CLI); the URL lands in the clipboard.
+  "trigger.share.privatebin": {"icon":"󰌷","label":"PrivateBin","aliases":["privatebin","paste","bin"]},
+  "trigger.share.privatebin.clipboard": {"icon":"","label":"Clipboard","action":"$HOME/.config/hypr/scripts/privatebin-share clipboard"},
+  "trigger.share.privatebin.file": {"icon":"","label":"File","action":"$HOME/.config/hypr/scripts/privatebin-share file"},
 
 
   // Setup > Config > Hyprland: submenu of ~/.config/hypr/ configs, opened in the

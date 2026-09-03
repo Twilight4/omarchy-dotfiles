@@ -1,0 +1,11 @@
+{
+  "bin": [
+    {
+      "host": "https://privatebin.net",
+      "name": ""
+    }
+  ],
+  "expire": "1day",
+  "formatter": "plaintext",
+  "gzip": true
+}

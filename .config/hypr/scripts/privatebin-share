@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# omarchy:summary=Share clipboard or a picked file via PrivateBin; the paste URL lands in the clipboard
+# Menu: Trigger > Share > PrivateBin. Stock share entries use LocalSend
+# (omarchy-menu-share); this is the internet-facing counterpart using the
+# privatebin CLI against ~/.config/privatebin/config.json (privatebin.net).
+
+set -euo pipefail
+
+mode="${1:-clipboard}"
+
+if [[ $mode == file ]]; then
+  # Command substitution keeps the chooser's exit status (see omarchy-menu-share).
+  picked=$(omarchy-file-select --title "Share via PrivateBin") || status=$?
+  if ((${status:-0} > 1)); then
+    omarchy-notification-send -g "" -u critical "Could not share" "The file chooser did not open"
+    exit 1
+  fi
+  [[ -n $picked ]] || exit 0
+
+  if ! url=$(privatebin create --filename "$picked" --attachment); then
+    omarchy-notification-send -g "" -u critical "PrivateBin upload failed" "$picked"
+    exit 1
+  fi
+else
+  if ! url=$(wl-paste --no-newline | privatebin create); then
+    omarchy-notification-send -g "" -u critical "PrivateBin upload failed" "Clipboard is empty or the upload errored"
+    exit 1
+  fi
+fi
+
+printf '%s' "$url" | wl-copy
+omarchy-notification-send -g 󰌷 "PrivateBin link copied" "$url"
