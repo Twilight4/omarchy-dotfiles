@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Pekao
+Comment=Pekao
+Exec=omarchy-launch-webapp https://www.pekao24.pl/pekao24/produkty
+Terminal=false
+Type=Application
+Icon=pekao
+StartupNotify=true

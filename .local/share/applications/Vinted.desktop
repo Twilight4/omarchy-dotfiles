@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Vinted
+Comment=Vinted
+Exec=omarchy-launch-webapp https://www.vinted.pl/
+Terminal=false
+Type=Application
+Icon=vinted
+StartupNotify=true

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Temu
+Comment=Temu
+Exec=omarchy-launch-webapp https://www.temu.com/pl
+Terminal=false
+Type=Application
+Icon=temu
+StartupNotify=true

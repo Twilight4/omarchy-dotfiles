@@ -75,10 +75,13 @@ bloat=(
     "eza"
 
     # Browser — zen-browser-bin replaces it
+    "chromium"
     "brave-browser"
-    # chromium STAYS on purpose: omarchy-launch-webapp's --app= mode needs a
-    # chromium-family browser (zen is Firefox-based, no app mode); removing it
-    # broke every webapp with uwsm's 'Path "--app=..." does not exist'.
+    # chromium removal is safe ONLY because omarchy-patches/
+    # omarchy-launch-webapp.patched routes zen -> zen --new-window; stock
+    # omarchy-launch-webapp hardcodes chromium as the --app= fallback and
+    # every webapp dies with uwsm 'Path "--app=..." does not exist'. The
+    # post-update re-patch hook is load-bearing for webapps.
 
     # Unused pre-installed apps (not covered by the preinstall remover)
     "1password-beta"

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Amazon
+Comment=Amazon
+Exec=omarchy-launch-webapp https://www.amazon.pl/
+Terminal=false
+Type=Application
+Icon=amazon
+StartupNotify=true

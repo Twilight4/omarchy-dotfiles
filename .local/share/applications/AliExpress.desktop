@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=AliExpress
+Comment=AliExpress
+Exec=omarchy-launch-webapp https://pl.aliexpress.com
+Terminal=false
+Type=Application
+Icon=aliexpress
+StartupNotify=true

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Tinder
+Comment=Tinder
+Exec=omarchy-launch-webapp https://tinder.com/app/recs
+Terminal=false
+Type=Application
+Icon=tinder
+StartupNotify=true

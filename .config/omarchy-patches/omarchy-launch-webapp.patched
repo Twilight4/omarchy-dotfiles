@@ -7,7 +7,9 @@
 # and has no chromeless --app mode, so web apps open as a plain new zen
 # window. Stock behaviour (chromium-family --app=) is unchanged.
 
-browser=$(xdg-settings get default-web-browser)
+# env -u BROWSER: a stale BROWSER env (e.g. brave) makes xdg-settings return a
+# bogus id (observed: imv.desktop), silently skipping the zen case.
+browser=$(env -u BROWSER xdg-settings get default-web-browser)
 
 case $browser in
 zen*)
