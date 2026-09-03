@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# omarchy:summary=Launch a URL as a web app in the default supported browser
+# omarchy:args=<url>
+#
+# PATCHED (omarchy-dotfiles/.config/omarchy-patches): zen is Firefox-family
+# and has no chromeless --app mode, so web apps open as a plain new zen
+# window. Stock behaviour (chromium-family --app=) is unchanged.
+
+browser=$(xdg-settings get default-web-browser)
+
+case $browser in
+zen*)
+  exec setsid uwsm-app -- $(sed -n 's/^Exec=\([^ ]*\).*/\1/p' {~/.local,~/.nix-profile,/usr}/share/applications/$browser 2>/dev/null | head -1) --new-window "$1"
+  ;;
+google-chrome* | brave* | microsoft-edge* | opera* | vivaldi* | helium*) ;;
+*) browser="chromium.desktop" ;;
+esac
+
+exec setsid uwsm-app -- $(sed -n 's/^Exec=\([^ ]*\).*/\1/p' {~/.local,~/.nix-profile,/usr}/share/applications/$browser 2>/dev/null | head -1) --app="$1" "${@:2}"

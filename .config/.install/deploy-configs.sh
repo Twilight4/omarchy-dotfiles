@@ -30,6 +30,16 @@ for d in "${deploy_dirs[@]}"; do
     cp -a "$src/." "$dst/"
     ok "Deployed ~/.config/$d"
 done
+# Tracked webapp launchers + icons (~/.local/share): .desktop entries made by
+# omarchy-webapp-install are user data, not omarchy-managed, so track them here.
+for sub in applications icons; do
+    src="$REPO_DIR/.local/share/$sub"
+    dst="$HOME/.local/share/$sub"
+    [[ -d $src ]] || continue
+    mkdir -p "$dst"
+    cp -a "$src/." "$dst/"
+    ok "Deployed ~/.local/share/$sub"
+done
 
 # wlogout colors are generated from the current Omarchy theme (colors.css is
 # gitignored); the theme-set.d/wlogout-colors.sh hook regenerates on theme
