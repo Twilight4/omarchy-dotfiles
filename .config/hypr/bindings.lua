@@ -304,14 +304,37 @@ hl.unbind("SUPER + CTRL + P")                            -- Power -> SUPER+CTRL+
 -- WM focus / master layout (ALT+TAB keeps the Omarchy combined focus+reveal)
 o.bind("SUPER + TAB", "Focus next monitor", hl.dsp.focus({ monitor = "+1" }))
 o.bind("SUPER + ALT + TAB", "Move workspace to next monitor", hl.dsp.workspace.move({ monitor = "+1" }))
--- Generic cyclenext (not master-only layoutmsg): survives dwindle/scrolling
--- workspaces set by the layout toggle.
-o.bind("SUPER + J", "Focus next window", hl.dsp.window.cycle_next())
-o.bind("SUPER + K", "Focus previous window", hl.dsp.window.cycle_next({ next = false }))
-o.bind("SUPER + CTRL + K", "Add master window", hl.dsp.layout("addmaster"))
-o.bind("SUPER + CTRL + J", "Remove master window", hl.dsp.layout("removemaster"))
-o.bind("SUPER + SHIFT + J", "Swap with next window", hl.dsp.layout("swapnext"))
-o.bind("SUPER + SHIFT + K", "Swap with previous window", hl.dsp.layout("swapprev"))
+-- Layout-aware window keys. Master: cycle/swap through the stack (generic
+-- cyclenext — survives any per-workspace layout). Scrolling: J/K move focus
+-- across columns (layoutmsg focus centers the column and wraps), SHIFT swaps
+-- columns, CTRL cycles the preset column widths.
+local function tl_scrolling()
+    return hl.get_active_workspace().tiled_layout == "scrolling"
+end
+o.bind("SUPER + J", "Focus next window (left column in scrolling)", function()
+    if tl_scrolling() then hl.dispatch(hl.dsp.layout("focus l"))
+    else hl.dispatch(hl.dsp.window.cycle_next()) end
+end)
+o.bind("SUPER + K", "Focus previous window (right column in scrolling)", function()
+    if tl_scrolling() then hl.dispatch(hl.dsp.layout("focus r"))
+    else hl.dispatch(hl.dsp.window.cycle_next({ next = false })) end
+end)
+o.bind("SUPER + CTRL + K", "Add master window (wider column in scrolling)", function()
+    if tl_scrolling() then hl.dispatch(hl.dsp.layout("colresize +conf"))
+    else hl.dispatch(hl.dsp.layout("addmaster")) end
+end)
+o.bind("SUPER + CTRL + J", "Remove master window (narrower column in scrolling)", function()
+    if tl_scrolling() then hl.dispatch(hl.dsp.layout("colresize -conf"))
+    else hl.dispatch(hl.dsp.layout("removemaster")) end
+end)
+o.bind("SUPER + SHIFT + J", "Swap with next window (column left in scrolling)", function()
+    if tl_scrolling() then hl.dispatch(hl.dsp.layout("swapcol l"))
+    else hl.dispatch(hl.dsp.layout("swapnext")) end
+end)
+o.bind("SUPER + SHIFT + K", "Swap with previous window (column right in scrolling)", function()
+    if tl_scrolling() then hl.dispatch(hl.dsp.layout("swapcol r"))
+    else hl.dispatch(hl.dsp.layout("swapprev")) end
+end)
 
 -- Resize
 o.bind("SUPER + ALT + H", "Resize window left", hl.dsp.window.resize({ x = -60, y = 0, relative = true }), { repeating = true })
@@ -365,29 +388,17 @@ o.bind("SUPER + comma", "Toggle special:scratchpad", hl.dsp.workspace.toggle_spe
 o.bind("SUPER + M", "Toggle special:comma", hl.dsp.workspace.toggle_special("comma"))
 o.bind("SUPER + N", "Toggle special:floating", hl.dsp.workspace.toggle_special("floating"))
 
--- SUPER+H: magic workspace as a window stash. The classic 5-dispatch recipe
--- only ever moved windows IN (pressing it on a normal workspace stashed the
--- window; pressing it again stashed the NEXT window) — nothing ever came
--- back. State-aware version: stash the focused window when magic is empty,
--- reveal magic when it holds windows, pull the focused window back out to the
--- underlying tiling workspace when magic is visible.
--- Note: hl.get_active_workspace() reports the TILING workspace under the
--- special; the visible special itself comes from
--- hl.get_active_special_workspace().
-o.bind("SUPER + H", "Toggle special:magic with window", function()
-    local sp = hl.get_active_special_workspace()
-    if sp ~= nil and sp.name == "special:magic" then
-        if hl.get_active_window() ~= nil then
-            hl.dispatch(hl.dsp.window.move({ workspace = tostring(hl.get_active_workspace().id), follow = false }))
-        end
-        hl.dispatch(hl.dsp.workspace.toggle_special("magic"))
+-- SUPER+H: window stash (minimize/restore). If magic holds stashed windows,
+-- pop the most recent one back onto the current workspace (focused + tiled);
+-- otherwise stash the focused window away. The special workspace itself is
+-- never shown — Garuda minimize semantics, not a workspace toggle.
+o.bind("SUPER + H", "Stash window / pop stashed window", function()
+    local magic = hl.get_workspace("special:magic")
+    if magic ~= nil and magic.windows > 0 then
+        local wins = hl.get_workspace_windows("special:magic")
+        hl.dispatch(hl.dsp.window.move({ window = "address:" .. tostring(wins[#wins].address), workspace = tostring(hl.get_active_workspace().id), follow = true }))
     else
-        local magic = hl.get_workspace("special:magic")
-        if magic ~= nil and magic.windows > 0 then
-            hl.dispatch(hl.dsp.workspace.toggle_special("magic"))
-        else
-            hl.dispatch(hl.dsp.window.move({ workspace = "special:magic", follow = false }))
-        end
+        hl.dispatch(hl.dsp.window.move({ workspace = "special:magic", follow = false }))
     end
 end)
 
@@ -420,6 +431,7 @@ o.bind("SUPER + SHIFT + ALT + B", "Theme menu", "omarchy-menu toggle theme")
 o.bind("SUPER + ALT + B", "Background switcher", "omarchy-menu toggle background")
 o.bind("SUPER + CTRL + SPACE", "Toggle notification history", "omarchy-shell notifications toggleHistory")
 o.bind("SUPER + period", "Dismiss last notification", "omarchy-shell notifications dismissOne")
+o.bind("SUPER + ALT + period", "Invoke last notification", "omarchy-shell notifications invokeLast")
 o.bind("SUPER + CTRL + X", "Color picker", "pkill hyprpicker || hyprpicker -a")
 o.bind("SUPER + CTRL + ALT + D", "Display", "omarchy-shell shell toggle omarchy.monitor")
 o.bind("SUPER + CTRL + ALT + N", "Network", "omarchy-shell shell toggle omarchy.network")

@@ -30,6 +30,14 @@ for d in "${deploy_dirs[@]}"; do
     cp -a "$src/." "$dst/"
     ok "Deployed ~/.config/$d"
 done
+# Tracked top-level files under .config/
+deploy_files=("user-dirs.dirs")
+for f in "${deploy_files[@]}"; do
+  src="$REPO_DIR/.config/$f"
+  dst="$HOME/.config/$f"
+  [[ -f $src ]] || { warn "Tracked file missing, skipping: $src"; continue; }
+  cp -a "$src" "$dst" && ok "Deployed ~/.config/$f"
+done
 # Tracked webapp launchers + icons (~/.local/share): .desktop entries made by
 # omarchy-webapp-install are user data, not omarchy-managed, so track them here.
 for sub in applications icons; do

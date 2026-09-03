@@ -88,11 +88,6 @@ Item {
   //
   // Aliased as a property so consumers outside this Item's id scope can bind
   // to it. QML ids aren't visible to external consumers without the alias.
-  Process {
-    id: soundProc
-    command: ["paplay", service.home + "/.config/omarchy/plugins/taeryn.notifications/msg-incoming.mp3"]
-  }
-
   property alias popupModel: popupModel
   ListModel { id: popupModel }
 
@@ -162,12 +157,11 @@ Item {
   // msg-incoming.mp3). Restored-but-silenced rows never pass through here,
   // and DND-silenced notifications return before the call site.
   function playIncomingSound() {
-    // Restart, not just start: setting running = true on an already-running
-    // Process is a no-op, so bursts of notifications played only the first
-    // sound and dropped the rest until paplay exited. Kill + start makes
-    // every popup audible immediately (new sound cuts the old one off).
-    soundProc.running = false
-    soundProc.running = true
+    // Every popup gets its own paplay process. A shared Process can't do
+    // this: running=true is a no-op while a previous sound still plays, and
+    // kill+restart coalesces unreliably within one event-loop pass. Detached
+    // spawns overlap cleanly through pipewire, so bursts stay audible.
+    Quickshell.execDetached(["paplay", service.home + "/.config/omarchy/plugins/taeryn.notifications/msg-incoming.mp3"])
   }
 
   function handleNotification(notification) {
