@@ -6,7 +6,7 @@
 }
 {
     "label" : "shutdown",
-    "action" : "sh -c 'omarchy-hyprland-monitor-scaling \"${WLOGOUT_PREV_SCALE:-1.6}\" >/dev/null 2>&1; omarchy-system-shutdown'",
+    "action" : "omarchy-system-shutdown",
     "text" : "Shutdown (s)",
     "keybind" : "s"
 }
@@ -18,7 +18,7 @@
 }
 {
     "label" : "reboot",
-    "action" : "sh -c 'omarchy-hyprland-monitor-scaling \"${WLOGOUT_PREV_SCALE:-1.6}\" >/dev/null 2>&1; omarchy-system-reboot'",
+    "action" : "omarchy-system-reboot",
     "text" : "Reboot (r)",
     "keybind" : "r"
 }
@@ -30,7 +30,7 @@
 }
 {
     "label" : "reboot-uefi",
-    "action" : "sh -c 'omarchy-hyprland-monitor-scaling \"${WLOGOUT_PREV_SCALE:-1.6}\" >/dev/null 2>&1; systemctl reboot --firmware-setup'",
+    "action" : "systemctl reboot --firmware-setup",
     "text" : "Reboot to UEFI (h)",
     "keybind" : "h"
 }
