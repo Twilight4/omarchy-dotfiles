@@ -25,6 +25,11 @@ o.launch_on_start(os.getenv("HOME") .. "/.config/hypr/scripts/auto-rotate.sh")
 -- flag (every toggle path flips it) and syncs runtime gaps/border rules.
 o.launch_on_start(os.getenv("HOME") .. "/.config/hypr/scripts/bar-watch")
 
+-- Lid close only suspends when the screen is unlocked: the daemon holds a
+-- logind handle-lid-switch block inhibitor while the session lock is
+-- engaged (SUPER+Y), so a locked screen keeps running with the lid closed.
+o.launch_on_start(os.getenv("HOME") .. "/.config/hypr/scripts/lid-inhibit-when-locked")
+
 -- Load hyprpm plugins (hyprgrass touch gestures), then re-parse the config
 -- ONCE so the guarded hyprgrass binds in bindings.lua register: hyprpm loads
 -- plugins after the initial config parse, so without this the gestures are

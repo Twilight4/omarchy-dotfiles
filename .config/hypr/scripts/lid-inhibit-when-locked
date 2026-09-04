@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Hold a logind handle-lid-switch block inhibitor while the session lock is
+# engaged: lid close suspends normally when unlocked, but a screen locked
+# first (omarchy-system-lock / SUPER+Y) keeps the machine running with the
+# lid closed. Released on unlock, so lid-suspend behavior returns instantly.
+#
+# Polls omarchy-shell lock status at 1s (same cadence as bar-watch). Engages
+# on `.locked or .requested` so the inhibitor is already held during the
+# sub-second lock engagement window, and normally holds through the unlock
+# animation (locked stays true until the lock surface is gone).
+
+exec 9>"${XDG_RUNTIME_DIR:-/tmp}/lid-inhibit.lock"
+flock -n 9 || exit 0   # single instance across config reloads
+
+locked() {
+  omarchy-shell lock status 2>/dev/null |
+    jq -e '.locked or .requested' >/dev/null
+}
+
+inh_pid=""
+while true; do
+  if locked; then
+    if [[ -z $inh_pid ]] || ! kill -0 "$inh_pid" 2>/dev/null; then
+      systemd-inhibit --what=handle-lid-switch --mode=block \
+        --who=taeryn --why="session locked - keep running with lid closed" \
+        sleep infinity &
+      inh_pid=$!
+    fi
+  elif [[ -n $inh_pid ]]; then
+    kill "$inh_pid" 2>/dev/null || true
+    inh_pid=""
+  fi
+  sleep 1
+done
