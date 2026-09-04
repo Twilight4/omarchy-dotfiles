@@ -58,6 +58,17 @@ if [[ -d $REPO_DIR/.config/.local/bin ]]; then
     ok "Deployed ~/.config/.local/bin"
 fi
 
+# ai-usagebar (AI Usage widget) config: seeded ONLY when missing — the live
+# copy carries the zai api_key copied from OMP's credential store, which this
+# repo must neither track nor overwrite.
+if [[ ! -f $HOME/.config/ai-usagebar/config.toml
+      && -f $REPO_DIR/.config/ai-usagebar/config.toml ]]; then
+    mkdir -p "$HOME/.config/ai-usagebar"
+    cp "$REPO_DIR/.config/ai-usagebar/config.toml" "$HOME/.config/ai-usagebar/config.toml"
+    chmod 600 "$HOME/.config/ai-usagebar/config.toml"
+    ok "Seeded ~/.config/ai-usagebar/config.toml (add the zai api_key)"
+fi
+
 # wlogout colors are generated from the current Omarchy theme (colors.css is
 # gitignored); the theme-set.d/wlogout-colors.sh hook regenerates on theme
 # changes, but seed it once here so a fresh deploy has colors immediately.

@@ -1,0 +1,33 @@
+# AI Usage (akitaonrails.ai-usagebar) — trimmed to the two subscriptions OMP
+# (oh-my-pi) consumes: Z.AI GLM + Kimi Code. Claude/Codex/OpenRouter are
+# disabled; they error on this box (no ~/.claude / ~/.codex / key).
+# Quota data comes from the vendor endpoints — OMP is the only consumer of
+# both plans, so the numbers are OMP's usage.
+#
+# TEMPLATE — deploy-configs.sh seeds ~/.config/ai-usagebar/config.toml from
+# this only when missing (never overwrites; the live copy holds the api_key).
+# Key source: OMP's credential store:
+#   sqlite3 ~/.omp/agent/agent.db "SELECT data FROM auth_credentials WHERE provider='zai'"
+
+[ui]
+primary = "zai"
+
+[anthropic]
+enabled = false
+
+[openai]
+enabled = false
+
+[openrouter]
+enabled = false
+
+[zai]
+api_key = ""
+
+[kimi]
+# Disabled until a key exists. ai-usagebar cannot reuse OMP's kimi-code OAuth
+# login: auth.kimi.com rotates the refresh token on every grant, so sharing
+# would log OMP out. Mint a key at kimi.com/code/console, then:
+#   ai-usagebar settings apply <<< '{"kimi":{"api_key":"sk-…"}}'
+# (flips enabled itself). If it errors on region, set region = "global"|"cn".
+enabled = false
