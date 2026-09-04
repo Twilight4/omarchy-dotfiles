@@ -421,13 +421,13 @@ Item {
               root.updateFilter(Util.editedFilter(event, root.filterText))
               event.accepted = true
             } else if (event.key === Qt.Key_Left || (event.key === Qt.Key_Tab && event.modifiers & Qt.ShiftModifier) || event.key === Qt.Key_Backtab
-                       || (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_K)) {
-              // C-k/C-j mirror Left/Right (rofi-style Emacs keys, same as the
+                       || (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_J)) {
+              // C-j/C-k mirror Left/Right (rofi-style Emacs keys, same as the
               // taeryn.menu / taeryn.clipboard sets)
               root.selectAdjacent(-1)
               event.accepted = true
             } else if (event.key === Qt.Key_Right || event.key === Qt.Key_Tab
-                       || (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_J)) {
+                       || (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_K)) {
               root.selectAdjacent(1)
               event.accepted = true
             } else if (root.filterable && event.text && event.text.length === 1 && event.text.charCodeAt(0) >= 32 && event.text.charCodeAt(0) !== 127 && (event.modifiers === Qt.NoModifier || event.modifiers === Qt.ShiftModifier)) {
