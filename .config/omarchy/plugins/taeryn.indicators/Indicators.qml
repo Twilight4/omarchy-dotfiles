@@ -20,6 +20,12 @@ BarWidget {
   // pin/hide state, so it survives reloads. Defaults to collapsed — hover
   // cannot reveal anything on a touchscreen, so a click toggle is the reveal.
   readonly property bool drawerCollapsed: setting("collapsed", true) === true
+  // Glass/gamemode toggles (formerly the standalone taeryn.glassgame widget)
+  // live inside the drawer: right of the chevron, left of the icon list, so
+  // the one toggle hides/shows them together with the indicators. State read
+  // live from the ~/.cache files the scripts write.
+  property string glassState: "normal"
+  property bool gameOn: false
   // Pure click toggle, no hover reveal anywhere (touch: press registers as
   // hover and release removes it, so hover-gated content flashed and hid).
   // Active indicators stay visible even collapsed; inactive ones show only
@@ -179,11 +185,11 @@ BarWidget {
   onIndicatorEntriesChanged: syncActiveIndicatorOrder()
 
   implicitWidth: root.vertical
-    ? Math.max(drawerChevronV.implicitWidth, inactiveVerticalArea.implicitWidth, activeVerticalArea.implicitWidth)
-    : drawerChevronH.implicitWidth + inactiveHorizontalArea.implicitWidth + activeHorizontalArea.implicitWidth
+    ? Math.max(drawerChevronV.implicitWidth, glassGameV.implicitWidth, inactiveVerticalArea.implicitWidth, activeVerticalArea.implicitWidth)
+    : drawerChevronH.implicitWidth + glassGameH.implicitWidth + inactiveHorizontalArea.implicitWidth + activeHorizontalArea.implicitWidth
   implicitHeight: root.vertical
-    ? drawerChevronV.implicitHeight + inactiveVerticalArea.implicitHeight + activeVerticalArea.implicitHeight
-    : Math.max(drawerChevronH.implicitHeight, inactiveHorizontalArea.implicitHeight, activeHorizontalArea.implicitHeight)
+    ? drawerChevronV.implicitHeight + glassGameV.implicitHeight + inactiveVerticalArea.implicitHeight + activeVerticalArea.implicitHeight
+    : Math.max(drawerChevronH.implicitHeight, glassGameH.implicitHeight, inactiveHorizontalArea.implicitHeight, activeHorizontalArea.implicitHeight)
 
   IpcHandler {
     target: "taeryn.indicators"
@@ -204,6 +210,46 @@ BarWidget {
 
   Component.onCompleted: root.refreshRequested()
 
+  component GlassGameButtons: Row {
+    spacing: 0
+
+    WidgetButton {
+      bar: root.bar
+      text: "\uF043"  // nf droplet
+      activeColor: "#ffffff"  // bright vs the grey theme foreground
+      active: root.glassState !== "off"
+      dimmed: root.glassState === "off"
+      horizontalMargin: 5.5
+      onPressed: root.bar && root.bar.run(
+        Quickshell.env("HOME") + "/.config/hypr/scripts/glassmorphism-toggle")
+    }
+
+    WidgetButton {
+      bar: root.bar
+      text: "\uF11B"  // nf gamepad
+      activeColor: "#ffffff"
+      active: root.gameOn
+      dimmed: !root.gameOn
+      horizontalMargin: 7.5
+      onPressed: root.bar && root.bar.run(
+        Quickshell.env("HOME") + "/.config/hypr/scripts/gamemode")
+    }
+  }
+
+  FileView {
+    path: Quickshell.env("HOME") + "/.cache/omarchy-glass-state"
+    watchChanges: true
+    onFileChanged: reload()
+    onLoaded: root.glassState = String(text()).trim()
+  }
+
+  FileView {
+    path: Quickshell.env("HOME") + "/.cache/omarchy-gamemode-state"
+    watchChanges: true
+    onFileChanged: reload()
+    onLoaded: root.gameOn = String(text()).trim() === "on"
+  }
+
   Row {
     id: horizontalIndicators
 
@@ -221,6 +267,21 @@ BarWidget {
       text: root.drawerCollapsed ? "\uf053" : "\uf054"
       horizontalMargin: 5.5
       onPressed: root.toggleDrawer()
+    }
+
+    Item {
+      id: glassGameH
+
+      implicitWidth: root.drawerCollapsed ? 0 : glassGameRowH.implicitWidth
+      implicitHeight: Math.max(glassGameRowH.implicitHeight, root.barSize)
+      width: implicitWidth
+      height: implicitHeight
+      clip: true
+
+      GlassGameButtons {
+        id: glassGameRowH
+        anchors.verticalCenter: parent.verticalCenter
+      }
     }
 
     Item {
@@ -283,6 +344,45 @@ BarWidget {
       text: root.drawerCollapsed ? "\uf053" : "\uf054"
       textRotation: 90
       onPressed: root.toggleDrawer()
+    }
+    Item {
+      id: glassGameV
+
+      implicitWidth: Math.max(glassGameColV.implicitWidth, root.barSize)
+      implicitHeight: root.drawerCollapsed ? 0 : glassGameColV.implicitHeight
+      width: implicitWidth
+      height: implicitHeight
+      clip: true
+
+      Column {
+        id: glassGameColV
+        anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 0
+
+        WidgetButton {
+          bar: root.bar
+          text: "\uF043"
+          activeColor: "#ffffff"
+          active: root.glassState !== "off"
+          dimmed: root.glassState === "off"
+          horizontalMargin: 5.5
+          textRotation: 90
+          onPressed: root.bar && root.bar.run(
+            Quickshell.env("HOME") + "/.config/hypr/scripts/glassmorphism-toggle")
+        }
+
+        WidgetButton {
+          bar: root.bar
+          text: "\uF11B"
+          activeColor: "#ffffff"
+          active: root.gameOn
+          dimmed: !root.gameOn
+          horizontalMargin: 7.5
+          textRotation: 90
+          onPressed: root.bar && root.bar.run(
+            Quickshell.env("HOME") + "/.config/hypr/scripts/gamemode")
+        }
+      }
     }
 
     Item {

@@ -3,16 +3,17 @@
 # taeryn.clipboard (rofi keys matching the menu — SUPER+C overlay),
 # taeryn.notifications (+ msg-incoming.mp3 sound on new popups) and
 # taeryn.image-picker (C-j left / C-k right in the background switcher).
-# taeryn.indicators (click-toggle chevron drawer) and taeryn.tray (tap-toggle
-# drawer, persisted) are clones with real customizations. taeryn.glassgame,
-# taeryn.webapps, taeryn.capture (touch screenshot picker) and taeryn.webcam
-# (ffplay toggle) are own bar widgets, not restorable clones.
+# taeryn.bar (drag-reorder disabled; required-props relaxed for Loader),
+# taeryn.indicators (click-toggle chevron drawer + embedded glass/gamemode
+# buttons) and taeryn.tray (tap-toggle drawer, persisted) are clones with real
+# customizations. taeryn.webapps, taeryn.capture (touch screenshot picker)
+# and taeryn.webcam (ffplay toggle) are own bar widgets, not restorable clones.
 .config/omarchy/plugins/*
 !.config/omarchy/plugins/taeryn.menu/
 !.config/omarchy/plugins/taeryn.clipboard/
 !.config/omarchy/plugins/taeryn.notifications/
 !.config/omarchy/plugins/taeryn.image-picker/
-!.config/omarchy/plugins/taeryn.glassgame/
+!.config/omarchy/plugins/taeryn.bar/
 !.config/omarchy/plugins/taeryn.webapps/
 !.config/omarchy/plugins/taeryn.indicators/
 !.config/omarchy/plugins/taeryn.capture/

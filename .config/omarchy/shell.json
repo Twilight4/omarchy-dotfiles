@@ -8,10 +8,7 @@
         },
         {
           "id": "taeryn.indicators",
-          "collapsed": true
-        },
-        {
-          "id": "taeryn.glassgame"
+          "collapsed": false
         },
         {
           "id": "omarchy.system-update"
@@ -48,7 +45,7 @@
       "right": [
         {
           "id": "taeryn.tray",
-          "expanded": true
+          "expanded": false
         },
         {
           "id": "omarchy.agents"
@@ -77,7 +74,8 @@
       ]
     },
     "position": "top",
-    "transparent": true
+    "transparent": true,
+    "id": "taeryn.bar"
   },
   "idle": {
     "lock": 300,
