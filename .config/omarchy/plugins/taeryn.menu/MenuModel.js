@@ -67,6 +67,10 @@ function mergeMenuSources(defaultItems, userItems) {
   var nextItems = ({})
   var nextOrder = []
   var sources = [defaultItems || [], userItems || []]
+  var stockIds = ({})
+  for (var d = 0; d < (defaultItems || []).length; d++) {
+    if (defaultItems[d] && defaultItems[d].id) stockIds[defaultItems[d].id] = true
+  }
 
   for (var s = 0; s < sources.length; s++) {
     var src = sources[s]
@@ -86,6 +90,21 @@ function mergeMenuSources(defaultItems, userItems) {
   if (!nextItems.root) {
     nextItems.root = { id: "root", parent: "", kind: "menu", icon: "", iconFont: "", label: "Go", title: "", target: "", description: "", aliases: [], when: "", checked: "", action: "", provider: "" }
     nextOrder.unshift("root")
+  }
+  // User-defined top-level entries (ids the stock menu doesn't declare, e.g.
+  // "webapps") render FIRST on the root page, in user-file order. Without
+  // this they append after every stock row, since first-seen order wins.
+  var hoist = []
+  for (var u = 0; u < (userItems || []).length; u++) {
+    var ue = userItems[u]
+    if (ue && ue.id && ue.id !== "root" && ue.parent === "root" && !stockIds[ue.id]) hoist.push(ue.id)
+  }
+  if (hoist.length > 0) {
+    var kept = []
+    for (var k = 0; k < nextOrder.length; k++) {
+      if (nextOrder[k] !== "root" && hoist.indexOf(nextOrder[k]) < 0) kept.push(nextOrder[k])
+    }
+    nextOrder = ["root"].concat(hoist, kept)
   }
   for (var k3 = 0; k3 < nextOrder.length; k3++) nextItems[nextOrder[k3]].order = k3
 
