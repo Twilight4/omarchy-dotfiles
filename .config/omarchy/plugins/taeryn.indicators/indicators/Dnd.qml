@@ -5,7 +5,11 @@ import qs.Ui
 BarIndicator {
   id: root
 
-  readonly property var notificationService: bar?.shell?.firstPartyServiceFor("omarchy.notifications")
+  // Services are keyed by exact plugin id; the enabled notifications service
+  // is the taeryn clone, with stock omarchy.notifications as fallback.
+  readonly property var notificationService: bar?.shell
+    ? (bar.shell.firstPartyServiceFor("taeryn.notifications") || bar.shell.firstPartyServiceFor("omarchy.notifications"))
+    : null
   readonly property bool dnd: notificationService ? notificationService.doNotDisturb : false
 
   active: dnd
