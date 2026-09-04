@@ -27,7 +27,10 @@ api_key = ""
 [kimi]
 # Disabled until a key exists. ai-usagebar cannot reuse OMP's kimi-code OAuth
 # login: auth.kimi.com rotates the refresh token on every grant, so sharing
-# would log OMP out. Mint a key at kimi.com/code/console, then:
+# would log OMP out. Mint a key ONLY at kimi.com/code/console — a
+# platform.moonshot.ai key authenticates against api.moonshot.ai (pay-as-you-go
+# balance) but 401s on the coding endpoint (verified 2026-09-04). Then:
 #   ai-usagebar settings apply <<< '{"kimi":{"api_key":"sk-…"}}'
-# (flips enabled itself). If it errors on region, set region = "global"|"cn".
+# (flips enabled itself). This account is REGION_OVERSEA → region = "global".
 enabled = false
+region = "global"
