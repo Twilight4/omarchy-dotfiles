@@ -1,0 +1,16 @@
+#!/bin/bash
+# Toggle notification DND (SUPER+CTRL+D, bindings.lua) with visible feedback.
+# Stock omarchy-toggle-notification-silencing refreshes the removed
+# omarchy.indicators plugin and gives no toast; the bar DND icon lives in the
+# collapsed taeryn.indicators drawer, so the toggle was invisible. The toast
+# uses the default app name omarchy-action, which bypasses DND.
+set -euo pipefail
+
+state=$(omarchy-shell notifications toggleDnd)
+omarchy-shell -q taeryn.indicators refresh || true
+
+if [[ $state == on ]]; then
+  omarchy-notification-send -g 󰂛 -r 9001 "Notifications silenced"
+else
+  omarchy-notification-send -g 󰂚 -r 9001 "Notifications enabled"
+fi

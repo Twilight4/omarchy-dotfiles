@@ -451,7 +451,10 @@ o.bind("SUPER + backslash", "Toggle nightlight", "~/.config/hypr/scripts/nightli
 o.bind("SUPER + ALT + backslash", "Night light warmer (-10%)", "~/.config/hypr/scripts/nightlight.sh warmer")
 o.bind("SUPER + SHIFT + backslash", "Night light cooler (+10%)", "~/.config/hypr/scripts/nightlight.sh cooler")
 o.bind_toggle("SUPER + CTRL + Y", "Toggle locking on idle", "idle")
-o.bind_toggle("SUPER + CTRL + D", "Toggle silencing notifications", "notification-silencing")
+-- Wrapper adds a confirmation toast; the stock toggle's indicator refresh
+-- targets the removed omarchy.indicators plugin and the DND icon is hidden
+-- in the collapsed taeryn.indicators drawer, so the stock bind was invisible.
+o.bind("SUPER + CTRL + D", "Toggle silencing notifications", os.getenv("HOME") .. "/.config/hypr/scripts/notification-silencing-toggle")
 
 if o.cmd_present("voxtype") then
   o.bind("F1", "Toggle dictation", "voxtype record toggle")
