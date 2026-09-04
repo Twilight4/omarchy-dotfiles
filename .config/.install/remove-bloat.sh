@@ -78,7 +78,8 @@ bloat=(
     "chromium"
     "brave-browser"
     # chromium removal is safe ONLY because omarchy-patches/
-    # omarchy-launch-webapp.patched routes zen -> zen --new-window; stock
+    # omarchy-launch-webapp.patched routes zen -> the dedicated "webapp" zen
+    # profile pinned to workspace 7; stock
     # omarchy-launch-webapp hardcodes chromium as the --app= fallback and
     # every webapp dies with uwsm 'Path "--app=..." does not exist'. The
     # post-update re-patch hook is load-bearing for webapps.

@@ -4,16 +4,59 @@
 # omarchy:args=<url>
 #
 # PATCHED (omarchy-dotfiles/.config/omarchy-patches): zen is Firefox-family
-# and has no chromeless --app mode, so web apps open as a plain new zen
-# window. Stock behaviour (chromium-family --app=) is unchanged.
-
+# and has no chromeless --app mode, so web apps run in a dedicated "webapp"
+# zen profile (separate process: no shared tabs, pins or essentials) pinned
+# to workspace WEBAPP_WS. Stock behaviour (chromium-family --app=) unchanged.
+#
 # env -u BROWSER: a stale BROWSER env (e.g. brave) makes xdg-settings return a
 # bogus id (observed: imv.desktop), silently skipping the zen case.
+
+WEBAPP_WS=7
+
 browser=$(env -u BROWSER xdg-settings get default-web-browser)
 
 case $browser in
 zen*)
-  exec setsid uwsm-app -- $(sed -n 's/^Exec=\([^ ]*\).*/\1/p' {~/.local,~/.nix-profile,/usr}/share/applications/$browser 2>/dev/null | head -1) --new-window "$1"
+  # Self-heal: create the dedicated profile once. user.js pre-seeds:
+  # welcome/default-browser chrome off, and — critically — session restore
+  # off (zen defaults to restoring previous windows, which would resurrect
+  # every past webapp as extra tabs/windows on each launch).
+  mkdir -p ~/.config/zen/webapp
+  printf '%s\n' \
+    'user_pref("zen.welcome-screen.seen", true);' \
+    'user_pref("browser.shell.checkDefaultBrowser", false);' \
+    'user_pref("datareporting.policy.dataSubmissionEnabled", false);' \
+    'user_pref("browser.startup.page", 1);' \
+    'user_pref("browser.startup.homepage", "about:blank");' \
+    'user_pref("browser.sessionstore.resume_from_crash", false);' \
+    > ~/.config/zen/webapp/user.js
+  grep -q '^Name=webapp$' ~/.config/zen/profiles.ini 2>/dev/null || \
+    zen-browser -CreateProfile "webapp $HOME/.config/zen/webapp" || exit 1
+
+  # Cold start: plain URL arg — the first window IS the webapp ("--new-window"
+  # on a fresh instance would spawn a stray home window too). Warm start: the
+  # CLI remotes to the running instance, so "--new-window" is required or the
+  # URL opens as a tab in an existing webapp window.
+  if pgrep -f -- '-P webapp' >/dev/null; then new_win="--new-window"; else new_win=""; fi
+  before=$(hyprctl -j clients | jq -r '.[] | select(.class == "zen") | .address' | sort)
+  hyprctl dispatch "hl.dsp.exec_cmd([=[[workspace $WEBAPP_WS] uwsm app -- zen-browser -P webapp $new_win $1]=])" >/dev/null
+
+  # First launch of the profile: the new process inherits the exec workspace
+  # tag and lands on WEBAPP_WS by itself. When the webapp instance is already
+  # running the window spawns untagged and the class=zen window rule yanks it
+  # to ws2 — so poll for the new address and move it ourselves.
+  # ponytail: address-diff can grab an unrelated zen window opened in the same
+  # ~5s window and move it too; unlikely enough to accept over tracking pids.
+  for _ in $(seq 20); do
+    sleep 0.25
+    new=$(comm -13 <(printf '%s\n' "$before") \
+          <(hyprctl -j clients | jq -r '.[] | select(.class == "zen") | .address' | sort) | head -1)
+    if [ -n "$new" ]; then
+      hyprctl dispatch "hl.dsp.window.move({workspace=\"$WEBAPP_WS\", window=\"address:$new\", follow=true})" >/dev/null
+      exit 0
+    fi
+  done
+  exit 0
   ;;
 google-chrome* | brave* | microsoft-edge* | opera* | vivaldi* | helium*) ;;
 *) browser="chromium.desktop" ;;
