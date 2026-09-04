@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# webapp-menu-sync - after `omarchy-webapp-install`, sync the new web app
+# everywhere this rice needs it:
+#   1. StartupWMClass on the live .desktop (webapp-wmclass.sh) so the nwg
+#      dock maps the window to its icon
+#   2. .desktop + icon copied into the dotfiles repo
+#   3. a "webapps.<id>" row in omarchy-menu.jsonc (the SUPER+S menu), then
+#      the jsonc deployed live (the menu FileView hot-reloads it)
+# Idempotent; safe to re-run. Only plain `omarchy-launch-webapp <url>`
+# entries are handled (the only kind in use).
+set -euo pipefail
+
+repo="$HOME/desktop/workspace/omarchy-dotfiles"
+jsonc_rel=".config/omarchy/extensions/omarchy-menu.jsonc"
+apps="$HOME/.local/share/applications"
+icons="$HOME/.local/share/icons/hicolor/256x256/apps"
+
+# 1. dock icon mapping (idempotent, skips entries that already have it)
+"$HOME/.config/hypr/scripts/webapp-wmclass.sh"
+
+shopt -s nullglob
+for f in "$apps"/*.desktop; do
+    exec_line=$(grep -m1 '^Exec=' "$f" || true)
+    [[ $exec_line == *omarchy-launch-webapp* ]] || continue
+
+    base=${f##*/}
+    name=$(grep -m1 '^Name=' "$f" | cut -d= -f2-)
+    icon=$(grep -m1 '^Icon=' "$f" | cut -d= -f2-)
+    url=$(printf '%s' "$exec_line" | grep -oE 'https?://[^ "]+' | head -1)
+    id=$(printf '%s' "$name" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-|-$//g')
+    host=$(printf '%s' "$url" | sed -E 's#https?://([^/]+).*#\1#')
+
+    # 2. capture into the repo
+    cp "$f" "$repo/.local/share/applications/$base"
+    [[ -f $icons/$icon.png ]] && cp "$icons/$icon.png" "$repo/.local/share/icons/hicolor/256x256/apps/$icon.png"
+
+    # 3. menu row, if missing
+    if grep -q "\"webapps.$id\"" "$repo/$jsonc_rel"; then
+        continue
+    fi
+    launch=$base
+    [[ $base == *" "* ]] && launch="'$base'"
+    row=$(printf '  "webapps.%s": {"icon":"","appIcon":"%s","label":"%s","parent":"webapps","action":"uwsm-app -- gtk-launch %s","description":"%s"},' \
+        "$id" "$icon" "$name" "$launch" "$host")
+    # insert after the last existing "webapps.<id>" row (the block sits at
+    # the end of the file)
+    awk -v row="$row" '
+        { lines[NR] = $0; if ($0 ~ /^  "webapps\.[a-z0-9-]+":/) last = NR }
+        END {
+            if (!last) exit 1
+            for (i = 1; i <= NR; i++) { print lines[i]; if (i == last) print row }
+        }
+    ' "$repo/$jsonc_rel" > "$repo/$jsonc_rel.tmp" && mv "$repo/$jsonc_rel.tmp" "$repo/$jsonc_rel"
+    echo "added webapps.$id ($name)"
+done
+
+# deploy the menu live; the shell's FileView hot-reloads it
+cp "$repo/$jsonc_rel" "$HOME/$jsonc_rel"

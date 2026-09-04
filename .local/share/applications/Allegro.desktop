@@ -6,4 +6,5 @@ Exec=omarchy-launch-webapp https://allegro.pl/
 Terminal=false
 Type=Application
 Icon=allegro
+StartupWMClass=chrome-allegro.pl__-Default
 StartupNotify=true

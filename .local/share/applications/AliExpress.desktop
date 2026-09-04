@@ -6,4 +6,5 @@ Exec=omarchy-launch-webapp https://pl.aliexpress.com
 Terminal=false
 Type=Application
 Icon=aliexpress
+StartupWMClass=chrome-pl.aliexpress.com__-Default
 StartupNotify=true

@@ -6,4 +6,5 @@ Exec=omarchy-launch-webapp https://tinder.com/app/recs
 Terminal=false
 Type=Application
 Icon=tinder
+StartupWMClass=chrome-tinder.com__app_recs-Default
 StartupNotify=true

@@ -6,4 +6,5 @@ Exec=omarchy-launch-webapp https://www.netflix.com/browse
 Terminal=false
 Type=Application
 Icon=netflix
+StartupWMClass=chrome-www.netflix.com__browse-Default
 StartupNotify=true

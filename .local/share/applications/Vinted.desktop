@@ -6,4 +6,5 @@ Exec=omarchy-launch-webapp https://www.vinted.pl/
 Terminal=false
 Type=Application
 Icon=vinted
+StartupWMClass=chrome-www.vinted.pl__-Default
 StartupNotify=true

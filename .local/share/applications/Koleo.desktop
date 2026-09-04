@@ -6,4 +6,5 @@ Exec=omarchy-launch-webapp https://koleo.pl/
 Terminal=false
 Type=Application
 Icon=koleo
+StartupWMClass=chrome-koleo.pl__-Default
 StartupNotify=true

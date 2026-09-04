@@ -6,4 +6,5 @@ Exec=omarchy-launch-webapp https://www.temu.com/pl
 Terminal=false
 Type=Application
 Icon=temu
+StartupWMClass=chrome-www.temu.com__pl-Default
 StartupNotify=true

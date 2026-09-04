@@ -414,6 +414,11 @@ Item {
                 root.cancel()
               }
               event.accepted = true
+            } else if (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_G) {
+              // C-g cancels outright, same as taeryn.menu/taeryn.clipboard
+              // (Escape only clears the filter first)
+              root.cancel()
+              event.accepted = true
             } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
               root.applySelected()
               event.accepted = true

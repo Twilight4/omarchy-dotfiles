@@ -186,8 +186,9 @@
   "update.time": {"when": "false"},
   "update.timezone": {"when": "false"},
   // Web apps menu (SUPER+S / bar globe button): one row per tracked
-  // .desktop entry in omarchy-dotfiles/.local/share/applications. Adding a
-  // webapp via the installer = copy the .desktop into the repo + one row here.
+  // .desktop entry in omarchy-dotfiles/.local/share/applications. After
+  // `omarchy-webapp-install`, run `webapp-menu-sync` — it copies the
+  // .desktop + icon into the repo and adds the row here automatically.
   "webapps": {"icon":"󰀹","label":"Web apps","aliases":["webapps","web apps","sites","www"]},
   "webapps.youtube": {"icon":"","appIcon":"youtube","label":"YouTube","parent":"webapps","action":"uwsm-app -- gtk-launch Youtube.desktop","description":"youtube.com"},
   "webapps.netflix": {"icon":"","appIcon":"netflix","label":"Netflix","parent":"webapps","action":"uwsm-app -- gtk-launch Netflix.desktop","description":"netflix.com"},
@@ -202,4 +203,6 @@
   "webapps.koleo": {"icon":"","appIcon":"koleo","label":"Koleo","parent":"webapps","action":"uwsm-app -- gtk-launch Koleo.desktop","description":"koleo.pl"},
   "webapps.pekao": {"icon":"","appIcon":"pekao","label":"Pekao","parent":"webapps","action":"uwsm-app -- gtk-launch Pekao.desktop","description":"pekao24.pl"},
   "webapps.google-maps": {"icon":"","appIcon":"google-maps","label":"Google Maps","parent":"webapps","action":"uwsm-app -- gtk-launch 'Google Maps.desktop'","description":"google.com/maps"},
+  "webapps.discord": {"icon":"","appIcon":"discord","label":"Discord","parent":"webapps","action":"uwsm-app -- gtk-launch Discord.desktop","description":"discord.com"},
+  "webapps.whatsapp": {"icon":"","appIcon":"whatsapp","label":"WhatsApp","parent":"webapps","action":"uwsm-app -- gtk-launch WhatsApp.desktop","description":"web.whatsapp.com"},
 }

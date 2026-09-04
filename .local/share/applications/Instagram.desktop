@@ -6,4 +6,5 @@ Exec=omarchy-launch-webapp https://www.instagram.com/
 Terminal=false
 Type=Application
 Icon=instagram
+StartupWMClass=chrome-www.instagram.com__-Default
 StartupNotify=true

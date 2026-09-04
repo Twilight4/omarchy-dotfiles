@@ -6,4 +6,5 @@ Exec=omarchy-launch-webapp https://www.amazon.pl/
 Terminal=false
 Type=Application
 Icon=amazon
+StartupWMClass=chrome-www.amazon.pl__-Default
 StartupNotify=true

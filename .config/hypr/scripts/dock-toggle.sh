@@ -15,7 +15,7 @@ else
     # without it the 1.6 monitor scale upscales a 1x surface (blurry icons).
     GDK_SCALE=2 nwg-dock-hyprland -d -i 30 -w 5 -mb 10 -ml 10 -mr 10 \
         -c "$HOME/.config/hypr/scripts/app-launcher.sh" \
-        -g "monitoring-kitty" >/dev/null 2>&1 &
+        -g "monitoring-kitty kitty-cliamp" >/dev/null 2>&1 &
     # -d starts hidden; nudge visible only if it is still hidden once the
     # GTK app has actually mapped (a too-early USR1 races the main loop)
     ( sleep 2

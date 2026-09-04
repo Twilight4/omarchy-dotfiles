@@ -6,4 +6,5 @@ Exec=omarchy-launch-webapp https://www.olx.pl/
 Terminal=false
 Type=Application
 Icon=olx
+StartupWMClass=chrome-www.olx.pl__-Default
 StartupNotify=true
