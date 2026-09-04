@@ -52,9 +52,21 @@ ShellRoot {
       return Quickshell.iconPath(v.length > 0 ? v : "application-x-executable", true)
     }
 
+    property bool launching: false
+
     function launch(id) {
+      if (panel.launching) return
+      panel.launching = true
       Quickshell.execDetached(["uwsm-app", "--", "gtk-launch", id + ".desktop"])
       Qt.quit()
+    }
+
+    // Touch feedback: highlight the tapped cell, then launch after a short
+    // beat so the highlight is seen before the launcher exits.
+    function launchTouched(id, index) {
+      grid.currentIndex = index
+      launchDelay.appId = id
+      launchDelay.restart()
     }
 
     // Directional grid navigation: h/l move one cell, j/k move one row
@@ -68,6 +80,13 @@ ShellRoot {
     Connections {
       target: DesktopEntries.applications
       function onValuesChanged() { panel.refreshApps() }
+    }
+
+    Timer {
+      id: launchDelay
+      interval: 200
+      property string appId: ""
+      onTriggered: panel.launch(appId)
     }
 
     Rectangle {
@@ -183,10 +202,12 @@ ShellRoot {
             width: grid.cellWidth
             height: grid.cellHeight
 
-            Column {
-              anchors.centerIn: parent
-              spacing: 8
-
+              Column {
+                id: cellContent
+                anchors.centerIn: parent
+                spacing: 8
+                scale: cellMouse.pressed ? 0.96 : 1
+                Behavior on scale { NumberAnimation { duration: 100; easing.type: Easing.OutCubic } }
               Image {
                 source: panel.iconSource(modelData.icon)
                 width: 96
@@ -207,11 +228,12 @@ ShellRoot {
                 horizontalAlignment: Text.AlignHCenter
               }
             }
-
             MouseArea {
+              id: cellMouse
               anchors.fill: parent
               hoverEnabled: false
-              onClicked: panel.launch(modelData.id)
+              onPressed: grid.currentIndex = index
+              onClicked: panel.launchTouched(modelData.id, index)
             }
           }
         }
