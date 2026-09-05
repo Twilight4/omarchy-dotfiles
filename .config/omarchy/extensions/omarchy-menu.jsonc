@@ -192,6 +192,7 @@
   "webapps": {"icon":"󰀹","label":"Web apps","aliases":["webapps","web apps","sites","www"]},
   "webapps.youtube": {"icon":"","appIcon":"youtube","label":"YouTube","parent":"webapps","action":"uwsm-app -- gtk-launch Youtube.desktop","description":"youtube.com"},
   "webapps.netflix": {"icon":"","appIcon":"netflix","label":"Netflix","parent":"webapps","action":"uwsm-app -- gtk-launch Netflix.desktop","description":"netflix.com"},
+  "webapps.x": {"icon":"","appIcon":"x","label":"X","parent":"webapps","action":"uwsm-app -- gtk-launch X.desktop","description":"x.com"},
   "webapps.olx": {"icon":"","appIcon":"olx","label":"OLX","parent":"webapps","action":"uwsm-app -- gtk-launch OLX.desktop","description":"olx.pl"},
   "webapps.allegro": {"icon":"","appIcon":"allegro","label":"Allegro","parent":"webapps","action":"uwsm-app -- gtk-launch Allegro.desktop","description":"allegro.pl"},
   "webapps.vinted": {"icon":"","appIcon":"vinted","label":"Vinted","parent":"webapps","action":"uwsm-app -- gtk-launch Vinted.desktop","description":"vinted.pl"},
