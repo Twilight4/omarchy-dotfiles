@@ -48,7 +48,13 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("uwsm app -- udev-block-notify")
 
     -- Workspaces: emacs (1), zen (2), ferdium (3), freetube (4), music (5)
-    hl.exec_cmd("~/.config/hypr/ws-scripts/ws-emacs")
+    -- ws-emacs must wait for the daemon socket: it fires ~0s after
+    -- `emacs --daemon' starts loading, and ALTERNATE_EDITOR="" (zshenv)
+    -- makes the racing client spawn a rival daemon that loses the
+    -- server-socket race and dies — no frame at boot. `-a false' polls
+    -- without side effects; after 15s it falls through to the old
+    -- self-healing behavior (client spawns its own daemon).
+    hl.exec_cmd([[sh -c 'n=0; until emacsclient -a false -n -e t >/dev/null 2>&1; do n=$((n+1)); [ "$n" -gt 60 ] && break; sleep 0.25; done; exec ~/.config/hypr/ws-scripts/ws-emacs']])
     hl.exec_cmd("~/.config/hypr/ws-scripts/ws-zen")
     hl.exec_cmd("uwsm app -- freetube --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto --enable-features=VaapiVideoDecodeLinuxGL --gpu-context=wayland")
     -- Music workspace (ws5): cliamp TUI with Mixed playlist playing at -20 dB
