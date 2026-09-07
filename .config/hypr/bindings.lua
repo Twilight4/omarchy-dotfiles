@@ -262,22 +262,19 @@ hl.unbind("SUPER + P")                                   -- Pseudo -> workspace 
 hl.unbind("SUPER + L")                                   -- Workspace layout -> scripts/layout-toggle.sh (master <-> scrolling)
 hl.unbind("SUPER + CTRL + Delete")                       -- Toggle laptop display -> uwsm stop
 
--- Window groups: unused
-hl.unbind("SUPER + G")                                   -- Toggle grouping
-hl.unbind("SUPER + ALT + G")                             -- Out of group -> glassmorphism
-hl.unbind("SUPER + ALT + LEFT")                          -- Into group left
-hl.unbind("SUPER + ALT + RIGHT")                         -- Into group right
-hl.unbind("SUPER + ALT + UP")                            -- Into group top
-hl.unbind("SUPER + ALT + DOWN")                          -- Into group bottom
+-- Window groups (Omarchy stock set restored 2026-09-07): SUPER+G toggles
+-- group/ungroup, SUPER+ALT+arrows move windows into groups, SUPER+CTRL+LEFT/
+-- RIGHT focus prev/next group member, SUPER+ALT+mouse scroll cycles. Not
+-- stock: SUPER+ALT+G is glassmorphism (group-out re-homed to SUPER+SHIFT+G),
+-- SUPER+ALT+TAB moves the workspace to the next monitor, and the SUPER+ALT+
+-- 1..5 group-window keys stay off (1-3 silently move windows to ws 7-9).
+hl.unbind("SUPER + ALT + G")                             -- Group out -> glassmorphism; SUPER+SHIFT+G below
 hl.unbind("SUPER + ALT + TAB")                           -- Group next -> move workspace to monitor
-hl.unbind("SUPER + ALT + SHIFT + TAB")                   -- Group previous
-hl.unbind("SUPER + CTRL + LEFT")                         -- Grouped focus left
-hl.unbind("SUPER + CTRL + RIGHT")                        -- Grouped focus right
-hl.unbind("SUPER + ALT + mouse_down")                    -- Group scroll next
-hl.unbind("SUPER + ALT + mouse_up")                      -- Group scroll previous
+hl.unbind("SUPER + ALT + SHIFT + TAB")                   -- Group previous (no lone half-pair on tabs)
 for key_code = 10, 14 do
-  hl.unbind("SUPER + ALT + code:" .. key_code)           -- Switch to group window N
+  hl.unbind("SUPER + ALT + code:" .. key_code)           -- Switch to group window N (ALT+1/2/3 = ws 7-9)
 end
+o.bind("SUPER + SHIFT + G", "Move active window out of group", hl.dsp.window.move({ out_of_group = true }))
 
 -- Universal clipboard keys re-homed
 hl.unbind("SUPER + C")                                   -- Universal copy -> clipboard manager
