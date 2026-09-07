@@ -282,6 +282,11 @@ hl.unbind("SUPER + ALT + mouse_up")                      -- Group scroll previou
 for key_code = 10, 14 do
   hl.unbind("SUPER + ALT + code:" .. key_code)           -- Stock group window N (re-homed to CTRL+N below)
 end
+-- Stock "Bar panel N" (SUPER+CTRL+1..9 toggles the Nth right-bar icon) stole
+-- the group member keys — drop the whole range; icons stay mouse/touch only.
+for key_code = 10, 18 do
+  hl.unbind("SUPER + CTRL + code:" .. key_code)
+end
 
 -- SUPER+SHIFT+G: into/out of this workspace's single group. Logic lives in
 -- scripts/group-toggle.sh (jq over `hyprctl -j clients`): group state isn't
