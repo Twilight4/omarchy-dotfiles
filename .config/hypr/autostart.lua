@@ -47,7 +47,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd('uwsm app -d "Emacs server" -- emacs --daemon')
     hl.exec_cmd("uwsm app -- udev-block-notify")
 
-    -- Workspaces: emacs (1), zen (2), ferdium (3), freetube (4), music (5).
+    -- Workspaces: emacs (1), zen (2), ferdium (3), freetube (4), music (5), x (6).
     -- Emacs chain, strictly sequential: (1) wait for the daemon socket —
     -- ws-emacs fires ~0s after `emacs --daemon' starts loading, and
     -- ALTERNATE_EDITOR="" (zshenv) makes the racing client spawn a rival
@@ -57,6 +57,9 @@ hl.on("hyprland.start", function()
     -- (3) land on the empty workspace (7 = first free, SUPER+1) only after
     -- that, so emacs can never open on top of the landing switch.
     hl.exec_cmd([[sh -c 'n=0; until emacsclient -a false -n -e t >/dev/null 2>&1; do n=$((n+1)); [ "$n" -gt 60 ] && break; sleep 0.25; done; ~/.config/hypr/ws-scripts/ws-emacs; sleep 1; hyprctl dispatch "hl.dsp.focus({workspace=\"7\"})"']])
+    -- X web app pinned to ws6 (WEBAPP_WS=6 set in X.desktop overrides the
+    -- launcher's ws7 default). Maps before the chain's final ws7 focus.
+    hl.exec_cmd("uwsm app -- gtk-launch X.desktop")
     hl.exec_cmd("~/.config/hypr/ws-scripts/ws-zen")
     hl.exec_cmd("uwsm app -- freetube --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto --enable-features=VaapiVideoDecodeLinuxGL --gpu-context=wayland")
     -- Music workspace (ws5): cliamp TUI with Mixed playlist playing at -20 dB

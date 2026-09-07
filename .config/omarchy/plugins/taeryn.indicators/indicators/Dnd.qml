@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import qs.Commons
 import qs.Ui
 
@@ -18,9 +19,10 @@ BarIndicator {
   activeTooltipText: "Allow Notifications"
   inactiveTooltipText: "Silence Notifications"
 
+  // Same path as SUPER+CTRL+D: the wrapper toggles DND, refreshes this
+  // drawer's icons and toasts (omarchy-action bypasses DND).
   onPressed: function() {
-    if (root.notificationService) {
-      root.notificationService.setDoNotDisturb(!root.notificationService.doNotDisturb)
-    }
+    if (root.bar)
+      root.bar.run(Quickshell.env("HOME") + "/.config/hypr/scripts/notification-silencing-toggle")
   }
 }

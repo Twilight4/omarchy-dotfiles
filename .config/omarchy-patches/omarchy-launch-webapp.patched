@@ -11,7 +11,7 @@
 # env -u BROWSER: a stale BROWSER env (e.g. brave) makes xdg-settings return a
 # bogus id (observed: imv.desktop), silently skipping the zen case.
 
-WEBAPP_WS=7
+WEBAPP_WS="${WEBAPP_WS:-7}"  # per-launch override (X.desktop pins X to ws 6)
 
 browser=$(env -u BROWSER xdg-settings get default-web-browser)
 

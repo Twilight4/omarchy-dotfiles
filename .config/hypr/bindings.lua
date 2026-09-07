@@ -309,6 +309,7 @@ hl.unbind("F9")                                          -- Dictation push-to-ta
 hl.unbind("SUPER + CTRL + W")                            -- Network -> SUPER+CTRL+ALT+N
 hl.unbind("SUPER + CTRL + O")                            -- Toggle menu -> SUPER+CTRL+T
 hl.unbind("SUPER + CTRL + P")                            -- Power -> SUPER+CTRL+ALT+P
+hl.unbind("SUPER + CTRL + E")                            -- Emojis -> SUPER+ALT+E (below); X webapp takes the key
 
 -- === Garuda bindings =======================================================
 
@@ -367,6 +368,7 @@ o.bind("SUPER + CTRL + W", "Zen browser workspace", "~/.config/hypr/ws-scripts/w
 o.bind("SUPER + CTRL + U", "FreeTube workspace", "~/.config/hypr/ws-scripts/ws-freetube")
 o.bind("SUPER + CTRL + O", "Ferdium workspace", "~/.config/hypr/ws-scripts/ws-ferdium")
 o.bind("SUPER + CTRL + P", "Music workspace", "~/.config/hypr/ws-scripts/ws-cliamp")
+o.bind("SUPER + CTRL + E", "X (Twitter) workspace", "~/.config/hypr/ws-scripts/ws-x")
 o.bind("SUPER + CTRL + N", "Clocks / weather / calculator", 'bash -c "uwsm app -- gnome-clocks & uwsm app -- gnome-weather & uwsm app -- gnome-calculator &"')
 
 -- Move window to workspace (SHIFT) / silently (ALT)
@@ -433,6 +435,7 @@ o.bind("SUPER + ALT + G", "Glassmorphism", "~/.config/hypr/scripts/glassmorphism
 -- Omarchy features re-homed to Garuda keys
 o.bind("SUPER + X", "Keybindings", "omarchy-menu-keybindings")
 o.bind("SUPER + C", "Clipboard manager", "omarchy-shell shell toggle taeryn.clipboard")
+o.bind("SUPER + ALT + E", "Emojis", "omarchy-shell shell toggle omarchy.emojis")
 o.bind("SUPER + Y", "Lock system", "omarchy-system-lock")
 o.bind("SUPER + SHIFT + ALT + B", "Theme menu", "omarchy-menu toggle theme")
 o.bind("SUPER + ALT + B", "Background switcher", "omarchy-menu toggle background")

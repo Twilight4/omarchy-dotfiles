@@ -1,0 +1,15 @@
+#!/bin/bash
+# X (Twitter) web app on workspace 6 (SUPER+E). WEBAPP_WS=6 pins the launch
+# to ws6 via the patched omarchy-launch-webapp (all other webapps stay on ws7).
+# ponytail: "is X running" = any zen-class window on ws6 — a main-browser
+# window dragged onto ws6 would be a false positive; title matching is too
+# fragile across x.com page names to be worth it.
+is_x_running() {
+  hyprctl clients -j | jq -e '.[] | select(.workspace.id == 6 and .class == "zen")' >/dev/null
+}
+
+hyprctl dispatch 'hl.dsp.focus({workspace=6})'
+
+if ! is_x_running; then
+  WEBAPP_WS=6 omarchy-launch-webapp https://x.com/home
+fi

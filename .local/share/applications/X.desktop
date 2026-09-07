@@ -2,7 +2,7 @@
 Version=1.0
 Name=X
 Comment=X
-Exec=omarchy-launch-webapp https://x.com/home
+Exec=env WEBAPP_WS=6 omarchy-launch-webapp https://x.com/home
 Terminal=false
 Type=Application
 Icon=x

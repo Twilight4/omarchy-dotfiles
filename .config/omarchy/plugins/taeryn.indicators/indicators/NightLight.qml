@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import qs.Ui
 
 BarIndicator {
@@ -12,9 +13,10 @@ BarIndicator {
   activeTooltipText: "Day Light"
   inactiveTooltipText: "Night Light"
 
-  function toggle() {
-    if (root.nightlightService) root.nightlightService.setNightlight(!root.active)
+  // Same path as SUPER+backslash: nightlight.sh toggles AND notifies; the
+  // stock omarchy-toggle-nightlight it calls refreshes this icon.
+  onPressed: function() {
+    if (root.bar)
+      root.bar.run(Quickshell.env("HOME") + "/.config/hypr/scripts/nightlight.sh toggle")
   }
-
-  onPressed: function() { root.toggle() }
 }
