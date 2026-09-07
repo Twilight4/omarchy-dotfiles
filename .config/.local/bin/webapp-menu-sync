@@ -8,6 +8,11 @@
 #      the jsonc deployed live (the menu FileView hot-reloads it)
 # Idempotent; safe to re-run. Only plain `omarchy-launch-webapp <url>`
 # entries are handled (the only kind in use).
+#
+# Pinning a webapp to a fixed workspace: prefix the .desktop Exec with
+# `env WEBAPP_WS=<n>` (see X.desktop). Unpinned webapps open on the
+# workspace focused at launch. This script copies .desktop files verbatim,
+# so pins survive re-syncs.
 set -euo pipefail
 
 repo="$HOME/desktop/workspace/omarchy-dotfiles"

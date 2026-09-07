@@ -11,7 +11,11 @@
 # env -u BROWSER: a stale BROWSER env (e.g. brave) makes xdg-settings return a
 # bogus id (observed: imv.desktop), silently skipping the zen case.
 
-WEBAPP_WS="${WEBAPP_WS:-7}"  # per-launch override (X.desktop pins X to ws 6)
+# Workspace pin: the WEBAPP_WS env overrides per launch (e.g. X.desktop pins
+# X to ws 6); unset = the workspace FOCUSED at launch ("open where I am").
+# Fallback 7 covers special workspaces (negative ids can't tag an exec).
+WEBAPP_WS="${WEBAPP_WS:-$(hyprctl activeworkspace -j 2>/dev/null | jq -r '.id // empty')}"
+[[ $WEBAPP_WS =~ ^[0-9]+$ ]] || WEBAPP_WS=7
 
 browser=$(env -u BROWSER xdg-settings get default-web-browser)
 
