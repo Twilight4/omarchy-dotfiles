@@ -8,6 +8,7 @@
 # buttons) and taeryn.tray (tap-toggle drawer, persisted) are clones with real
 # customizations. taeryn.webapps, taeryn.capture (touch screenshot picker)
 # and taeryn.webcam (ffplay toggle) are own bar widgets, not restorable clones.
+# taeryn.network (DNS provider section removed from the panel).
 .config/omarchy/plugins/*
 !.config/omarchy/plugins/taeryn.menu/
 !.config/omarchy/plugins/taeryn.clipboard/
@@ -18,6 +19,7 @@
 !.config/omarchy/plugins/taeryn.indicators/
 !.config/omarchy/plugins/taeryn.capture/
 !.config/omarchy/plugins/taeryn.tray/
+!.config/omarchy/plugins/taeryn.network/
 .config/omarchy/*.bak.*
 .config/wlogout/colors.css
 __pycache__/
