@@ -47,14 +47,16 @@ hl.on("hyprland.start", function()
     hl.exec_cmd('uwsm app -d "Emacs server" -- emacs --daemon')
     hl.exec_cmd("uwsm app -- udev-block-notify")
 
-    -- Workspaces: emacs (1), zen (2), ferdium (3), freetube (4), music (5)
-    -- ws-emacs must wait for the daemon socket: it fires ~0s after
-    -- `emacs --daemon' starts loading, and ALTERNATE_EDITOR="" (zshenv)
-    -- makes the racing client spawn a rival daemon that loses the
-    -- server-socket race and dies — no frame at boot. `-a false' polls
-    -- without side effects; after 15s it falls through to the old
-    -- self-healing behavior (client spawns its own daemon).
-    hl.exec_cmd([[sh -c 'n=0; until emacsclient -a false -n -e t >/dev/null 2>&1; do n=$((n+1)); [ "$n" -gt 60 ] && break; sleep 0.25; done; exec ~/.config/hypr/ws-scripts/ws-emacs']])
+    -- Workspaces: emacs (1), zen (2), ferdium (3), freetube (4), music (5).
+    -- Emacs chain, strictly sequential: (1) wait for the daemon socket —
+    -- ws-emacs fires ~0s after `emacs --daemon' starts loading, and
+    -- ALTERNATE_EDITOR="" (zshenv) makes the racing client spawn a rival
+    -- daemon that loses the server-socket race and dies (`-a false' polls
+    -- without side effects; 15s cap falls through to the old self-heal);
+    -- (2) ws-emacs blocks until the frame is mapped AND pinned to ws1;
+    -- (3) land on the empty workspace (7 = first free, SUPER+1) only after
+    -- that, so emacs can never open on top of the landing switch.
+    hl.exec_cmd([[sh -c 'n=0; until emacsclient -a false -n -e t >/dev/null 2>&1; do n=$((n+1)); [ "$n" -gt 60 ] && break; sleep 0.25; done; ~/.config/hypr/ws-scripts/ws-emacs; sleep 1; hyprctl dispatch "hl.dsp.focus({workspace=\"7\"})"']])
     hl.exec_cmd("~/.config/hypr/ws-scripts/ws-zen")
     hl.exec_cmd("uwsm app -- freetube --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto --enable-features=VaapiVideoDecodeLinuxGL --gpu-context=wayland")
     -- Music workspace (ws5): cliamp TUI with Mixed playlist playing at -20 dB
@@ -65,6 +67,4 @@ hl.on("hyprland.start", function()
     -- auto-hide mode and nudges it visible (same path as SUPER+D)
     hl.exec_cmd('uwsm app -d "App dock" -- ~/.config/hypr/scripts/dock-toggle.sh')
 
-    -- Land on an empty workspace (7 = first free, SUPER+1)
-    hl.exec_cmd([[sleep 5 && hyprctl dispatch 'hl.dsp.focus({workspace="7"})']])
 end)

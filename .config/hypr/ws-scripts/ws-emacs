@@ -4,6 +4,21 @@ is_kitty_running() {
 }
 if ! is_kitty_running; then
   hyprctl dispatch 'hl.dsp.exec_cmd([=[[workspace 1] uwsm app -- emacsclient -c]=])'
+  # The [workspace 1] exec prefix does NOT pin the frame: the Wayland surface
+  # belongs to the emacs --daemon pid, not this dispatched emacsclient, so it
+  # opens on whatever workspace is focused (verified: a [workspace 6] prefix
+  # landed on the focused ws). Pin it explicitly once it maps, then focus it
+  # (the manual SUPER+CTRL+I path expects to land in emacs). Special
+  # workspaces are excluded — special:comma runs its own emacsclient.
+  for _ in $(seq 1 40); do
+    addr=$(hyprctl clients -j | jq -r '.[] | select(.class=="emacs" and .workspace.id != 1 and (.workspace.name | startswith("special") | not)) | .address' | head -1)
+    if [ -n "$addr" ]; then
+      hyprctl dispatch "hl.dsp.window.move({ window = \"address:$addr\", workspace = \"1\", follow = false })"
+      hyprctl dispatch 'hl.dsp.focus({window="class:^(emacs)$"})'
+      break
+    fi
+    sleep 0.25
+  done
 else
   hyprctl dispatch 'hl.dsp.focus({window="class:^(emacs)$"})'
 fi
