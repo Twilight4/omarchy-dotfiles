@@ -71,12 +71,22 @@ if hl.plugin.hyprgrass ~= nil then
     -- Pinch is deliberately NOT bound: with no hyprgrass pinch bind, the
     -- gesture passes through to apps, which handle zoom natively
     -- (browser/web-app default behaviour the user prefers).
-    -- 2-finger horizontal swipe anywhere switches workspaces (follows the
-    -- finger). Replaces Hyprland's native workspace_swipe_touch, whose core
-    -- state machine wedges — disabled in input.lua.
-    hl.plugin.hyprgrass.gesture({
-      pattern = { kind = "swipe", fingers = 2, direction = "horizontal" },
-      action = "workspace",
+    -- 2-finger horizontal swipe anywhere switches workspaces (discrete
+    -- one-switch-per-swipe; left = next, right = prev). Replaces Hyprland's
+    -- native workspace_swipe_touch (disabled in input.lua: its core state
+    -- machine wedges — touches get stuck shifting workspaces).
+    -- NOTE: implemented as hyprgrass *binds*, not a `gesture` with
+    -- action="workspace": on Hyprland 0.56.2 + hyprgrass @56473e9 the
+    -- shim-dispatched action-string gestures (workspace/close/…) never
+    -- activate (verified by injection tests), while Lua-function binds
+    -- fire reliably.
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "swipe", fingers = 2, direction = "left" },
+      action = function() hl.dispatch(hl.dsp.focus({ workspace = "m+1" })) end,
+    })
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "swipe", fingers = 2, direction = "right" },
+      action = function() hl.dispatch(hl.dsp.focus({ workspace = "m-1" })) end,
     })
     -- Touchscreen: 2-finger swipe up toggles the hyprexpo overview (mirrors
     -- the touchpad gesture; discrete bind so it fires once on completion,
