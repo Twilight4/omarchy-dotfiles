@@ -262,19 +262,35 @@ hl.unbind("SUPER + P")                                   -- Pseudo -> workspace 
 hl.unbind("SUPER + L")                                   -- Workspace layout -> scripts/layout-toggle.sh (master <-> scrolling)
 hl.unbind("SUPER + CTRL + Delete")                       -- Toggle laptop display -> uwsm stop
 
--- Window groups (Omarchy stock set restored 2026-09-07): SUPER+G toggles
--- group/ungroup, SUPER+ALT+arrows move windows into groups, SUPER+CTRL+LEFT/
--- RIGHT focus prev/next group member, SUPER+ALT+mouse scroll cycles. Not
--- stock: SUPER+ALT+G is glassmorphism (group-out re-homed to SUPER+SHIFT+G),
--- SUPER+ALT+TAB moves the workspace to the next monitor, and the SUPER+ALT+
--- 1..5 group-window keys stay off (1-3 silently move windows to ws 7-9).
+-- Window groups (2026-09-07): SUPER+G toggles group/ungroup on the focused
+-- window; SUPER+SHIFT+G moves it into/out of this workspace's single group;
+-- SUPER+CTRL+1..5 switches group members by index. Stock binds not kept:
+-- SUPER+ALT+G is glassmorphism, SUPER+ALT+TAB moves the workspace to the
+-- next monitor; arrows / grouped-focus / mouse-scroll group binds are
+-- unbound (single group per workspace — toggle + member keys cover it).
 hl.unbind("SUPER + ALT + G")                             -- Group out -> glassmorphism; SUPER+SHIFT+G below
 hl.unbind("SUPER + ALT + TAB")                           -- Group next -> move workspace to monitor
-hl.unbind("SUPER + ALT + SHIFT + TAB")                   -- Group previous (no lone half-pair on tabs)
+hl.unbind("SUPER + ALT + SHIFT + TAB")                   -- Group previous
+hl.unbind("SUPER + ALT + LEFT")                          -- Into group left (SHIFT+G toggle covers it)
+hl.unbind("SUPER + ALT + RIGHT")                         -- Into group right
+hl.unbind("SUPER + ALT + UP")                            -- Into group top
+hl.unbind("SUPER + ALT + DOWN")                          -- Into group bottom
+hl.unbind("SUPER + CTRL + LEFT")                         -- Grouped focus left (CTRL+1..5 covers it)
+hl.unbind("SUPER + CTRL + RIGHT")                        -- Grouped focus right
+hl.unbind("SUPER + ALT + mouse_down")                    -- Group scroll next
+hl.unbind("SUPER + ALT + mouse_up")                      -- Group scroll previous
 for key_code = 10, 14 do
-  hl.unbind("SUPER + ALT + code:" .. key_code)           -- Switch to group window N (ALT+1/2/3 = ws 7-9)
+  hl.unbind("SUPER + ALT + code:" .. key_code)           -- Stock group window N (re-homed to CTRL+N below)
 end
-o.bind("SUPER + SHIFT + G", "Move active window out of group", hl.dsp.window.move({ out_of_group = true }))
+
+-- SUPER+SHIFT+G: into/out of this workspace's single group. Logic lives in
+-- scripts/group-toggle.sh (jq over `hyprctl -j clients`): group state isn't
+-- exposed on Lua window objects, and io.popen("hyprctl …") inside a Lua
+-- bind DEADLOCKS the compositor's IPC (~5s freeze) — exec_cmd detaches.
+o.bind("SUPER + SHIFT + G", "Move window into/out of workspace group", "~/.config/hypr/scripts/group-toggle.sh")
+for index = 1, 5 do
+  o.bind("SUPER + CTRL + code:" .. tostring(index + 9), "Switch to group window " .. index, hl.dsp.group.active({ index = index }))
+end
 
 -- Universal clipboard keys re-homed
 hl.unbind("SUPER + C")                                   -- Universal copy -> clipboard manager
