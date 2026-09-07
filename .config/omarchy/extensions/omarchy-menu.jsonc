@@ -6,7 +6,9 @@
   // them (search checks each row's own guard only). Regenerate that block
   // after an omarchy update adds stock entries:
   //   grep -oE '^  "[a-z0-9._-]+"' /usr/share/omarchy/default/omarchy/omarchy-menu.jsonc \
-  //     | tr -d ' "' | grep -E '^(learn|system|update|install\.(aur|service|development|editor|terminal|browser|ai|style\.font)|remove\.(development|browser|preinstalls)|style\.(font|hyprland))(\.|$)' | sort
+  //     | tr -d ' "' | grep -E '^(learn|system|update|install\.(aur|service|development|editor|terminal|browser|ai|style\.font)|remove\.(development|browser|preinstalls)|style\.(font|hyprland)|setup\.(default|security\.passwordless-sudo))(\.|$)' | sort
+  // update.password.drive is re-homed to Setup > Security below — when
+  // regenerating, keep it out of the hidden block.
 
   "apps": {"icon":"󰀻","label":"Apps","aliases":["app","applications"],"provider":"apps","when":"false"},
   "update": {"icon":"","label":"Update","aliases":[],"action":"omarchy-launch-floating-terminal-with-presentation omarchy-update"},
@@ -40,6 +42,11 @@
   "setup.config.hyprland.windowrules": {"icon":"","label":"Window Rules","aliases":["windowrules"],"action":"emacsclient -n \"$HOME/.config/hypr/windowrules.lua\"","description":"windowrules.lua"},
   "setup.config.hyprland.looknfeel": {"icon":"󰍹","label":"Look & Feel","aliases":["looknfeel"],"action":"emacsclient -n \"$HOME/.config/hypr/looknfeel.lua\"","description":"looknfeel.lua"},
   "setup.config.hyprland.autostart": {"icon":"","label":"Autostart","aliases":["autostart"],"action":"emacsclient -n \"$HOME/.config/hypr/autostart.lua\"","description":"autostart.lua"},
+
+  // Setup > Security > Drive Encryption: re-homed from the (hidden) Update
+  // subtree — the root Update row is a one-click action, so its submenu is
+  // unreachable. Stock id + fields kept; only the parent moves.
+  "update.password.drive": {"icon":"","label":"Drive Encryption","action":"omarchy-launch-floating-terminal-with-presentation omarchy-drive-password","parent":"setup.security"},
 
   // ---- generated: descendants of the removed subtrees (see header) ----
   "install.ai": {"when": "false"},
@@ -149,6 +156,40 @@
   "remove.development.scala": {"when": "false"},
   "remove.development.zig": {"when": "false"},
   "remove.preinstalls": {"when": "false"},
+  "setup.default": {"when": "false"},
+  "setup.default.agent": {"when": "false"},
+  "setup.default.agent.claude": {"when": "false"},
+  "setup.default.agent.codex": {"when": "false"},
+  "setup.default.agent.copilot": {"when": "false"},
+  "setup.default.agent.crush": {"when": "false"},
+  "setup.default.agent.gemini": {"when": "false"},
+  "setup.default.agent.grok": {"when": "false"},
+  "setup.default.agent.omp": {"when": "false"},
+  "setup.default.agent.opencode": {"when": "false"},
+  "setup.default.agent.pi": {"when": "false"},
+  "setup.default.browser": {"when": "false"},
+  "setup.default.browser.brave": {"when": "false"},
+  "setup.default.browser.brave-origin": {"when": "false"},
+  "setup.default.browser.chrome": {"when": "false"},
+  "setup.default.browser.chromium": {"when": "false"},
+  "setup.default.browser.edge": {"when": "false"},
+  "setup.default.browser.firefox": {"when": "false"},
+  "setup.default.browser.zen": {"when": "false"},
+  "setup.default.editor": {"when": "false"},
+  "setup.default.editor.cursor": {"when": "false"},
+  "setup.default.editor.emacs": {"when": "false"},
+  "setup.default.editor.helix": {"when": "false"},
+  "setup.default.editor.neovim": {"when": "false"},
+  "setup.default.editor.sublime": {"when": "false"},
+  "setup.default.editor.vim": {"when": "false"},
+  "setup.default.editor.vscode": {"when": "false"},
+  "setup.default.editor.zed": {"when": "false"},
+  "setup.default.terminal": {"when": "false"},
+  "setup.default.terminal.alacritty": {"when": "false"},
+  "setup.default.terminal.foot": {"when": "false"},
+  "setup.default.terminal.ghostty": {"when": "false"},
+  "setup.default.terminal.kitty": {"when": "false"},
+  "setup.security.passwordless-sudo": {"when": "false"},
   "style.font": {"when": "false"},
   "system": {"when": "false"},
   "system.hibernate": {"when": "false"},
@@ -177,7 +218,6 @@
   "update.hardware.wifi": {"when": "false"},
   "update.omarchy": {"when": "false"},
   "update.password": {"when": "false"},
-  "update.password.drive": {"when": "false"},
   "update.password.user": {"when": "false"},
   "update.process": {"when": "false"},
   "update.process.hyprsunset": {"when": "false"},
