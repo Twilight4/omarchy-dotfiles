@@ -46,17 +46,25 @@ zen*)
   hyprctl dispatch "hl.dsp.exec_cmd([=[[workspace $WEBAPP_WS] uwsm app -- zen-browser -P webapp $new_win $1]=])" >/dev/null
 
   # First launch of the profile: the new process inherits the exec workspace
-  # tag and lands on WEBAPP_WS by itself. When the webapp instance is already
-  # running the window spawns untagged and the class=zen window rule yanks it
-  # to ws2 — so poll for the new address and move it ourselves.
-  # ponytail: address-diff can grab an unrelated zen window opened in the same
-  # ~5s window and move it too; unlikely enough to accept over tracking pids.
+  # tag and lands on WEBAPP_WS by itself — skip the move then (follow=true
+  # would steal focus at boot). When the webapp instance is already running
+  # the window spawns untagged and the class=zen window rule yanks it to
+  # ws2 — so poll for the new address and move it ourselves. Candidates are
+  # restricted to THIS instance (/proc cmdline contains "-P webapp"): boot
+  # autostart maps the main zen browser inside the same poll window and a
+  # bare address-diff grabbed that instead, parking the main browser on the
+  # webapp workspace alongside the webapp itself.
   for _ in $(seq 20); do
     sleep 0.25
-    new=$(comm -13 <(printf '%s\n' "$before") \
-          <(hyprctl -j clients | jq -r '.[] | select(.class == "zen") | .address' | sort) | head -1)
+    new=$(hyprctl -j clients | jq -r '.[] | select(.class == "zen") | "\(.pid) \(.address)"' \
+      | while read -r pid addr; do
+          printf '%s\n' "$before" | grep -qxF "$addr" && continue
+          tr '\0' ' ' </proc/$pid/cmdline 2>/dev/null | grep -q -- '-P webapp' && echo "$addr"
+        done | head -1)
     if [ -n "$new" ]; then
-      hyprctl dispatch "hl.dsp.window.move({workspace=\"$WEBAPP_WS\", window=\"address:$new\", follow=true})" >/dev/null
+      ws=$(hyprctl -j clients | jq -r --arg a "$new" '.[] | select(.address == $a) | .workspace.id')
+      [ "$ws" = "$WEBAPP_WS" ] || \
+        hyprctl dispatch "hl.dsp.window.move({workspace=\"$WEBAPP_WS\", window=\"address:$new\", follow=true})" >/dev/null
       exit 0
     fi
   done
