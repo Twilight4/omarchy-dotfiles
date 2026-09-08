@@ -20,6 +20,7 @@ what differs on top.
 | `.config/wlogout/` | wlogout power menu; `colors.css` is generated from the current Omarchy theme (`generate-colors.sh`, re-run by the `theme-set.d/wlogout-colors.sh` hook on every theme change) |
 | `.config/systemd/user/` | fcitx5 override (frees input-method-v2 for wvkbd) |
 | `.config/.install/` | the install chain (below) |
+| `.config/.local/bin/` | user scripts: webcam pops, capture helper, webapp-menu-sync, taeryn-wallpaper-themes (aether theme per wallpaper) |
 
 Shell plugin *code* is not tracked — `setup-plugins.sh` re-clones the three
 quickshell plugins from their git remotes.
@@ -74,8 +75,11 @@ Run it from anywhere except inside `~/.config` itself.
    the shared trees (`zsh emacs git btop mpv yazi zathura bat fontconfig
    lsd`) + user scripts; then the **Omarchy zsh bridge**: `~/.local/bin`
    on PATH (Omarchy's agent CLIs / mise stubs) and XDG symlinks so the
-   official `.zshenv`'s `XDG_DATA_HOME` redirect keeps Omarchy's
-   `~/.local/share/{fonts,applications,icons}` visible.
+   official `.zshenv`'s XDG_DATA_HOME redirect keeps Omarchy's
+   `~/.local/share/{fonts,applications,icons}` visible. Also clones
+   `Twilight4/wallpapers` to `~/pictures/wallpapers` and generates an
+   Omarchy theme per wallpaper (aether → `~/.config/omarchy/themes/wp-*`,
+   picked via **Style > Wallpapers**).
 6. **zsh / cursor / plugins / cleanup-homedir** — default shell, Bibata via
    gsettings + hyprctl, plugin re-clones, XDG home skeleton (`~/.local` and
    `~/.cache` left intact for Omarchy).

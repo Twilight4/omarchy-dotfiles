@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+# taeryn-wallpaper-themes — one Omarchy theme per wallpaper in the wallpapers
+# repo (~/pictures/wallpapers). Colors come from Omarchy's own theme builder
+# (aether --generate --no-apply); colors.toml is re-resolved through
+# omarchy-theme-color so the FULL palette (dark/darker/lighter shades, ANSI
+# slots) is baked in, and each theme's background is a symlink into the repo
+# (no image duplication). Themes land in ~/.config/omarchy/themes/wp-<slug>/.
+#
+#   sync            generate missing wp-* themes (idempotent; new wallpapers
+#                   are picked up on the next run)
+#   pick (default)  sync, open the image selector over the repo, apply the
+#                   selected wallpaper's theme via omarchy-theme-set
+#
+# ponytail: no pruning — deleting a wallpaper leaves its theme behind until
+# removed by hand: rm -r ~/.config/omarchy/themes/wp-<slug>
+set -uo pipefail
+
+WALLPAPERS_DIR="${WALLPAPERS_DIR:-$HOME/pictures/wallpapers}"
+THEMES_DIR="$HOME/.config/omarchy/themes"
+CURRENT_BACKGROUND_LINK="$HOME/.local/state/omarchy/current/background"
+GENERATED=0
+
+warn() { printf 'taeryn-wallpaper-themes: %s\n' "$*" >&2; }
+
+slug_for() { # <filename> -> wp-<slug>; empty output on an unusable name
+  local s=${1%.*}
+  s=${s,,}
+  s=${s//[_ ]/-}
+  s=$(printf '%s' "$s" | tr -cd '[:alnum:]-')
+  s=$(printf '%s' "$s" | sed -E 's/-+/-/g; s/^-+//; s/-+$//')
+  [[ -n $s ]] && printf 'wp-%s' "$s"
+}
+
+resolve_slug() { # <image> -> slug owning THIS image; -2/-3… on stem collisions
+  local img=$1 base slug n target
+  base=$(slug_for "${img##*/}")
+  [[ -n $base ]] || return 0
+  slug=$base n=1
+  while [[ -d $THEMES_DIR/$slug && $n -le 9 ]]; do
+    target=$(find "$THEMES_DIR/$slug/backgrounds" -maxdepth 1 -type l -printf '%l\n' 2>/dev/null | head -n1)
+    [[ $target == "$(realpath "$img")" ]] && break
+    n=$((n + 1)) slug="$base-$n"
+  done
+  printf '%s' "$slug"
+}
+
+sync_one() { # <image>
+  local img=$1 slug theme_dir tmp f
+  slug=$(resolve_slug "$img")
+  [[ -n $slug ]] || { warn "unusable name, skipping: ${img##*/}"; return 0; }
+  theme_dir="$THEMES_DIR/$slug"
+  [[ -d $theme_dir ]] && return 0
+
+  tmp=$(mktemp -d) || return 1
+  if ! aether --generate "$img" --no-apply --no-zed --no-vscode --no-neovim \
+    --output "$tmp" >/dev/null 2>&1; then
+    warn "aether failed, skipping: ${img##*/}"
+    rm -rf "$tmp"
+    return 1
+  fi
+
+  # Full resolved palette instead of aether's mix of short/long role names.
+  if omarchy-theme-color --file "$tmp/colors.toml" --all >/dev/null 2>&1; then
+    omarchy-theme-color --file "$tmp/colors.toml" --all |
+      awk -F'\t' '{ printf "%s = \"%s\"\n", $1, $2 }' >"$tmp/colors.toml.new"
+    mv "$tmp/colors.toml.new" "$tmp/colors.toml"
+  fi
+
+  mkdir -p "$theme_dir/backgrounds"
+  for f in colors.toml btop.theme chromium.theme icons.theme; do
+    [[ -f $tmp/$f ]] && mv "$tmp/$f" "$theme_dir/$f"
+  done
+  ln -s "$(realpath "$img")" "$theme_dir/backgrounds/${img##*/}"
+  rm -rf "$tmp"
+  GENERATED=$((GENERATED + 1))
+}
+
+sync_themes() {
+  [[ -d $WALLPAPERS_DIR ]] || { warn "no wallpapers dir: $WALLPAPERS_DIR"; return 1; }
+  local img
+  while IFS= read -r -d '' img; do
+    sync_one "$img" || true
+  done < <(find -L "$WALLPAPERS_DIR" -mindepth 1 -type f -not -path '*/.git/*' \
+    \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.gif' \
+    -o -iname '*.webp' -o -iname '*.bmp' \) -print0 | sort -z)
+}
+
+pick() {
+  sync_themes || exit 1
+
+  local dirs selected slug
+  mapfile -t dirs < <(find "$WALLPAPERS_DIR" -mindepth 1 -maxdepth 1 -type d -not -name '.*' | sort)
+  (( ${#dirs[@]} > 0 )) || { warn "no wallpaper collections found"; exit 1; }
+
+  selected=$(omarchy-menu-images \
+    --selected "$(readlink -f "$CURRENT_BACKGROUND_LINK" 2>/dev/null)" \
+    --filterable --lazy-thumbnails --show-labels \
+    "${dirs[@]}")
+  [[ -n $selected ]] || exit 0
+
+  slug=$(resolve_slug "$(realpath "$selected")")
+  [[ -n $slug ]] || { warn "no theme for ${selected##*/}"; exit 1; }
+  exec omarchy-theme-set "$slug"
+}
+
+case ${1:-pick} in
+  sync)
+    sync_themes || exit 1
+    printf 'generated %d, total %d themes\n' "$GENERATED" \
+      "$(find "$THEMES_DIR" -maxdepth 1 -name 'wp-*' | wc -l)"
+    ;;
+  pick) pick ;;
+  *) echo "Usage: taeryn-wallpaper-themes [sync|pick]" >&2; exit 1 ;;
+esac

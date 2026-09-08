@@ -36,6 +36,36 @@ fi
 
 ok "Official dotfiles at $OFFICIAL_DIR"
 
+#------------------------------------------------------- wallpapers + themes
+# Wallpaper repo (XDG Pictures, see user-dirs.dirs). taeryn-wallpaper-themes
+# (deployed earlier by deploy-configs.sh) turns every image into an Omarchy
+# theme under ~/.config/omarchy/themes/wp-* — picked via Style > Wallpapers.
+WALLPAPERS_DIR="${WALLPAPERS_DIR:-$HOME/pictures/wallpapers}"
+WALLPAPERS_REMOTE_SSH="git@github.com:Twilight4/wallpapers.git"
+WALLPAPERS_REMOTE_HTTPS="https://github.com/Twilight4/wallpapers.git"
+
+if [[ -d $WALLPAPERS_DIR/.git ]]; then
+    info "Wallpapers repo present, updating: $WALLPAPERS_DIR"
+    git -C "$WALLPAPERS_DIR" pull --ff-only || warn "git pull failed — using existing checkout."
+elif [[ -d $WALLPAPERS_DIR ]]; then
+    warn "$WALLPAPERS_DIR exists but is not a git repo — skipping wallpapers."
+else
+    # --depth 1: 2.5 GB of images, history has no value here. Public repo,
+    # so the HTTPS fallback works without SSH keys.
+    git clone --depth 1 "$WALLPAPERS_REMOTE_SSH" "$WALLPAPERS_DIR" \
+        || git clone --depth 1 "$WALLPAPERS_REMOTE_HTTPS" "$WALLPAPERS_DIR" \
+        || warn "Could not clone the wallpapers repo — Style > Wallpapers syncs it later."
+fi
+
+if [[ -x $HOME/.config/.local/bin/taeryn-wallpaper-themes && -d $WALLPAPERS_DIR ]]; then
+    info "Generating Omarchy themes from wallpapers (first run takes ~1 min)..."
+    if "$HOME/.config/.local/bin/taeryn-wallpaper-themes" sync; then
+        ok "Wallpaper themes ready in ~/.config/omarchy/themes/"
+    else
+        warn "Wallpaper theme generation failed — retry via: taeryn-wallpaper-themes sync"
+    fi
+fi
+
 # Config trees shared by both rices. Extend this list, not the copies.
 shared_configs=(
     zsh          # shell (aliases, p10k, functions, scripts)
