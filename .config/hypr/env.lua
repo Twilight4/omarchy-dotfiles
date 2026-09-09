@@ -17,4 +17,8 @@ hl.env("XMODIFIERS", "@im=fcitx")
 hl.env("GTK_IM_MODULE", "fcitx")
 hl.env("QT_IM_MODULE", "fcitx")
 
+-- Screenshots into ~/pictures/screenshots, not flat ~/pictures (read by
+-- omarchy-capture-screenshot + taeryn-capture-rect; overrides XDG_PICTURES_DIR)
+hl.env("OMARCHY_SCREENSHOT_DIR", os.getenv("HOME") .. "/pictures/screenshots")
+
 
