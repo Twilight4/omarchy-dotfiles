@@ -69,6 +69,10 @@ if [[ ! -f $HOME/.config/ai-usagebar/config.toml
     ok "Seeded ~/.config/ai-usagebar/config.toml (add the zai api_key)"
 fi
 
+# OMARCHY_SCREENRECORD_DIR target (hypr/env.lua) — omarchy-capture-screenrecording
+# errors on a missing dir instead of creating it.
+mkdir -p "$HOME/videos/recordings" && ok "Created ~/videos/recordings"
+
 # Power profile default: stock picks performance on AC when nothing has been
 # remembered yet (~/.local/state/omarchy/powerprofiles/ac). Seed balanced for
 # AC — only when no profile is remembered, so a later explicit menu choice
