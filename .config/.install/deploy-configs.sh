@@ -69,6 +69,18 @@ if [[ ! -f $HOME/.config/ai-usagebar/config.toml
     ok "Seeded ~/.config/ai-usagebar/config.toml (add the zai api_key)"
 fi
 
+# Power profile default: stock picks performance on AC when nothing has been
+# remembered yet (~/.local/state/omarchy/powerprofiles/ac). Seed balanced for
+# AC — only when no profile is remembered, so a later explicit menu choice
+# survives installer re-runs. Boot (omarchy powerprofiles init) and every
+# AC/battery transition restore it afterwards.
+if [[ ! -f ${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/powerprofiles/ac ]] \
+    && command -v omarchy &>/dev/null; then
+    omarchy powerprofiles set ac balanced \
+        && ok "AC power profile default: balanced" \
+        || warn "Could not set AC power profile default"
+fi
+
 # wlogout colors are generated from the current Omarchy theme (colors.css is
 # gitignored); the theme-set.d/wlogout-colors.sh hook regenerates on theme
 # changes, but seed it once here so a fresh deploy has colors immediately.
