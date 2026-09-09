@@ -7,9 +7,11 @@
 # (no image duplication). Themes land in ~/.config/omarchy/themes/wp-<slug>/.
 #
 #   sync            generate missing wp-* themes (idempotent; new wallpapers
-#                   are picked up on the next run)
-#   pick (default)  sync, open the image selector over the repo, apply the
-#                   selected wallpaper's theme via omarchy-theme-set
+#                   are picked up on the next run — run after adding images)
+#   pick (default)  sync, then image-select a wallpaper and apply its theme
+#                   (standalone picker; day-to-day selection goes through
+#                   Style > Theme, which lists every wp-* theme with the
+#                   wallpaper as its preview)
 #
 # ponytail: no pruning — deleting a wallpaper leaves its theme behind until
 # removed by hand: rm -r ~/.config/omarchy/themes/wp-<slug>

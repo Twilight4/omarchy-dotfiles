@@ -60,6 +60,10 @@ zen*)
   # welcome/setup so the first real window comes up straight on the URL.
   [ "$fresh" = 1 ] && timeout 90 zen-browser -P "$prof" --headless --screenshot /dev/null about:blank >/dev/null 2>&1
 
+  # New web app: its class joins the dock's ignore list (frozen at dock
+  # start) — relaunch the dock hidden so the new window never shows there.
+  [[ $fresh = 1 ]] && "$HOME/.config/hypr/scripts/dock-toggle.sh" --refresh >/dev/null 2>&1 || true
+
   # Cold start: the exec workspace tag lands the window on WEBAPP_WS by
   # itself — no post-map move, no workspace detour.
   hyprctl dispatch "hl.dsp.exec_cmd([=[[workspace $WEBAPP_WS] uwsm app -- env MOZ_APP_REMOTINGNAME=$prof zen-browser -P $prof $1]=])" >/dev/null

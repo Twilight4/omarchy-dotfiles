@@ -107,6 +107,22 @@ if ! grep -qx uinput /etc/modules-load.d/uinput.conf 2>/dev/null; then
         || warn "Failed to install modules-load uinput.conf"
 fi
 
+# Zen enterprise policies: force-install uBlock Origin + Dark Reader into
+# EVERY zen profile — each web app runs in its own zen profile (see
+# omarchy-launch-webapp.patched), so per-profile manual installs don't
+# scale. /etc/zen/policies shadows the package's own
+# /opt/zen-browser-bin/distribution/policies.json (SysConfD wins), so the
+# packager's keys are carried over. The per-extension key is
+# "installation_mode" — with "install_type" the file still shows Active on
+# about:policies but nothing ever installs (verified the hard way).
+zen_policies="/etc/zen/policies/policies.json"
+if ! cmp -s "$REPO_DIR/.config/.install/system/zen-policies.json" "$zen_policies" 2>/dev/null; then
+    sudo mkdir -p /etc/zen/policies \
+        && sudo cp "$REPO_DIR/.config/.install/system/zen-policies.json" "$zen_policies" \
+        && ok "Installed: $zen_policies" \
+        || warn "Failed to install $zen_policies"
+fi
+
 # Restart the shell stack so the patched launcher actually takes effect.
 # Kill supervisor + quickshell, then reload — the default autostart re-execs
 # omarchy-launch-shell, which now reads the patched file. If the reload

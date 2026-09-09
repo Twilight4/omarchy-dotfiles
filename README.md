@@ -79,7 +79,8 @@ Run it from anywhere except inside `~/.config` itself.
    `~/.local/share/{fonts,applications,icons}` visible. Also clones
    `Twilight4/wallpapers` to `~/pictures/wallpapers` and generates an
    Omarchy theme per wallpaper (aether → `~/.config/omarchy/themes/wp-*`,
-   picked via **Style > Wallpapers**).
+   surfaced in **Style > Theme** — every wp-* theme shows its wallpaper as
+   the preview; `taeryn-wallpaper-themes sync` adds new wallpapers).
 6. **zsh / cursor / plugins / cleanup-homedir** — default shell, Bibata via
    gsettings + hyprctl, plugin re-clones, XDG home skeleton (`~/.local` and
    `~/.cache` left intact for Omarchy).

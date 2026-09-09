@@ -39,7 +39,7 @@ ok "Official dotfiles at $OFFICIAL_DIR"
 #------------------------------------------------------- wallpapers + themes
 # Wallpaper repo (XDG Pictures, see user-dirs.dirs). taeryn-wallpaper-themes
 # (deployed earlier by deploy-configs.sh) turns every image into an Omarchy
-# theme under ~/.config/omarchy/themes/wp-* — picked via Style > Wallpapers.
+# theme under ~/.config/omarchy/themes/wp-* — Style > Theme lists them.
 WALLPAPERS_DIR="${WALLPAPERS_DIR:-$HOME/pictures/wallpapers}"
 WALLPAPERS_REMOTE_SSH="git@github.com:Twilight4/wallpapers.git"
 WALLPAPERS_REMOTE_HTTPS="https://github.com/Twilight4/wallpapers.git"
@@ -54,7 +54,7 @@ else
     # so the HTTPS fallback works without SSH keys.
     git clone --depth 1 "$WALLPAPERS_REMOTE_SSH" "$WALLPAPERS_DIR" \
         || git clone --depth 1 "$WALLPAPERS_REMOTE_HTTPS" "$WALLPAPERS_DIR" \
-        || warn "Could not clone the wallpapers repo — Style > Wallpapers syncs it later."
+        || warn "Could not clone the wallpapers repo — 'taeryn-wallpaper-themes sync' retries after clone."
 fi
 
 if [[ -x $HOME/.config/.local/bin/taeryn-wallpaper-themes && -d $WALLPAPERS_DIR ]]; then
