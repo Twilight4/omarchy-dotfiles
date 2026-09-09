@@ -16,7 +16,7 @@ info "Tidying \$HOME (create XDG skeleton, relocate stray dotfiles)."
 directories=(
     ~/{documents,downloads,desktop,videos,music,pictures}
     ~/pictures/{dcim,screenshots}
-    ~/documents/pdfs
+    ~/videos/recordings
     ~/desktop/{workspace,projects,server}
     ~/.ssh
     ~/.config/.local/share/gnupg
