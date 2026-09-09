@@ -143,7 +143,13 @@ if hl.plugin.hyprexpo ~= nil then
     hl.config({ plugin = { hyprexpo = {
         columns = 3,
         bg_col = expo_bg,
-        workspace_method = "center current",
+        -- dynamic_grid: tiles = exactly the non-empty workspaces, so every
+        -- app always shows from any current workspace. The default "center
+        -- current" window backtracks 3 below current and stops at the wrap,
+        -- silently dropping far-side workspaces (from ws6 only ws3-6 got
+        -- tiles; ws1/ws2 apps vanished) — the visible set shifted with the
+        -- current workspace.
+        dynamic_grid = 1,
         skip_empty = 0,
         gesture_distance = 200,
         cancel_key = "escape",
