@@ -20,5 +20,7 @@ hl.env("QT_IM_MODULE", "fcitx")
 -- Screenshots into ~/pictures/screenshots, not flat ~/pictures (read by
 -- omarchy-capture-screenshot + taeryn-capture-rect; overrides XDG_PICTURES_DIR)
 hl.env("OMARCHY_SCREENSHOT_DIR", os.getenv("HOME") .. "/pictures/screenshots")
+-- Same for screen recordings (script errors if the dir is missing, not mkdir)
+hl.env("OMARCHY_SCREENRECORD_DIR", os.getenv("HOME") .. "/videos/recordings")
 
 
