@@ -54,6 +54,7 @@ zen*)
     'user_pref("browser.startup.homepage", "about:blank");' \
     'user_pref("browser.sessionstore.resume_from_crash", false);' \
     'user_pref("zen.urlbar.open-on-startup", false);' \
+    'user_pref("browser.uiCustomization.state", '\''{"placements":{"widget-overflow-fixed-list":[],"unified-extensions-area":[],"nav-bar":["back-button","forward-button","stop-reload-button","customizableui-special-spring1","vertical-spacer","urlbar-container","customizableui-special-spring2","unified-extensions-button","ublock0_raymondhill_net-browser-action","addon_darkreader_org-browser-action"],"toolbar-menubar":["menubar-items"],"TabsToolbar":["tabbrowser-tabs","ai-window-toggle"],"vertical-tabs":[],"PersonalToolbar":["personal-bookmarks"],"zen-sidebar-top-buttons":["zen-toggle-compact-mode"],"zen-sidebar-foot-buttons":["downloads-button","zen-workspaces-button","zen-create-new-button"]},"seen":["ai-window-toggle","developer-button","screenshot-button","ublock0_raymondhill_net-browser-action","addon_darkreader_org-browser-action"],"dirtyAreaCache":["nav-bar","vertical-tabs","zen-sidebar-foot-buttons","TabsToolbar","toolbar-menubar","PersonalToolbar","zen-sidebar-top-buttons","unified-extensions-area","ublock0_raymondhill_net-browser-action","addon_darkreader_org-browser-action"],"currentVersion":25,"newElementCount":2}'\'');' \
     > "$pdir/user.js"
 
   # One-time headless touch on a fresh profile: consumes zen's first-run
