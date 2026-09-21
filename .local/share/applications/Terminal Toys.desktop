@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Terminal Toys
+Comment=Open the CLI eye-candy dashboard in terminal windows
+Exec=tm-open-all.sh
+Terminal=false
+Type=Application
+Icon=utilities-terminal
+StartupNotify=false

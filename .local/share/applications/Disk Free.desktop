@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Disk Free
+Comment=Filesystem free space table (duf)
+Exec=xdg-terminal-exec --app-id=TUI.float -e bash -c "duf; echo; echo 'Press any key to close'; read -n 1 -s"
+Terminal=false
+Type=Application
+Icon=org.gnome.DiskUtility
+StartupNotify=true

@@ -157,6 +157,11 @@ packages=(
     "lolcat"
     "cbonsai"
     "smassh-bin"
+    "asciiquarium"            # terminal-toys dashboard (tm-open-all.sh)
+    "cava"
+    "cmatrix-git"
+    "musikcube"
+    "fireplace"
 )
 
 # Variant swaps: legacy variants conflict with (or shadow via provides) the
