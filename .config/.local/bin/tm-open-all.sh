@@ -10,12 +10,13 @@ launch() { # <title> <class> <kitty args...>
   setsid uwsm-app -- kitty -T "$title" --class "$class" "$@" &>/dev/null &
 }
 
-# Any-key refresh loop — space/enter re-run the tool fresh (e.g. after a
-# resize), q closes the window. All other stdin bytes are swallowed: kitty's
-# replies to terminal queries (ESC sequences from fastfetch/tput cursor
-# reports) must not count as keypresses, or the tool re-runs in a tight loop
-# (flicker). Animations are killed and restarted; one-shots just exit.
-LOOP='while true; do clear; "$@" & p=$!; while :; do IFS= read -rsn1 k || exit; if [[ $k == q ]]; then kill $p 2>/dev/null; wait $p 2>/dev/null; exit; fi; [[ $k == " " || -z $k ]] && break; done; kill $p 2>/dev/null; wait $p 2>/dev/null; done'
+# Any-key refresh loop — space/enter re-runs the tool fresh (e.g. after a
+# resize), q closes the window. Other stdin bytes (kitty's replies to the
+# tool's terminal queries) are swallowed. The tool runs with an empty FIFO
+# as stdin: rain/pipes pace their animation with `read -t <timeout>`, and
+# any byte arriving on the shared pty made those reads return early, which
+# sped the animation up several-fold. The FIFO guarantees full timeouts.
+LOOP='D=""; trap "rm -f \$D" EXIT HUP TERM; while true; do clear; D=$(mktemp -u /tmp/toy.XXXXXX); mkfifo "$D"; exec 9<>"$D"; "$@" <"$D" & p=$!; while :; do IFS= read -rsn1 k || exit; if [[ $k == q ]]; then kill $p 2>/dev/null; wait $p 2>/dev/null; rm -f "$D"; exit; fi; [[ $k == " " || -z $k ]] && break; done; kill $p 2>/dev/null; wait $p 2>/dev/null; rm -f "$D"; done'
 
 # Native TUIs: redraw on resize and quit on q themselves.
 launch asciiquarium asciiquarium -e asciiquarium --transparent
