@@ -160,6 +160,8 @@ packages=(
     "asciiquarium"            # terminal-toys dashboard (tm-open-all.sh)
     "cava"
     "cmatrix-git"
+    "pipes.sh"                 # TUI screensaver (Style > Screensaver picker)
+    "ascii-rain-git"           # TUI screensaver; binary is "rain"
 )
 
 # Variant swaps: legacy variants conflict with (or shadow via provides) the
