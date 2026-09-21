@@ -12,10 +12,12 @@ screensaver_in_focus() {
 }
 
 screensaver_pid=""
+tool_fifo=""
 
 exit_screensaver() {
   hyprctl eval 'hl.config({ cursor = { invisible = false } })' &>/dev/null || hyprctl keyword cursor:invisible false &>/dev/null || true
   [[ -n $screensaver_pid ]] && kill "$screensaver_pid" 2>/dev/null
+  [[ -n $tool_fifo ]] && rm -f "$tool_fifo"
   pkill -x ttfx 2>/dev/null
   pkill -f '[o]rg.omarchy.screensaver' 2>/dev/null
   exit 0
@@ -71,7 +73,16 @@ if tool=$(screensaver_command "$choice"); then
   # A TUI tool: no rotation. When the tool quits on its own (e.g. cmatrix on
   # 'q'), that is the user asking to leave — exit, don't respawn.
   # ponytail: plain word-split is safe — screensaver_command emits no quotes/globs
-  $tool &
+  # The tool must NOT share the pty with our `read -n1` monitor: bash tools
+  # pace frames with `read -t <delay>` on stdin (pipes, pipes.sh, rain), and
+  # the monitor's termios toggling / stray reply bytes return those reads
+  # early — measured 6-11x animation speedup. An empty FIFO as the tool's
+  # stdin guarantees full timeouts (same fix as tm-open-all.sh's toys LOOP).
+  # fd 9 holds it open so the tool's reads block instead of hitting EOF.
+  tool_fifo=$(mktemp -u /tmp/omarchy-screensaver.XXXXXX)
+  mkfifo "$tool_fifo"
+  exec 9<>"$tool_fifo"
+  $tool <"$tool_fifo" &
   screensaver_pid=$!
   monitor_and_exit
   exit_screensaver
