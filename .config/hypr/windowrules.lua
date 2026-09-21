@@ -38,6 +38,23 @@ hl.window_rule({ match = { class = "zenity" },      float = true, center = true 
 hl.window_rule({ match = { class = "xdg-desktop-portal-gtk" }, float = true, center = true })
 hl.window_rule({ match = { class = "xdg-desktop-portal-kde" }, float = true, center = true })
 
+-- Terminal toys (tm-open-all.sh, "Terminal Toys" launcher): float like the
+-- TUI windows, scattered in a 3x3 grid across the 1200x750 logical panel
+-- instead of stacking on one center point.
+local toys = {
+  asciiquarium = { 0, 0 }, cava = { 1, 0 }, clock = { 2, 0 },
+  cmatrix = { 0, 1 }, pipes = { 1, 1 }, rain = { 2, 1 },
+  fetch = { 0, 2 }, cpufetch = { 1, 2 }, cbonsai = { 2, 2 },
+}
+for class, cell in pairs(toys) do
+  hl.window_rule({
+    match = { class = "^" .. class .. "$" },
+    float = true,
+    size = { 390, 225 },
+    move = { 5 + cell[1] * 400, 48 + cell[2] * 235 },
+  })
+end
+
 -- Image viewers (Omarchy's set)
 hl.window_rule({ match = { class = "^org.gnome.eog" },  float = true, center = true })
 hl.window_rule({ match = { class = "^org.gnome.Snapshot" },  float = true, center = true })

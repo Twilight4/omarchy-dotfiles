@@ -14,10 +14,8 @@ launch asciiquarium asciiquarium -e asciiquarium --transparent
 launch cava        cava        -e cava
 launch clock       clock       -e tty-clock -c -C 6 -r -s -f "%A, %B, %d"
 launch cmatrix     cmatrix     -e cmatrix
-launch musikcube   musikcube   -e musikcube
 [[ -x $HOME/.config/zsh/bash-scripts/pipes ]] && launch pipes pipes -e "$HOME/.config/zsh/bash-scripts/pipes"
 [[ -x $HOME/.config/zsh/bash-scripts/rain  ]] && launch rain  rain  -e "$HOME/.config/zsh/bash-scripts/rain"
-launch fetch       fetch       --hold -e fastfetch
-launch cpufetch    cpufetch    --hold -e cpufetch
-launch fireplace   fireplace   -e fireplace
+launch fetch       fetch       -e bash -c "fastfetch; read -n 1 -s"
+launch cpufetch    cpufetch    -e bash -c "cpufetch; read -n 1 -s"
 launch cbonsai     cbonsai     -e cbonsai --live

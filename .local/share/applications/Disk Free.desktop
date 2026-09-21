@@ -2,7 +2,7 @@
 Version=1.0
 Name=Disk Free
 Comment=Filesystem free space table (duf)
-Exec=xdg-terminal-exec --app-id=TUI.float -e bash -c "duf; echo; echo 'Press any key to close'; read -n 1 -s"
+Exec=xdg-terminal-exec --app-id=TUI.float -e bash -c "duf --hide special -hide-mp /run/user/$UID/psd/$USER-firefox-nlmda6r7.default,/run/user/$UID/psd/$USER-firefox-pjxpviu5.default-esr,/var/tmp,/var/log,/var/cache,/srv,/boot/efi; echo; echo 'Press any key to close'; read -n 1 -s"
 Terminal=false
 Type=Application
 Icon=org.gnome.DiskUtility
