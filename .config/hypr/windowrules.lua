@@ -38,9 +38,10 @@ hl.window_rule({ match = { class = "zenity" },      float = true, center = true 
 hl.window_rule({ match = { class = "xdg-desktop-portal-gtk" }, float = true, center = true })
 hl.window_rule({ match = { class = "xdg-desktop-portal-kde" }, float = true, center = true })
 
--- Terminal toys (tm-open-all.sh, "Terminal Toys" launcher): float like the
--- TUI windows, scattered in a 3x3 grid across the 1200x750 logical panel
--- instead of stacking on one center point.
+-- Terminal toys (tm-open-all.sh, "Terminal Toys" launcher): float at the
+-- same 875x600 size as the TUI.float windows, each cascaded to a distinct
+-- offset within the 1200x750 panel so every window's title bar and text
+-- stay reachable through the stack.
 local toys = {
   asciiquarium = { 0, 0 }, cava = { 1, 0 }, clock = { 2, 0 },
   cmatrix = { 0, 1 }, pipes = { 1, 1 }, rain = { 2, 1 },
@@ -50,8 +51,8 @@ for class, cell in pairs(toys) do
   hl.window_rule({
     match = { class = "^" .. class .. "$" },
     float = true,
-    size = { 390, 225 },
-    move = { 5 + cell[1] * 400, 48 + cell[2] * 235 },
+    size = { 875, 600 },
+    move = { 5 + cell[1] * 160, 45 + cell[2] * 52 },
   })
 end
 
