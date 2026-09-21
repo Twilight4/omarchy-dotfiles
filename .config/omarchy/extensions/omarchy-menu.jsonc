@@ -226,6 +226,17 @@
   "update.time": {"when": "false"},
   "update.timezone": {"when": "false"},
 
+  // About submenu: system info TUIs (replaces the single stock fastfetch
+  // row — stock omarchy-launch-about keeps its auto-fit + re-render).
+  // Loop rows: any key re-runs the tool fresh (e.g. after a resize), q
+  // closes. dua i is a native TUI (quits on q by itself).
+  "about": {"icon":"","label":"About"},
+  "about.fastfetch": {"icon":"","label":"Fastfetch","description":"System overview","action":"omarchy-launch-about"},
+  "about.cpu": {"icon":"","label":"CPU (cpufetch)","description":"any key refresh · q close","action":"omarchy-launch-tui --app-id=TUI.float bash -c 'while :; do clear; cpufetch; read -rsn1 k; [[ $k == q ]] && exit; done'"},
+  "about.gpu": {"icon":"","label":"GPU (nvidia-smi)","description":"any key refresh · q close","action":"omarchy-launch-tui --app-id=TUI.float bash -c 'while :; do clear; nvidia-smi; read -rsn1 k; [[ $k == q ]] && exit; done'"},
+  "about.disks": {"icon":"","label":"Disks (duf)","description":"any key refresh · q close","action":"omarchy-launch-tui --app-id=TUI.float bash -c 'while :; do clear; duf --hide special -hide-mp /run/user/$UID/psd/$USER-firefox-nlmda6r7.default,/run/user/$UID/psd/$USER-firefox-pjxpviu5.default-esr,/var/tmp,/var/log,/var/cache,/srv,/boot/efi; read -rsn1 k; [[ $k == q ]] && exit; done'"},
+  "about.diskusage": {"icon":"","label":"Disk Usage (dua)","description":"Interactive · q closes","action":"omarchy-launch-tui --app-id=TUI.float dua i"},
+
   // Style > Screensaver > Choose Screensaver: TUI screensaver picker
   // (tty-clock, pipes, cmatrix, asciiquarium, cbonsai, rain + stock TTE).
   // Choice lives in ~/.config/omarchy/screensaver-tool (missing = TTE); the
