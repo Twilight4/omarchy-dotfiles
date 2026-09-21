@@ -16,6 +16,6 @@ launch clock       clock       -e tty-clock -c -C 6 -r -s -f "%A, %B, %d"
 launch cmatrix     cmatrix     -e cmatrix
 [[ -x $HOME/.config/zsh/bash-scripts/pipes ]] && launch pipes pipes -e "$HOME/.config/zsh/bash-scripts/pipes"
 [[ -x $HOME/.config/zsh/bash-scripts/rain  ]] && launch rain  rain  -e "$HOME/.config/zsh/bash-scripts/rain"
-launch fetch       fetch       -o font_size=7 -e bash -c "fastfetch; read -n 1 -s"
-launch cpufetch    cpufetch    -o font_size=7 -e bash -c "cpufetch; read -n 1 -s"
+launch fetch       fetch       -e bash -c 'while true; do clear; fastfetch; echo; echo "any key = refresh · q = quit"; read -rsn1 k; [[ $k == q ]] && break; done'
+launch cpufetch    cpufetch    -e bash -c 'while true; do clear; cpufetch; echo; echo "any key = refresh · q = quit"; read -rsn1 k; [[ $k == q ]] && break; done'
 launch cbonsai     cbonsai     -e cbonsai --live
