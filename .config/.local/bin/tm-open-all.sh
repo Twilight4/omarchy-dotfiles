@@ -7,7 +7,16 @@
 
 launch() { # <title> <class> <kitty args...>
   local title="$1" class="$2"; shift 2
-  setsid uwsm-app -- kitty -T "$title" --class "$class" "$@" &>/dev/null &
+  # Font-size keys for every toy window: C-=/C-- step the size, C-0 resets
+  # (shifted variants too, since "+" needs shift on most layouts).
+  setsid uwsm-app -- kitty -T "$title" --class "$class" \
+    -o 'map=ctrl+equal change_font_size all +2.0' \
+    -o 'map=ctrl+shift+equal change_font_size all +2.0' \
+    -o 'map=ctrl+minus change_font_size all -2.0' \
+    -o 'map=ctrl+shift+minus change_font_size all -2.0' \
+    -o 'map=ctrl+0 change_font_size all 0' \
+    -o 'map=ctrl+shift+0 change_font_size all 0' \
+    "$@" &>/dev/null &
 }
 
 # Any-key refresh loop — space/enter re-runs the tool fresh (e.g. after a
