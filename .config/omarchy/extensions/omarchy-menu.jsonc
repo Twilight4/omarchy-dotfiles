@@ -232,7 +232,7 @@
   // patched /usr/bin/omarchy-screensaver (omarchy-patches/) runs it. Picking
   // one force-launches it as a live preview — any key or focus change
   // dismisses. Tools: pipes.sh + ascii-rain-git (binary "rain") via AUR.
-  "style.screensaver.choose": {"icon":"","label":"Choose Screensaver","aliases":["screensavers"]},
+  "style.screensaver.choose": {"icon":"","label":"Choose Screensaver","aliases":["screensavers"]},
   "style.screensaver.choose.tte": {"icon":"","label":"TTE Effects","description":"Stock random text effects","checked":"[[ \"$(cat ~/.config/omarchy/screensaver-tool 2>/dev/null || echo tte)\" == tte ]]","action":"printf tte > ~/.config/omarchy/screensaver-tool && omarchy-launch-screensaver force"},
   "style.screensaver.choose.tty-clock": {"icon":"","label":"Clock","checked":"[[ \"$(cat ~/.config/omarchy/screensaver-tool 2>/dev/null || echo tte)\" == tty-clock ]]","action":"printf tty-clock > ~/.config/omarchy/screensaver-tool && omarchy-launch-screensaver force"},
   "style.screensaver.choose.pipes": {"icon":"","label":"Pipes","checked":"[[ \"$(cat ~/.config/omarchy/screensaver-tool 2>/dev/null || echo tte)\" == pipes ]]","action":"printf pipes > ~/.config/omarchy/screensaver-tool && omarchy-launch-screensaver force"},

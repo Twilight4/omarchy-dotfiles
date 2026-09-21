@@ -27,8 +27,7 @@ exit_screensaver() {
 # binary so the caller falls back to stock TTE.
 screensaver_command() {
   case $1 in
-    tty-clock) cmd="tty-clock -c -s -C 6" ;;
-    cmatrix) cmd="cmatrix -b" ;;
+    cmatrix) cmd="cmatrix -a" ;;
     pipes) cmd="pipes.sh" ;;
     asciiquarium) cmd="asciiquarium" ;;
     cbonsai) cmd="cbonsai -l" ;;
