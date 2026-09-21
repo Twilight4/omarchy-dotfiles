@@ -13,6 +13,10 @@
   "apps": {"icon":"󰀻","label":"Apps","aliases":["app","applications"],"provider":"apps","when":"false"},
   "update": {"icon":"","label":"Update","aliases":[],"action":"omarchy-launch-floating-terminal-with-presentation omarchy-update"},
   "style.unlock": {"icon":"󰟵","label":"Unlock","aliases":["unlock"],"action":"omarchy-shell lock explore","description":"Preview and choose a lock screen design"},
+
+  // Disk Usage: ncdu in a stock TUI.float window (float + center + 875x600
+  // from default/hypr/apps/system.lua — same class omarchy-tui-install uses).
+  "disk-usage": {"icon":"󰋊","label":"Disk Usage","aliases":["ncdu","du","storage"],"action":"uwsm-app -- xdg-terminal-exec --app-id=TUI.float -e bash -c 'ncdu /'","description":"Scan disk usage with ncdu"},
   "install.package": {"icon":"󰣇","label":"Package","action":"xdg-terminal-exec --app-id=org.omarchy.terminal $HOME/.config/hypr/scripts/pkg-install","description":"Search official repos and the AUR together"},
   "install.style.theme": {"icon":"󰸌","label":"Theme","action":"omarchy-launch-floating-terminal-with-presentation omarchy-theme-install","parent":"install"},
   "install.style.background": {"icon":"","label":"Background","action":"omarchy-theme-bg-install","parent":"install"},
