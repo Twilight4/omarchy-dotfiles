@@ -89,7 +89,7 @@ packages=(
     "yazi"
     "trash-cli"
     "duf"
-    "ncdu"
+    "dua-cli"
     "sd"
     "pv"
     "xcp"
