@@ -38,10 +38,10 @@ hl.window_rule({ match = { class = "zenity" },      float = true, center = true 
 hl.window_rule({ match = { class = "xdg-desktop-portal-gtk" }, float = true, center = true })
 hl.window_rule({ match = { class = "xdg-desktop-portal-kde" }, float = true, center = true })
 
--- Terminal toys (tm-open-all.sh, "Terminal Toys" launcher): float at the
--- same 875x600 size as the TUI.float windows, each cascaded to a distinct
--- offset within the 1200x750 panel so every window's title bar and text
--- stay reachable through the stack.
+-- Terminal toys (tm-open-all.sh, "Terminal Toys" launcher): floating
+-- windows ~40% smaller than the TUI.float default, each cascaded to a
+-- distinct offset on the 1200x750 panel so every window stays reachable
+-- through the stack (fetch/cpufetch also run a smaller kitty font).
 local toys = {
   asciiquarium = { 0, 0 }, cava = { 1, 0 }, clock = { 2, 0 },
   cmatrix = { 0, 1 }, pipes = { 1, 1 }, rain = { 2, 1 },
@@ -51,8 +51,8 @@ for class, cell in pairs(toys) do
   hl.window_rule({
     match = { class = "^" .. class .. "$" },
     float = true,
-    size = { 875, 600 },
-    move = { 5 + cell[1] * 160, 45 + cell[2] * 52 },
+    size = { 525, 360 },
+    move = { 5 + cell[1] * 335, 45 + cell[2] * 172 },
   })
 end
 
