@@ -1,7 +1,10 @@
-# Monitoring session (SUPER+ special workspace, ws-monitoring). kitty
-# silently drops a splits-layout tab when it is the last of five in this
-# session file (verified: works as tab 2, never spawns as tab 5) — keep the
-# audio tab early.
+# Monitoring session (SUPER+ special workspace, ws-monitoring): btop only,
+# plus the audio tab — pulsemixer controls on top, cava visualizer in the
+# smaller bottom split (~25%).
+#
+# kitty quirk: a splits-layout tab silently never spawns when it is the last
+# of five tabs in this session file (verified: works as tab 2) — keep the
+# audio tab directly after btop.
 
 # Tab 1: btop
 layout tall
@@ -9,28 +12,9 @@ cd ~/
 launch --title btop sh -c 'btop'
 focus
 
-# Tab 2: audio — pulsemixer controls on top, cava visualizer in the
-# smaller bottom split (~25%)
+# Tab 2: audio
 new_tab audio
 layout splits
 cd ~/
 launch --title pulsemixer sh -c 'pulsemixer'
 launch --location=hsplit --bias 25 --title cava sh -c 'cava'
-
-# Tab 3: htop
-new_tab htop
-layout tall
-cd ~/
-launch --title htop sh -c 'htop'
-
-# Tab 4: nvtop
-new_tab nvtop
-layout tall
-cd ~/
-launch --title nvtop sh -c 'nvtop'
-
-# Tab 5: wavemon
-new_tab wavemon
-layout tall
-cd ~/
-launch --title wavemon sh -c 'wavemon'
