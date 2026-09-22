@@ -12,10 +12,13 @@ hl.config({
   },
 })
 
--- Wake the screen on any input (mouse move or key press brings DPMS back).
+-- Wake the screen on key press only. Touch deliberately does NOT wake: touch
+-- motion routes through Hyprland's unified mouse-move wake path, and the
+-- power button tap (scripts/power-button.sh) is the intended wake action —
+-- smartphone-style, see bindings.lua.
 hl.config({
   misc = {
-    mouse_move_enables_dpms = true,
+    mouse_move_enables_dpms = false,
     key_press_enables_dpms = true,
     -- Animate mouse-drag window resizes. Keyboard resize (resizeactive,
     -- SUPER+ALT+HJKL) is dispatcher-driven and Hyprland never animates

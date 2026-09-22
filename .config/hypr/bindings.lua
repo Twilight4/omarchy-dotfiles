@@ -179,11 +179,15 @@ end })
 -- (.config/qs-applauncher) is the touch flow via the 4-finger swipe-up
 -- gesture and the nwg dock launcher button.
 o.bind("SUPER + R", "Apps menu", "omarchy-menu toggle apps")
--- Power/session menu: wlogout on the physical power button, replacing
--- Omarchy's default "omarchy-menu toggle system". Blur behind it comes from
--- the layer rule in looknfeel.lua.
+-- Power button, smartphone-style (scripts/power-button.sh): tap = lock +
+-- screen off (tap again = screen on; touch never wakes it — see
+-- looknfeel.lua), hold ~0.6s = wlogout power menu. Replaces Omarchy's
+-- default "omarchy-menu toggle system" on XF86PowerOff; blur behind wlogout
+-- comes from the layer rule in looknfeel.lua.
+local power_button = os.getenv("HOME") .. "/.config/hypr/scripts/power-button.sh"
 hl.unbind("XF86PowerOff")
-o.bind("XF86PowerOff", "Power menu", "pkill wlogout || wlogout", { locked = true })
+o.bind("XF86PowerOff", "Screen off + lock (tap)", power_button .. " press", { locked = true })
+o.bind("XF86PowerOff", "Screen on (release)", power_button .. " release", { locked = true, release = true })
 
 -- ---------------------------------------------------------------------------
 -- 2026-08-31: Garuda dotfiles migration (dotfiles/.config/hypr/configs/
