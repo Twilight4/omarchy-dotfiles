@@ -83,7 +83,10 @@ hl.config({
 -- gesture, no plugin needed — mirrors the touchscreen behaviour).
 hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
 -- Touchpad: 4-finger swipe down locks the screen (mirrors the touchscreen).
-hl.gesture({ fingers = 4, direction = "down", action = function() os.execute("omarchy-system-lock") end })
+-- (hl.dispatch + exec_cmd spawns detached — a bare os.execute here BLOCKS
+-- the compositor's Lua thread for the seconds omarchy-system-lock takes,
+-- freezing the screen before the lock appears.)
+hl.gesture({ fingers = 4, direction = "down", action = function() hl.dispatch(hl.dsp.exec_cmd("omarchy-system-lock")) end })
 
 -- App-specific touchpad scroll speeds.
 -- o.window("(Alacritty|kitty|foot)", { scroll_touchpad = 1.5 })
