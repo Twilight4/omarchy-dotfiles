@@ -82,6 +82,8 @@ hl.config({
 -- Touchpad: 3-finger horizontal swipe switches workspaces (native hyprland
 -- gesture, no plugin needed — mirrors the touchscreen behaviour).
 hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
+-- Touchpad: 4-finger swipe down locks the screen (mirrors the touchscreen).
+hl.gesture({ fingers = 4, direction = "down", action = function() os.execute("omarchy-system-lock") end })
 
 -- App-specific touchpad scroll speeds.
 -- o.window("(Alacritty|kitty|foot)", { scroll_touchpad = 1.5 })

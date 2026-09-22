@@ -124,6 +124,11 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "swipe", fingers = 4, direction = "up" },
       action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/app-launcher.sh"),
     })
+    -- 4-finger swipe down locks the screen (plain lock, nothing else).
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "swipe", fingers = 4, direction = "down" },
+      action = hl.dsp.exec_cmd("omarchy-system-lock"),
+    })
 end
 -- hyprexpo (expose-style workspace overview, sandwichfarm fork). Same
 -- load-order guard as hyprgrass: hyprpm loads plugins after the config
@@ -179,12 +184,11 @@ end })
 -- (.config/qs-applauncher) is the touch flow via the 4-finger swipe-up
 -- gesture and the nwg dock launcher button.
 o.bind("SUPER + R", "Apps menu", "omarchy-menu toggle apps")
--- Power button (scripts/power-button.sh): tap = lock + screen off, tap
--- again = screen on (lockscreen). No hold action. Replaces Omarchy's
--- default "omarchy-menu toggle system" on XF86PowerOff; touch never wakes
--- the screen — see looknfeel.lua.
+-- Power/session menu: wlogout on the physical power button, replacing
+-- Omarchy's default "omarchy-menu toggle system". Blur behind it comes from
+-- the layer rule in looknfeel.lua.
 hl.unbind("XF86PowerOff")
-o.bind("XF86PowerOff", "Screen off/lock <-> on", os.getenv("HOME") .. "/.config/hypr/scripts/power-button.sh press", { locked = true })
+o.bind("XF86PowerOff", "Power menu", "pkill wlogout || wlogout", { locked = true })
 
 -- ---------------------------------------------------------------------------
 -- 2026-08-31: Garuda dotfiles migration (dotfiles/.config/hypr/configs/
