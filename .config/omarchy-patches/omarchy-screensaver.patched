@@ -3,8 +3,8 @@
 # omarchy:summary=Run the Omarchy screensaver using random effects from TTE.
 
 # Taeryn patch: dispatch on ~/.config/omarchy/screensaver-tool to run a TUI
-# screensaver (tty-clock, cmatrix, pipes, asciiquarium, cbonsai, rain)
-# instead of the TTE branding effects. Unknown choice or missing binary
+# screensaver (tty-clock, cmatrix, pipes, asciiquarium, cbonsai, rain) or the
+# custom TAERYN branding instead of the stock TTE effects. Unknown choice
 # falls back to stock TTE. Picked from Super+Space > Style > Screensaver.
 
 screensaver_in_focus() {
@@ -89,8 +89,12 @@ if tool=$(screensaver_command "$choice"); then
   monitor_and_exit
   exit_screensaver
 else
+  # 'taeryn' = TTE effects over the custom TAERYN branding; anything else
+  # (tte/unknown) = stock Omarchy logo.
+  tte_input=~/.config/omarchy/branding/screensaver.txt
+  [[ $choice == taeryn ]] && tte_input=~/.config/omarchy/branding/taeryn.txt
   while true; do
-    ttfx -i ~/.config/omarchy/branding/screensaver.txt \
+    ttfx -i "$tte_input" \
       --frame-rate 120 --canvas-width 0 --canvas-height 0 --reuse-canvas --anchor-canvas c --anchor-text c\
       --random-effect --no-eol --no-restore-cursor &
 
