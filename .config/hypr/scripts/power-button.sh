@@ -6,65 +6,92 @@
 # Runs detached from the bind exec, so hyprctl calls here are safe (io.popen
 # from inside a Lua bind would deadlock the compositor IPC).
 #
-# Two device realities this works around:
-# - The power button AUTO-REPEATS while held (hardware key repeat — extra
-#   press events keep arriving). A press while one is pending is treated as
-#   a repeat and ignored, so the hold timer keeps the ORIGINAL timestamp.
-# - Engaging the omarchy lock force-wakes the display shortly after it maps
-#   (the lock view's wake-on-input fires as the surface appears). The blank
-#   is therefore re-asserted for a settle window (GUARD_MS) while the lock
-#   engages in the background; the lock's own 5s idle blank is the backstop.
-#   Intentional wakes (tap-on, hold) set stop-guard so the guard yields.
+# Device realities handled here:
+# - While held, the button emits a STREAM of extra press AND release events
+#   (hardware key repeat). Discrimination is therefore two-stage: a press
+#   while one is pending only refreshes the "still held" timestamp (the
+#   original contact start is kept so the hold timer is unaffected), and a
+#   release only counts once no further press arrived within CONFIRM_MS —
+#   churn arrives far faster than that, a real finger does not come back.
+# - Engaging the omarchy lock force-wakes the panel (its view fires
+#   wake-on-input as it maps), which used to flash the lockscreen white for
+#   a split second. The backlight is dropped to 0 BEFORE the lock engages,
+#   so that frame renders invisibly; a short guard loop re-asserts dpms-off
+#   once the wake lands, and the saved backlight level is restored on every
+#   wake path. The lock's own 5s idle blank is the backstop.
 set -u
 
 HOLD_MS=600
+CONFIRM_MS=200
 GUARD_MS=2500
 state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/power-button"
-press_file="$state_dir/press.ms"
+stamp="$state_dir/press.ms"     # first press of the current contact
+last="$state_dir/last.ms"       # refreshed by every press event
 stop_guard="$state_dir/stop-guard"
+saved_bl="$state_dir/backlight" # pre-off backlight % for restore
 mkdir -p "$state_dir"
 
+now_ms()    { date +%s%3N; }
+wr()        { printf '%s' "$2" >"$1.tmp" && mv "$1.tmp" "$1"; } # churn-safe
 screen_on() { hyprctl monitors -j | jq -e 'any(.[]; .dpmsStatus)' >/dev/null; }
-blank()     { hyprctl dispatch 'hl.dsp.dpms({ action = "disable" })' >/dev/null; omarchy-brightness-keyboard off; }
-wake()      { : >"$stop_guard"; omarchy-system-wake; }
+dpms_off()  { hyprctl dispatch 'hl.dsp.dpms({ action = "disable" })' >/dev/null; }
+
+blank_screen() {
+  dpms_off                                  # instant black
+  local cur
+  cur=$(omarchy-brightness-display 2>/dev/null) || cur=""
+  [[ $cur =~ ^[0-9]+$ && $cur -gt 0 ]] && wr "$saved_bl" "$cur"
+  omarchy-brightness-display --no-osd 0%    # hide the lock's engage flash
+  omarchy-brightness-keyboard off
+}
+restore_backlight() {
+  [[ -f $saved_bl ]] && omarchy-brightness-display --no-osd "$(cat "$saved_bl")%"
+  rm -f "$saved_bl"
+}
+wake_screen() { : >"$stop_guard"; restore_backlight; omarchy-system-wake; }
 guard_blank() {
   rm -f "$stop_guard"
-  local end=$(( $(date +%s%3N) + GUARD_MS ))
-  while (( $(date +%s%3N) < end )); do
-    [ -f "$stop_guard" ] && exit 0
-    screen_on && blank
+  local end=$(( $(now_ms) + GUARD_MS ))
+  while (( $(now_ms) < end )); do
+    [[ -f $stop_guard ]] && exit 0
+    screen_on && dpms_off
     sleep 0.1
   done
+}
+tap_off() {
+  blank_screen
+  omarchy-system-lock &
+  guard_blank
 }
 
 case "${1:-}" in
 press)
-  # Hardware key repeat: swallow presses while one is pending.
-  [ -f "$press_file" ] && exit 0
-  now=$(date +%s%3N)
-  printf '%s' "$now" >"$press_file"
-  # Arm the hold: fire only if the key is still down after HOLD_MS — a quick
-  # release deletes press_file first and disarms us.
+  n=$(now_ms)
+  if [[ -f $stamp ]]; then
+    wr "$last" "$n"                    # repeat press: still holding
+    exit 0
+  fi
+  wr "$stamp" "$n"; wr "$last" "$n"
   (
     sleep "$(awk "BEGIN{printf \"%.3f\", $HOLD_MS/1000}")"
-    [ "$(cat "$press_file" 2>/dev/null)" = "$now" ] || exit 0
-    rm -f "$press_file"
-    wake                  # menu must be visible even if screen was off
+    [[ "$(cat "$stamp" 2>/dev/null)" = "$n" ]] || exit 0
+    # Keep $stamp afterwards: post-menu repeat presses must not start a new
+    # cycle — the next genuine release cleans it up.
+    wake_screen
     pkill wlogout 2>/dev/null || wlogout
   ) &
   ;;
 release)
-  [ -f "$press_file" ] || exit 0   # hold already fired, or stray release
-  now=$(date +%s%3N)
-  was=$(cat "$press_file")
-  rm -f "$press_file"
-  (( now - was >= HOLD_MS )) && exit 0
-  if screen_on; then
-    blank                        # instant black, then lock behind it
-    omarchy-system-lock &
-    guard_blank                  # re-blank the lock's engage-wake
-  else
-    wake
-  fi
+  [[ -f $stamp ]] || exit 0            # nothing pending (post-menu / stray)
+  rnow=$(now_ms)
+  (
+    sleep "$(awk "BEGIN{printf \"%.3f\", $CONFIRM_MS/1000}")"
+    # A press after this release started means the contact never ended.
+    (( $(cat "$last" 2>/dev/null || echo 0) > rnow )) && exit 0
+    was=$(cat "$stamp")
+    rm -f "$stamp" "$last"
+    (( $(now_ms) - was < HOLD_MS )) || exit 0
+    if screen_on; then tap_off; else wake_screen; fi
+  ) &
   ;;
 esac
