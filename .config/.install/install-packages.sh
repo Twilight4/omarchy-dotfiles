@@ -90,6 +90,10 @@ packages=(
     "trash-cli"
     "duf"
     "dua-cli"
+    "inxi"
+    "htop"
+    "nvtop"
+    "wavemon"
     "sd"
     "pv"
     "xcp"
@@ -158,6 +162,7 @@ packages=(
     "cbonsai"
     "smassh-bin"
     "asciiquarium"            # terminal-toys dashboard (tm-open-all.sh)
+    "pulsemixer"
     "cava"
     "cmatrix-git"
     "pipes.sh"                 # TUI screensaver (Style > Screensaver picker)

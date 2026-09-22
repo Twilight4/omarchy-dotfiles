@@ -32,6 +32,9 @@ screensaver_command() {
     asciiquarium) cmd="asciiquarium" ;;
     cbonsai) cmd="cbonsai -l" ;;
     rain) cmd="rain" ;;
+    # No -f date format here: the format string has spaces and the caller
+    # word-splits $cmd (see the ponytail note at the launch site).
+    tty-clock) cmd="tty-clock -c -C 6 -r -s" ;;
     *) return 1 ;;
   esac
   command -v "${cmd%% *}" &>/dev/null || return 1

@@ -1,44 +1,36 @@
-# Set the layout in this tab
+# Monitoring session (SUPER+ special workspace, ws-monitoring). kitty
+# silently drops a splits-layout tab when it is the last of five in this
+# session file (verified: works as tab 2, never spawns as tab 5) — keep the
+# audio tab early.
+
+# Tab 1: btop
 layout tall
-# Set the working directory for windows in the current tab
 cd ~/
-# Create a window (title sets the tab title)
 launch --title btop sh -c 'btop'
-# Focus the current tab
 focus
 
-# Create a new tab
-new_tab htop
-# Set the layout in this tab
-layout tall
-# Set the working directory for windows in the current tab
+# Tab 2: audio — pulsemixer controls on top, cava visualizer in the
+# smaller bottom split (~25%)
+new_tab audio
+layout splits
 cd ~/
-# Create a window (title sets the tab title)
+launch --title pulsemixer sh -c 'pulsemixer'
+launch --location=hsplit --bias 25 --title cava sh -c 'cava'
+
+# Tab 3: htop
+new_tab htop
+layout tall
+cd ~/
 launch --title htop sh -c 'htop'
 
-# Create a new tab
+# Tab 4: nvtop
 new_tab nvtop
-# Set the layout in this tab
 layout tall
-# Set the working directory for windows in the current tab
 cd ~/
-# Create a window (title sets the tab title)
 launch --title nvtop sh -c 'nvtop'
 
-# Create a new tab
+# Tab 5: wavemon
 new_tab wavemon
-# Set the layout in this tab
 layout tall
-# Set the working directory for windows in the current tab
 cd ~/
-# Create a window (title sets the tab title)
 launch --title wavemon sh -c 'wavemon'
-
-# Create a new tab
-new_tab pfetch
-# Set the layout in this tab
-layout tall
-# Set the working directory for windows in the current tab
-cd ~/
-# Create a window (title sets the tab title)
-launch --title pfetch sh -c 'echo ; pfetch ; exec zsh'
