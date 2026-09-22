@@ -159,7 +159,7 @@ packages=(
     "cbonsai"
     "smassh-bin"
     "asciiquarium"            # terminal-toys dashboard (tm-open-all.sh)
-    "pulsemixer"
+    "wiremix"
     "cava"
     "cmatrix-git"
     "pipes.sh"                 # TUI screensaver (Style > Screensaver picker)

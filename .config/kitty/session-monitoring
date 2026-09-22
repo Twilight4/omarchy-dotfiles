@@ -1,5 +1,5 @@
 # Monitoring session (SUPER+ special workspace, ws-monitoring): btop only,
-# plus the audio tab — pulsemixer controls on top, cava visualizer in the
+# plus the audio tab — wiremix controls on top, cava visualizer in the
 # smaller bottom split (~25%).
 #
 # kitty quirk: a splits-layout tab silently never spawns when it is the last
@@ -16,5 +16,5 @@ focus
 new_tab audio
 layout splits
 cd ~/
-launch --title pulsemixer sh -c 'pulsemixer'
+launch --title wiremix sh -c 'wiremix'
 launch --location=hsplit --bias 25 --title cava sh -c 'cava'
