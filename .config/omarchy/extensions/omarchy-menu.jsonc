@@ -31,6 +31,12 @@
   "trigger.share.privatebin.clipboard": {"icon":"","label":"Clipboard","action":"$HOME/.config/hypr/scripts/privatebin-share clipboard"},
   "trigger.share.privatebin.file": {"icon":"","label":"File","action":"$HOME/.config/hypr/scripts/privatebin-share file"},
 
+  // Capture > Download: yt-dlp the focused browser tab's media. Same grab as
+  // SUPER+ALT+D / SUPER+ALT+SHIFT+D — the menu overlay is a layer, so the
+  // synthetic Ctrl+L/Ctrl+C still target the browser window beneath it.
+  "trigger.capture.download-video": {"icon":"󰇚","label":"Download Video","aliases":["download video","ytdlp","yt-dlp"],"action":"$HOME/.config/hypr/scripts/video-download.sh"},
+  "trigger.capture.download-audio": {"icon":"󰎆","label":"Download Audio","aliases":["download audio","mp3","music"],"action":"$HOME/.config/hypr/scripts/video-download.sh audio"},
+
 
   // Setup > Config > Hyprland: submenu of ~/.config/hypr/ configs, opened in the
   // running Emacs (emacsclient -n). Keybindings/Monitors/Input moved in from Setup.

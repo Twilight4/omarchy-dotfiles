@@ -5,12 +5,11 @@
 # keybindings menu's static "Download Video from Web App" row dispatches;
 # synthetic keys enter at the compositor seat, so xremap never sees them),
 # reads the URL from the Wayland clipboard, then re-execs this script's worker
-# inside a focused floating kitty (class video-download). Video: -t mp4
-# (best h264+aac merged — "-f mp4" grabbed video-only formats = silent files)
-# into $(xdg-user-dir VIDEOS)/youtube. SUPER+ALT+SHIFT+D / `audio` mode:
-# --extract-audio --embed-thumbnail (ydlab parity) into
-# $(xdg-user-dir MUSIC)/youtube. Mirrors the omarchy native host
-# (omarchy-chromium-ytdlp-host --download) minus its OSD.
+# inside a focused floating kitty (class video-download). Video: yt-dlp's
+# default format logic under a strict 1440p (2K) ceiling — the height filter
+# keeps 4K/8K out while default sorting still picks the best codec/container
+# below it. Audio mode (SUPER+ALT+SHIFT+D): --extract-audio --embed-thumbnail
+# (ydlab parity) into $(xdg-user-dir MUSIC)/youtube. Mirrors the omarchy
 
 set -euo pipefail
 
@@ -35,12 +34,11 @@ download() { # download <url> <video|audio>
     icon=󰎆
   else
     dir="${OMARCHY_YTDLP_DIR:-$(xdg-user-dir VIDEOS)/youtube}"
-    flags=(-t mp4)
+    # yt-dlp's documented resolution-cap recipe: the filter is strict, the
+    # sorting inside it stays the default (best codec/container ≤1440p).
+    flags=(-f 'bv*[height<=1440]+ba/b[height<=1440]')
     icon=󰄬
   fi
-  mkdir -p "$dir"
-  records=$(mktemp)
-
   # ydl parity (scripts.zsh): --restrict-filenames. --no-playlist kept because
   # the grabbed URL carries &list= — without it a music radio queue would dump
   # dozens of downloads. ponytail: no --simulate precheck — the terminal is
