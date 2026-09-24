@@ -486,6 +486,11 @@ o.bind("SUPER + CTRL + T", "Toggle menu", "omarchy-menu toggle toggle")
 -- reloads via ~/.local/state/omarchy/workspace-layouts/
 o.bind("SUPER + L", "Toggle workspace layout (master/scrolling)", "~/.config/hypr/scripts/layout-toggle.sh")
 
+-- Download the focused browser tab's video (Zen port of Omarchy's Chromium
+-- yt-dlp extension): grabs the URL via synthetic Ctrl+L/Ctrl+C, runs yt-dlp
+-- in a background no-focus kitty (see windowrules.lua).
+o.bind("SUPER + ALT + D", "Download video from web app", "~/.config/hypr/scripts/video-download.sh")
+
 
 
 -- Night light: toggle + 10% temperature steps, all with notifications
