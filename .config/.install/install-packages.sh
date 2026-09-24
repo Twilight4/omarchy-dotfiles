@@ -121,6 +121,7 @@ packages=(
     # ---- media ----------------------------------------------------------
     "mpv-mpris"
     "yt-dlp"
+    "python-mutagen"                # yt-dlp --embed-thumbnail (video-download.sh)
     "noise-suppression-for-voice"   # repo prebuilt (the -git pkg compiles)
 
     # ---- desktop extras -------------------------------------------------

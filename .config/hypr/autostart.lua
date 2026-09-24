@@ -43,7 +43,7 @@ o.launch_on_start(
 -- like swaync/polkit/wallpaper/bar have their omarchy equivalents already).
 hl.on("hyprland.start", function()
     -- Key remapper (Emacs-style binds, scoped to Zen)
-    hl.exec_cmd('uwsm app -d "Xremap key remapper" -- xremap ~/.config/xremap/config.yml --watch=config,device')
+    --hl.exec_cmd('uwsm app -d "Xremap key remapper" -- xremap ~/.config/xremap/config.yml --watch=config,device')
     hl.exec_cmd('uwsm app -d "Emacs server" -- emacs --daemon')
     hl.exec_cmd("uwsm app -- udev-block-notify")
 

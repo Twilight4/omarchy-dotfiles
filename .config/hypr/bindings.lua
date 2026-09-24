@@ -490,6 +490,7 @@ o.bind("SUPER + L", "Toggle workspace layout (master/scrolling)", "~/.config/hyp
 -- yt-dlp extension): grabs the URL via synthetic Ctrl+L/Ctrl+C, runs yt-dlp
 -- in a background no-focus kitty (see windowrules.lua).
 o.bind("SUPER + ALT + D", "Download video from web app", "~/.config/hypr/scripts/video-download.sh")
+o.bind("SUPER + ALT + SHIFT + D", "Download audio from web app", "~/.config/hypr/scripts/video-download.sh audio")
 
 
 
