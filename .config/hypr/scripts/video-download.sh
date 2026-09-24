@@ -39,6 +39,8 @@ download() { # download <url> <video|audio>
     flags=(-f 'bv*[height<=1440]+ba/b[height<=1440]')
     icon=󰄬
   fi
+  mkdir -p "$dir"
+  records=$(mktemp)
   # ydl parity (scripts.zsh): --restrict-filenames. --no-playlist kept because
   # the grabbed URL carries &list= — without it a music radio queue would dump
   # dozens of downloads. ponytail: no --simulate precheck — the terminal is
