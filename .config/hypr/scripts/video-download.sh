@@ -6,14 +6,15 @@
 # synthetic keys enter at the compositor seat, so xremap's C-l remap is
 # bypassed and zen receives the real URL-bar shortcut), reads the URL from the
 # Wayland clipboard, then re-execs this script's --download worker inside a
-# background kitty (class video-download; no_focus window rule keeps focus on
-# the browser) running yt-dlp into ~/Videos, mirroring the omarchy native host
-# (omarchy-chromium-ytdlp-host --download) minus its OSD.
+# focused floating kitty (class video-download) running yt-dlp with the user's
+# ydl flags (mp4, --restrict-filenames) into $(xdg-user-dir VIDEOS)/youtube,
+# mirroring the omarchy native host (omarchy-chromium-ytdlp-host --download)
+# minus its OSD.
 
 set -euo pipefail
 
 SCRIPT_PATH="${BASH_SOURCE[0]}"
-DOWNLOAD_DIR="${OMARCHY_YTDLP_DIR:-$HOME/Videos}"
+DOWNLOAD_DIR="${OMARCHY_YTDLP_DIR:-$(xdg-user-dir VIDEOS)/youtube}"
 # ponytail: activewindow is the only real target; VD_WINDOW exists so tests can
 # drive a specific window by address ("address:0x…") without stealing focus.
 VD_WINDOW="${VD_WINDOW:-activewindow}"
@@ -31,8 +32,10 @@ download() {
   records=$(mktemp)
 
   # ponytail: no --simulate precheck — the terminal is the feedback surface
-  # (the native host needed the precheck because it ran invisibly).
-  yt-dlp --no-playlist --progress --newline \
+  # ydl parity (scripts.zsh): --restrict-filenames -f mp4. --no-playlist kept
+  # because the grabbed URL carries &list= — without it a music radio queue
+  # would dump dozens of videos.
+  yt-dlp --no-playlist --restrict-filenames -f mp4 --progress --newline \
     --paths "$DOWNLOAD_DIR" -o '%(title)s.%(ext)s' \
     --print 'after_move:VD_FILE %(filepath)s' -- "$url" | tee "$records" || true
 

@@ -33,7 +33,7 @@ hl.window_rule({ match = { class = "^org.gnome.clocks" },     float = true, cent
 
 -- Media / popups
 hl.window_rule({ match = { class = "mpv" },   float = true, center = true, opaque = true, size = { 1100, 620 } })
-hl.window_rule({ match = { class = "video-download" }, float = true, center = true, size = { 900, 500 }, no_focus = true })  -- yt-dlp progress from scripts/video-download.sh; no_focus = background
+hl.window_rule({ match = { class = "video-download" }, float = true, center = true, size = { 900, 500 } })  -- yt-dlp progress from scripts/video-download.sh; focused so ALT+TAB / scratchpad work
 hl.window_rule({ match = { class = "zenity" },      float = true, center = true })
 hl.window_rule({ match = { class = "xdg-desktop-portal-gtk" }, float = true, center = true })
 hl.window_rule({ match = { class = "xdg-desktop-portal-kde" }, float = true, center = true })
