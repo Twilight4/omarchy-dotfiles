@@ -18,6 +18,7 @@
 !.config/omarchy/plugins/taeryn.webapps/
 !.config/omarchy/plugins/taeryn.indicators/
 !.config/omarchy/plugins/taeryn.capture/
+!.config/omarchy/plugins/taeryn.cleanmode/
 !.config/omarchy/plugins/taeryn.tray/
 !.config/omarchy/plugins/taeryn.network/
 .config/omarchy/*.bak.*

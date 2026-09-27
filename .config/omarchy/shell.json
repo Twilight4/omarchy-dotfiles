@@ -34,6 +34,9 @@
           "id": "omarchy.workspaces"
         },
         {
+          "id": "taeryn.cleanmode"
+        },
+        {
           "id": "taeryn.webapps"
         },
         {
@@ -45,8 +48,8 @@
       ],
       "right": [
         {
-          "expanded": false,
-          "id": "taeryn.tray"
+          "id": "taeryn.tray",
+          "expanded": false
         },
         {
           "id": "omarchy.agents"

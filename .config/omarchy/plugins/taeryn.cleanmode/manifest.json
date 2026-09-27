@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "taeryn.cleanmode",
+  "name": "Clean mode",
+  "version": "1.0.0",
+  "author": "Twilight4",
+  "description": "Screen-clean mode: panel off + fullscreen overlay swallowing all touch; 4-finger swipe left restores",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Clean Mode",
+    "description": "Toggle panel-off clean mode",
+    "category": "Utility",
+    "allowMultiple": false,
+    "defaultSection": "left"
+  }
+}

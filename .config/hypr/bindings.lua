@@ -34,6 +34,27 @@
 -- config parses, so an unguarded plugin.* config errors at startup/reload
 -- ("unknown option plugin:hyprgrass:sensitivity") whenever the plugin isn't
 -- loaded yet.
+-- Clean mode (scripts/clean-mode.sh + the taeryn.cleanmode overlay) must be
+-- the ONLY touch consumer while active: an overlay layer cannot stop hyprgrass
+-- from seeing raw touch events, so every hyprgrass action no-ops while the
+-- clean-mode flag exists. The overlay's own 4-finger-left swipe restores.
+local clean_flag = os.getenv("HOME") .. "/.local/state/omarchy/toggles/taeryn-clean-mode"
+local function gated(action)
+  local function blocked()
+    local f = io.open(clean_flag, "r")
+    if f then f:close() return true end
+    return false
+  end
+  if type(action) == "function" then
+    return function()
+      if not blocked() then action() end
+    end
+  end
+  return function()
+    if not blocked() then hl.dispatch(action) end
+  end
+end
+
 if hl.plugin.hyprgrass ~= nil then
     hl.config({
       plugin = {
@@ -46,12 +67,12 @@ if hl.plugin.hyprgrass ~= nil then
     })
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "edge", origin = "down", direction = "up" },
-      action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/osk-toggle.sh"),
+      action = gated(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/osk-toggle.sh")),
     })
     -- 2-finger tap toggles float
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "tap", fingers = 2 },
-      action = hl.dsp.window.float(),
+      action = gated(hl.dsp.window.float()),
     })
     -- 3-finger long-press, then move = drag the window (hyprgrass has no
     -- double-tap-hold gesture; 1-finger long-press was dropped because apps
@@ -59,13 +80,13 @@ if hl.plugin.hyprgrass ~= nil then
     -- mouse dispatcher.
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "longpress", fingers = 3 },
-      action = hl.dsp.window.drag(),
+      action = gated(hl.dsp.window.drag()),
       mouse = true,
     })
     -- 2-finger long-press, then move = resize the window
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "longpress", fingers = 2 },
-      action = hl.dsp.window.resize(),
+      action = gated(hl.dsp.window.resize()),
       mouse = true,
     })
     -- Pinch is deliberately NOT bound: with no hyprgrass pinch bind, the
@@ -82,52 +103,52 @@ if hl.plugin.hyprgrass ~= nil then
     -- fire reliably.
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "swipe", fingers = 2, direction = "left" },
-      action = function() hl.dispatch(hl.dsp.focus({ workspace = "m+1" })) end,
+      action = gated(function() hl.dispatch(hl.dsp.focus({ workspace = "m+1" })) end),
     })
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "swipe", fingers = 2, direction = "right" },
-      action = function() hl.dispatch(hl.dsp.focus({ workspace = "m-1" })) end,
+      action = gated(function() hl.dispatch(hl.dsp.focus({ workspace = "m-1" })) end),
     })
     -- Touchscreen: 2-finger swipe up toggles the hyprexpo overview (mirrors
     -- the touchpad gesture; discrete bind so it fires once on completion,
     -- not per animation frame). Nil-guarded: hyprexpo may be absent.
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "swipe", fingers = 2, direction = "up" },
-      action = function()
+      action = gated(function()
         if hl.plugin.hyprexpo then hl.plugin.hyprexpo.expo("toggle") end
-      end,
+      end),
     })
     -- 2-finger swipe down closes the active window (mirrors SUPER+Q).
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "swipe", fingers = 2, direction = "down" },
-      action = hl.dsp.window.close(),
+      action = gated(hl.dsp.window.close()),
     })
     -- 3-finger tap toggles fullscreen on the active window.
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "tap", fingers = 3 },
-      action = hl.dsp.window.fullscreen(),
+      action = gated(hl.dsp.window.fullscreen()),
     })
     -- 3-finger swipe down toggles the top bar (same command as
     -- SUPER+SHIFT+SPACE). Touchpad mirror is below, outside this block.
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "swipe", fingers = 3, direction = "down" },
-      action = hl.dsp.exec_cmd("omarchy-toggle-bar"),
+      action = gated(hl.dsp.exec_cmd("omarchy-toggle-bar")),
     })
     -- 3-finger swipe up toggles the nwg app dock (scripts/dock-toggle.sh).
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "swipe", fingers = 3, direction = "up" },
-      action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/dock-toggle.sh"),
+      action = gated(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/dock-toggle.sh")),
     })
     -- 4-finger swipe up toggles the big-icons app launcher (touch-native,
     -- rofi has no wl_touch): 2 fingers = expo, 3 = dock, 4 = launcher.
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "swipe", fingers = 4, direction = "up" },
-      action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/app-launcher.sh"),
+      action = gated(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/app-launcher.sh")),
     })
     -- 4-finger swipe down locks the screen (plain lock, nothing else).
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "swipe", fingers = 4, direction = "down" },
-      action = hl.dsp.exec_cmd("omarchy-system-lock"),
+      action = gated(hl.dsp.exec_cmd("omarchy-system-lock")),
     })
     -- 4-finger swipe left = clean mode: panel + touchscreen off together via
     -- scripts/clean-mode.sh. Enters clean mode from the touchscreen; restore
@@ -135,7 +156,7 @@ if hl.plugin.hyprgrass ~= nil then
     -- is dead while the mode is on.
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "swipe", fingers = 4, direction = "left" },
-      action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/clean-mode.sh"),
+      action = gated(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/clean-mode.sh")),
     })
 end
 -- hyprexpo (expose-style workspace overview, sandwichfarm fork). Same
@@ -512,25 +533,28 @@ o.bind_toggle("SUPER + CTRL + Y", "Toggle locking on idle", "idle")
 -- in the collapsed taeryn.indicators drawer, so the stock bind was invisible.
 o.bind("SUPER + CTRL + D", "Toggle silencing notifications", os.getenv("HOME") .. "/.config/hypr/scripts/notification-silencing-toggle")
 
+
 -- Stock Omarchy features re-homed (2026-09-27):
--- Dismiss ALL notifications (stock SUPER+SHIFT+comma; SUPER+period keeps
--- dismiss-last only).
-o.bind("SUPER + SHIFT + period", "Dismiss all notifications", "omarchy-shell notifications dismissAll")
--- Pop window out: float + pin a tile, persists per display (stock SUPER+O is
--- workspace 3 here; SHIFT+F joins the F float family: F fullscreen, ALT+F
--- full width, CTRL+F tiled fullscreen).
-o.bind("SUPER + SHIFT + F", "Pop window out (float & pin)", "omarchy-hyprland-window-pop")
+-- Pop window out: float + pin a tile, keeping its tiled size and position
+-- (scripts/window-pop.sh passes the live geometry; the stock script's
+-- 1300x900 default exceeds the 1200x750 panel and looks like fullscreen).
+-- SHIFT+F joins the F float family: F fullscreen, ALT+F full width, CTRL+F
+-- tiled fullscreen.
+o.bind("SUPER + SHIFT + F", "Pop window out (float & pin)", "~/.config/hypr/scripts/window-pop.sh")
 -- Touchscreen on/off (screen-clean); omarchy's toggle persists across
--- reloads and shows its own OSD.
+-- reloads and shows its own OSD. The keyboard's F10 key sends
+-- XF86TouchpadToggle (fn+F10), so BOTH keysyms are bound.
 o.bind("SUPER + F10", "Toggle touchscreen", "omarchy toggle touchscreen")
--- Clean mode: panel + touchscreen off together (see scripts/clean-mode.sh).
-o.bind("SUPER + SHIFT + F10", "Clean mode (panel + touch off)", "~/.config/hypr/scripts/clean-mode.sh")
--- Rebuild the Plymouth boot screen from the CURRENT Omarchy theme. The
--- command needs sudo (writes /usr/share/plymouth + SDDM, rebuilds initramfs
--- via mkinitcpio, ~30s), so it runs in a floating kitty for the password
--- prompt + progress. SUPER+P family: P alone = ws5, CTRL+P = music ws,
--- ALT+P = silent ws5 move; CTRL+SHIFT+P was free.
-o.bind("SUPER + CTRL + SHIFT + P", "Match boot screen to current theme", [[uwsm app -- kitty --class plymouth-theme -e bash -c 'omarchy-plymouth-set-by-theme "$(omarchy theme current)"; echo; read -r -n1 -s -p "Press any key to close"']])
+o.bind("SUPER + XF86TouchpadToggle", "Toggle touchscreen", "omarchy toggle touchscreen")
+-- Clean mode: panel off + touch swallowed by the taeryn.cleanmode overlay
+-- (see scripts/clean-mode.sh). 4-finger swipe left on the touchscreen/touchpad.
+o.bind("SUPER + ALT + Y", "Clean mode (panel + touch off)", "~/.config/hypr/scripts/clean-mode.sh")
+-- Rebuild the Plymouth boot screen from the CURRENT Omarchy theme. Needs
+-- sudo (writes /usr/share/plymouth + SDDM, rebuilds initramfs via mkinitcpio,
+-- ~30s), so it runs in a floating kitty for the password prompt + progress.
+-- Theme slug comes from the state file: `omarchy theme current` prints the
+-- human TITLE (spaces), which omarchy-theme-dir cannot resolve back to a dir.
+o.bind("SUPER + CTRL + SHIFT + P", "Match boot screen to current theme", [[uwsm app -- kitty --class plymouth-theme -e bash -c 'omarchy-plymouth-set-by-theme "$(cat ~/.local/state/omarchy/current/theme.name)"; echo; read -r -n1 -s -p "Press any key to close"']])
 
 if o.cmd_present("voxtype") then
   o.bind("F1", "Toggle dictation", "voxtype record toggle")

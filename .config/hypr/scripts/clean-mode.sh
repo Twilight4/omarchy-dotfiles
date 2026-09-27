@@ -1,21 +1,22 @@
 #!/usr/bin/env bash
-# Clean mode: blank the panel AND disable the touchscreen together (4-finger
-# swipe left on the touchscreen/touchpad, or SUPER+SHIFT+F10). With dpms off,
-# a touch would instantly re-wake the panel (touch rides Hyprland's unified
-# mouse-move wake path), so both must go together. State = omarchy's own
-# touchscreen toggle file (toggles/hypr/touchscreen-disabled-name), so the
-# OSD toggle, menu rows, and this script never disagree. While clean mode is
-# on, keyboard presses still wake the panel; re-run this to bring touch back.
+# Clean mode: panel off + ALL touch swallowed by the taeryn.cleanmode overlay
+# (fullscreen black layer-shell surface). The touchscreen device stays enabled
+# so the overlay's MultiPointTouchArea can recognize the restoring 4-finger
+# LEFT swipe — restoring is therefore touchscreen-only, exactly like entering
+# (4-finger left, or SUPER+ALT+Y, or the touchpad mirror in input.lua).
+# hyprgrass actions are gated on this flag file in bindings.lua, so raw touch
+# events the plugin still sees cannot fire gestures underneath the overlay.
+# The overlay itself watches this file (FileView) — it is the visibility truth.
 set -euo pipefail
 
-name_file=$HOME/.local/state/omarchy/toggles/hypr/touchscreen-disabled-name
+flag=$HOME/.local/state/omarchy/toggles/taeryn-clean-mode
 
-if [[ -f $name_file ]]; then
-  omarchy toggle touchscreen on
+if [[ -f $flag ]]; then
+  rm -f "$flag"
   hyprctl dispatch 'hl.dsp.dpms({action="enable"})' >/dev/null
-  omarchy-notification-send -g 󰐤 "Clean mode off" "Panel + touchscreen on" || true
+  omarchy-notification-send -g 󰐤 "Clean mode off" "Panel + touch on" || true
 else
-  omarchy toggle touchscreen off
+  mkdir -p "$(dirname "$flag")"
+  touch "$flag"
   hyprctl dispatch 'hl.dsp.dpms({action="disable"})' >/dev/null
-  omarchy-notification-send -g 󰆑 "Clean mode on" "Panel + touchscreen off" || true
 fi
