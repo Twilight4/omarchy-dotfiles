@@ -495,6 +495,14 @@ o.bind("SUPER + X", "Keybindings", "omarchy-menu-keybindings")
 o.bind("SUPER + C", "Clipboard manager", "omarchy-shell shell toggle taeryn.clipboard")
 o.bind("SUPER + ALT + E", "Emojis", "omarchy-shell shell toggle omarchy.emojis")
 o.bind("SUPER + Y", "Lock system", "omarchy-system-lock")
+-- Lid close: stock omarchy-system-lid-close locks the session immediately
+-- (lock-before-suspend head start). During clean mode the logind inhibitor
+-- already keeps the machine running, and a lock there is unwanted — reopen
+-- showed a locked screen. scripts/lid-close.sh skips only the lock while
+-- clean mode is on; everything else (clamshell monitor reconciliation,
+-- normal lock+suspend path) is stock.
+hl.unbind("switch:on:Lid Switch")
+o.bind("switch:on:Lid Switch", nil, os.getenv("HOME") .. "/.config/hypr/scripts/lid-close.sh", { locked = true })
 o.bind("SUPER + SHIFT + ALT + B", "Theme menu", "omarchy-menu toggle theme")
 o.bind("SUPER + ALT + B", "Background switcher", "omarchy-menu toggle background")
 o.bind("SUPER + CTRL + SPACE", "Toggle notification history", "omarchy-shell notifications toggleHistory")
