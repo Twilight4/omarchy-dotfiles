@@ -5,14 +5,14 @@ import Quickshell.Wayland
 import qs.Commons
 import qs.Ui
 
-// Clean mode: panel off + this fullscreen opaque layer swallowing ALL touch
-// input (apps get nothing while it is up). The touchscreen device stays
-// enabled so the MultiPointTouchArea below can recognize the restoring
-// 4-finger LEFT swipe — the mode is therefore enterable AND restorable from
-// the touchscreen alone. Visibility truth = the flag file that
-// scripts/clean-mode.sh toggles (hyprgrass actions are gated on it too).
-// Also enterable/exitable via the bar button, SUPER+ALT+Y, or the touchpad
-// 4-finger-left mirror in input.lua.
+// Clean mode shade: while the flag file exists (scripts/clean-mode.sh), map
+// a fullscreen opaque layer over every screen that swallows ALL touch input
+// — apps receive nothing. The enter/exit gesture is NOT here: hyprgrass sees
+// raw touch regardless of layers, so the SAME 4-finger-left swipe toggles
+// clean-mode.sh both ways (its hyprgrass bind is exempt from the clean-mode
+// gating in bindings.lua; every other hyprgrass action no-ops while flagged
+// so wiping the glass can't fire gestures underneath). Esc is a keyboard
+// exit; SUPER+ALT+Y and the touchpad mirror also run the script.
 
 BarWidget {
   id: root
@@ -23,8 +23,10 @@ BarWidget {
 
   readonly property string cleanScript: Quickshell.env("HOME") + "/.config/hypr/scripts/clean-mode.sh"
 
-  implicitWidth: btn.implicitWidth
-  implicitHeight: btn.implicitHeight
+  // No bar button: the gesture is the interface (widget exists to host the
+  // shade + flag watch).
+  implicitWidth: 0
+  implicitHeight: 0
 
   FileView {
     path: Quickshell.env("HOME") + "/.local/state/omarchy/toggles/taeryn-clean-mode"
@@ -39,20 +41,8 @@ BarWidget {
     command: [root.cleanScript]
   }
 
-  function toggleClean() {
-    cleanProc.running = true
-  }
-
   function exitClean() {
-    if (clean) toggleClean()
-  }
-
-  WidgetButton {
-    id: btn
-    bar: root.bar
-    text: "\uf186"  // nf-fa-moon_o — screen-off/clean-mode toggle
-    horizontalMargin: 5.5
-    onPressed: root.toggleClean()
+    if (clean) cleanProc.running = true
   }
 
   Variants {
@@ -63,6 +53,7 @@ BarWidget {
         id: shade
 
         required property var modelData
+
         screen: modelData
         visible: root.clean
         anchors { top: true; bottom: true; left: true; right: true }
@@ -77,46 +68,19 @@ BarWidget {
           id: keyScope
           anchors.fill: parent
           focus: true
-          // Esc is the keyboard exit path (binds still fire — compositor
-          // binds run before layer key routing, so SUPER+ALT+Y works too).
           Keys.onEscapePressed: root.exitClean()
         }
 
-        Text {
-          visible: false  // panel is dpms-off; nothing to read
-          text: ""
-        }
-
+        // Touch/pointer consumers: no handlers on purpose — the areas exist
+        // only so every touch and click ends HERE instead of in an app.
         MultiPointTouchArea {
           anchors.fill: parent
           minimumTouchPoints: 1
           maximumTouchPoints: 10
+        }
 
-          // First-seen X per finger; when 4+ fingers each travel ~160px left,
-          // exit clean mode (mirrors the hyprgrass 4-left enter gesture).
-          property var startX: ({})
-
-          onTouchUpdated: function(points) {
-            if (points.length === 0) {
-              startX = ({})
-              return
-            }
-            for (var i = 0; i < points.length; i++) {
-              var p = points[i]
-              if (startX[p.pointId] === undefined)
-                startX[p.pointId] = p.x
-            }
-            if (points.length >= 4) {
-              for (var j = 0; j < points.length; j++) {
-                var q = points[j]
-                if (q.x - startX[q.pointId] < -160) {
-                  startX = ({})
-                  root.exitClean()
-                  return
-                }
-              }
-            }
-          }
+        MouseArea {
+          anchors.fill: parent
         }
       }
     }

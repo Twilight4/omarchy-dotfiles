@@ -150,13 +150,13 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "swipe", fingers = 4, direction = "down" },
       action = gated(hl.dsp.exec_cmd("omarchy-system-lock")),
     })
-    -- 4-finger swipe left = clean mode: panel + touchscreen off together via
-    -- scripts/clean-mode.sh. Enters clean mode from the touchscreen; restore
-    -- needs the touchpad mirror (input.lua) or SUPER+SHIFT+F10 because touch
-    -- is dead while the mode is on.
+    -- 4-finger swipe left = clean mode toggle (scripts/clean-mode.sh +
+    -- taeryn.cleanmode shade). Deliberately NOT gated: hyprgrass sees raw
+    -- touch with the shade layer up, so this same gesture both ENTERS and
+    -- EXITS clean mode. Everything else no-ops while flagged.
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "swipe", fingers = 4, direction = "left" },
-      action = gated(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/clean-mode.sh")),
+      action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/clean-mode.sh"),
     })
 end
 -- hyprexpo (expose-style workspace overview, sandwichfarm fork). Same
@@ -554,7 +554,7 @@ o.bind("SUPER + ALT + Y", "Clean mode (panel + touch off)", "~/.config/hypr/scri
 -- ~30s), so it runs in a floating kitty for the password prompt + progress.
 -- Theme slug comes from the state file: `omarchy theme current` prints the
 -- human TITLE (spaces), which omarchy-theme-dir cannot resolve back to a dir.
-o.bind("SUPER + CTRL + SHIFT + P", "Match boot screen to current theme", [[uwsm app -- kitty --class plymouth-theme -e bash -c 'omarchy-plymouth-set-by-theme "$(cat ~/.local/state/omarchy/current/theme.name)"; echo; read -r -n1 -s -p "Press any key to close"']])
+o.bind("SUPER + CTRL + SHIFT + P", "Match boot screen to current theme", [[uwsm app -- kitty --class plymouth-theme -e bash -c '~/.config/hypr/scripts/plymouth-theme.sh; echo; read -r -n1 -s -p "Press any key to close"']])
 
 if o.cmd_present("voxtype") then
   o.bind("F1", "Toggle dictation", "voxtype record toggle")
