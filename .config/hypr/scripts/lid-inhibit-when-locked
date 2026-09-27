@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Hold a logind handle-lid-switch block inhibitor while the session lock is
-# engaged: lid close suspends normally when unlocked, but a screen locked
-# first (omarchy-system-lock / SUPER+Y) keeps the machine running with the
-# lid closed. Released on unlock, so lid-suspend behavior returns instantly.
+# engaged OR clean mode is on (scripts/clean-mode.sh flag): lid close
+# suspends normally otherwise, but a screen locked first
+# (omarchy-system-lock / SUPER+Y) or clean mode (SUPER+ALT+Y / 4-finger left)
+# keeps the machine running with the lid closed. Released on unlock / clean
+# mode exit, so lid-suspend behavior returns instantly.
 #
 # Polls omarchy-shell lock status at 1s (same cadence as bar-watch). Engages
 # on `.locked or .requested` so the inhibitor is already held during the
@@ -12,17 +14,18 @@
 exec 9>"${XDG_RUNTIME_DIR:-/tmp}/lid-inhibit.lock"
 flock -n 9 || exit 0   # single instance across config reloads
 
-locked() {
+hold_inhibitor() {
   omarchy-shell lock status 2>/dev/null |
-    jq -e '.locked or .requested' >/dev/null
+    jq -e '.locked or .requested' >/dev/null ||
+    [[ -f $HOME/.local/state/omarchy/toggles/taeryn-clean-mode ]]
 }
 
 inh_pid=""
 while true; do
-  if locked; then
+  if hold_inhibitor; then
     if [[ -z $inh_pid ]] || ! kill -0 "$inh_pid" 2>/dev/null; then
       systemd-inhibit --what=handle-lid-switch --mode=block \
-        --who=taeryn --why="session locked - keep running with lid closed" \
+        --who=taeryn --why="session locked or clean mode - keep running with lid closed" \
         sleep infinity &
       inh_pid=$!
     fi
