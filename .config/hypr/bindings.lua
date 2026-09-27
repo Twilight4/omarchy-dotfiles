@@ -129,6 +129,14 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "swipe", fingers = 4, direction = "down" },
       action = hl.dsp.exec_cmd("omarchy-system-lock"),
     })
+    -- 4-finger swipe left = clean mode: panel + touchscreen off together via
+    -- scripts/clean-mode.sh. Enters clean mode from the touchscreen; restore
+    -- needs the touchpad mirror (input.lua) or SUPER+SHIFT+F10 because touch
+    -- is dead while the mode is on.
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "swipe", fingers = 4, direction = "left" },
+      action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/clean-mode.sh"),
+    })
 end
 -- hyprexpo (expose-style workspace overview, sandwichfarm fork). Same
 -- load-order guard as hyprgrass: hyprpm loads plugins after the config
@@ -503,6 +511,26 @@ o.bind_toggle("SUPER + CTRL + Y", "Toggle locking on idle", "idle")
 -- targets the removed omarchy.indicators plugin and the DND icon is hidden
 -- in the collapsed taeryn.indicators drawer, so the stock bind was invisible.
 o.bind("SUPER + CTRL + D", "Toggle silencing notifications", os.getenv("HOME") .. "/.config/hypr/scripts/notification-silencing-toggle")
+
+-- Stock Omarchy features re-homed (2026-09-27):
+-- Dismiss ALL notifications (stock SUPER+SHIFT+comma; SUPER+period keeps
+-- dismiss-last only).
+o.bind("SUPER + SHIFT + period", "Dismiss all notifications", "omarchy-shell notifications dismissAll")
+-- Pop window out: float + pin a tile, persists per display (stock SUPER+O is
+-- workspace 3 here; SHIFT+F joins the F float family: F fullscreen, ALT+F
+-- full width, CTRL+F tiled fullscreen).
+o.bind("SUPER + SHIFT + F", "Pop window out (float & pin)", "omarchy-hyprland-window-pop")
+-- Touchscreen on/off (screen-clean); omarchy's toggle persists across
+-- reloads and shows its own OSD.
+o.bind("SUPER + F10", "Toggle touchscreen", "omarchy toggle touchscreen")
+-- Clean mode: panel + touchscreen off together (see scripts/clean-mode.sh).
+o.bind("SUPER + SHIFT + F10", "Clean mode (panel + touch off)", "~/.config/hypr/scripts/clean-mode.sh")
+-- Rebuild the Plymouth boot screen from the CURRENT Omarchy theme. The
+-- command needs sudo (writes /usr/share/plymouth + SDDM, rebuilds initramfs
+-- via mkinitcpio, ~30s), so it runs in a floating kitty for the password
+-- prompt + progress. SUPER+P family: P alone = ws5, CTRL+P = music ws,
+-- ALT+P = silent ws5 move; CTRL+SHIFT+P was free.
+o.bind("SUPER + CTRL + SHIFT + P", "Match boot screen to current theme", [[uwsm app -- kitty --class plymouth-theme -e bash -c 'omarchy-plymouth-set-by-theme "$(omarchy theme current)"; echo; read -r -n1 -s -p "Press any key to close"']])
 
 if o.cmd_present("voxtype") then
   o.bind("F1", "Toggle dictation", "voxtype record toggle")
