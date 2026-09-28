@@ -2,7 +2,7 @@
 # Hold a logind handle-lid-switch block inhibitor while the session lock is
 # engaged OR clean mode is on (scripts/clean-mode.sh flag): lid close
 # suspends normally otherwise, but a screen locked first
-# (omarchy-system-lock / SUPER+Y) or clean mode (SUPER+ALT+Y / 4-finger left)
+# (omarchy-system-lock / SUPER+Y) or clean mode (SUPER+ALT+Y / 4-finger down)
 # keeps the machine running with the lid closed. Released on unlock / clean
 # mode exit, so lid-suspend behavior returns instantly.
 #

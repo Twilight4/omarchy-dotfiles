@@ -37,7 +37,7 @@
 -- Clean mode (scripts/clean-mode.sh + the taeryn.cleanmode overlay) must be
 -- the ONLY touch consumer while active: an overlay layer cannot stop hyprgrass
 -- from seeing raw touch events, so every hyprgrass action no-ops while the
--- clean-mode flag exists. The overlay's own 4-finger-left swipe restores.
+-- clean-mode flag exists. The overlay's own 4-finger-down swipe restores.
 local clean_flag = os.getenv("HOME") .. "/.local/state/omarchy/toggles/taeryn-clean-mode"
 local function gated(action)
   local function blocked()
@@ -145,17 +145,18 @@ if hl.plugin.hyprgrass ~= nil then
       pattern = { kind = "swipe", fingers = 4, direction = "up" },
       action = gated(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/app-launcher.sh")),
     })
-    -- 4-finger swipe down locks the screen (plain lock, nothing else).
-    hl.plugin.hyprgrass.bind({
-      pattern = { kind = "swipe", fingers = 4, direction = "down" },
-      action = gated(hl.dsp.exec_cmd("omarchy-system-lock")),
-    })
-    -- 4-finger swipe left = clean mode toggle (scripts/clean-mode.sh +
-    -- taeryn.cleanmode shade). Deliberately NOT gated: hyprgrass sees raw
-    -- touch with the shade layer up, so this same gesture both ENTERS and
-    -- EXITS clean mode. Everything else no-ops while flagged.
+    -- 4-finger swipe left locks the screen (plain lock, nothing else).
     hl.plugin.hyprgrass.bind({
       pattern = { kind = "swipe", fingers = 4, direction = "left" },
+      action = gated(hl.dsp.exec_cmd("omarchy-system-lock")),
+    })
+    -- 4-finger swipe down = clean mode toggle (scripts/clean-mode.sh +
+    -- taeryn.cleanmode shade): panel off, touch swallowed. Deliberately NOT
+    -- gated: hyprgrass sees raw touch with the shade layer up, so this same
+    -- gesture both ENTERS and EXITS clean mode. Everything else no-ops while
+    -- flagged.
+    hl.plugin.hyprgrass.bind({
+      pattern = { kind = "swipe", fingers = 4, direction = "down" },
       action = hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/clean-mode.sh"),
     })
 end
@@ -554,6 +555,9 @@ o.bind("SUPER + SHIFT + F", "Pop window out (float & pin)", "~/.config/hypr/scri
 -- XF86TouchpadToggle (fn+F10), so BOTH keysyms are bound.
 o.bind("SUPER + F10", "Toggle touchscreen", "omarchy toggle touchscreen")
 o.bind("SUPER + XF86TouchpadToggle", "Toggle touchscreen", "omarchy toggle touchscreen")
+-- Screen recording toggle. ALT+PRINT (stock) is unreachable on this
+-- keyboard; F6 sits beside the F10 touchscreen toggle.
+o.bind("SUPER + F6", "Screen recording", "omarchy-capture-screenrecording --stop-recording || omarchy-menu toggle trigger.capture.screenrecord")
 -- Clean mode: panel off + touch swallowed by the taeryn.cleanmode overlay
 -- (see scripts/clean-mode.sh). 4-finger swipe left on the touchscreen/touchpad.
 o.bind("SUPER + ALT + Y", "Clean mode (panel + touch off)", "~/.config/hypr/scripts/clean-mode.sh")

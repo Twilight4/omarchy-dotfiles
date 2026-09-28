@@ -82,15 +82,15 @@ hl.config({
 -- Touchpad: 3-finger horizontal swipe switches workspaces (native hyprland
 -- gesture, no plugin needed — mirrors the touchscreen behaviour).
 hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
--- Touchpad: 4-finger swipe down locks the screen (mirrors the touchscreen).
+-- Touchpad: 4-finger swipe left locks the screen (mirrors the touchscreen).
 -- (hl.dispatch + exec_cmd spawns detached — a bare os.execute here BLOCKS
 -- the compositor's Lua thread for the seconds omarchy-system-lock takes,
 -- freezing the screen before the lock appears.)
-hl.gesture({ fingers = 4, direction = "down", action = function() hl.dispatch(hl.dsp.exec_cmd("omarchy-system-lock")) end })
--- Touchpad: 4-finger swipe left toggles clean mode (mirrors the touchscreen
+hl.gesture({ fingers = 4, direction = "left", action = function() hl.dispatch(hl.dsp.exec_cmd("omarchy-system-lock")) end })
+-- Touchpad: 4-finger swipe down toggles clean mode (mirrors the touchscreen
 -- bind, but the touchpad stays alive while the mode is on, so this is also
 -- the gesture that RESTORES panel + touch).
-hl.gesture({ fingers = 4, direction = "left", action = function() hl.dispatch(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/clean-mode.sh")) end })
+hl.gesture({ fingers = 4, direction = "down", action = function() hl.dispatch(hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/clean-mode.sh")) end })
 
 -- App-specific touchpad scroll speeds.
 -- o.window("(Alacritty|kitty|foot)", { scroll_touchpad = 1.5 })

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Clean mode: panel off + fullscreen opaque taeryn.cleanmode overlay that
 # swallows ALL touch (apps get nothing). Entered AND exited by the SAME
-# 4-finger LEFT swipe — hyprgrass sees raw touch regardless of what layer is
+# 4-finger DOWN swipe — hyprgrass sees raw touch regardless of what layer is
 # up, so its bind (exempt from the clean-mode gating in bindings.lua) toggles
 # this script both ways. Also SUPER+ALT+Y and the touchpad mirror in
 # input.lua.

@@ -8,7 +8,7 @@ import qs.Ui
 // Clean mode shade: while the flag file exists (scripts/clean-mode.sh), map
 // a fullscreen opaque layer over every screen that swallows ALL touch input
 // — apps receive nothing. The enter/exit gesture is NOT here: hyprgrass sees
-// raw touch regardless of layers, so the SAME 4-finger-left swipe toggles
+// raw touch regardless of layers, so the SAME 4-finger-down swipe toggles
 // clean-mode.sh both ways (its hyprgrass bind is exempt from the clean-mode
 // gating in bindings.lua; every other hyprgrass action no-ops while flagged
 // so wiping the glass can't fire gestures underneath). Esc is a keyboard

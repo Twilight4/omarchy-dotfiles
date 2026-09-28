@@ -4,7 +4,7 @@
   "name": "Clean mode",
   "version": "1.0.0",
   "author": "Twilight4",
-  "description": "Screen-clean mode: panel off + fullscreen overlay swallowing all touch; 4-finger swipe left restores",
+  "description": "Screen-clean mode: panel off + fullscreen overlay swallowing all touch; 4-finger swipe down restores",
   "kinds": [
     "bar-widget"
   ],
