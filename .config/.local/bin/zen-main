@@ -1,0 +1,6 @@
+#!/bin/bash
+# Open args in the main zen profile (the SUPER+CTRL+W "Default (release)" one):
+# remotes into the running instance as a new tab, cold-starts it if not running.
+# Wrapper exists because .desktop Exec parsing mangles the quoted
+# "-P Default (release)" argument (profile name has a space) — bash quoting is reliable.
+exec /opt/zen-browser-bin/zen-bin -P 'Default (release)' "$@"
